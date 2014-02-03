@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<body>
+	<p> Template para registro </p>
+	<h2> Nuevo Usuario </h2>
+	{{error}}
+	<form action = "/perfiles/registrar/" method = "post"> {% csrf_token %}
+		{{user_creation_form.as_ul}}
+		<input type = "submit" value = "Registrar"/>
+	</form>
+</body>

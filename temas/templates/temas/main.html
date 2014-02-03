@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+	{% for tema in temas %}
+
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+	<ul>
+		<li> <a href = "{% url 'temas:index_tema' tema.nombre %}"> {{ tema.nombre }} </a></li>
+		<li> {{ tema.fecha_creacion }} </li>
+		<li> {{ tema.descripcion }} </li>
+		<li> {{ tema.creador.usuario.username }} </li>
+	</ul>
+	<br/>
+	{% endfor %}
+<p> Click aqui <a href = "{% url 'temas:nuevo_tema' %}"> aqui </a> para añadir un tema </p>
+<p> Ckick aqui <a href = "{% url 'perfiles:index' %}"> aqui </a> para ver el index de Perfiles </p>
+</body>

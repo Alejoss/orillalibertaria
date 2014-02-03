@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<body>
+	<ul>
+		<li>Nombre de usuario: {{usuario.usuario}}</li>
+		<li>Descripción: {{usuario.descripcion}}</li>
+		<li>Link1: {{usuario.link1}}</li>
+	</ul>
+
+	{% if user.is_authenticated %}
+	<ul>
+		<li> {{ user.first_name }} </li>
+		<li> {{ user.last_name }} </li>
+		<li> {{ user.email }} </li>
+	</ul>
+	{% endif %}
+
+	{% for post in posts %}
+	<ul>
+		<li> Posts </li>
+		<li> {{ post.texto }} </li>
+		<li> {{ post.tema }} </li>
+		<li> {{ post.fecha }} </li>
+	</ul>
+	{% endfor %}
+
+	<p> Click aqui <a href = "{% url 'perfiles:editar_perfil_des' %}"> aqui </a> editar_perfil </p>
+	<p> Ckick aqui <a href = "{% url 'perfiles:index' %}"> aqui </a> para ver el index de Perfiles </p>
+	<p> Ckick aqui <a href = "{% url 'temas:main' %}"> aqui </a> para la página de Temas </p>
+</body>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<body>
+	{% if user.is_authenticated %}
+	<p> Bienvenido {{user.username}} gracias por conectarte</p>
+	{% endif %}
+	<p> Ckick aqui <a href = "{% url 'perfiles:editar_perfil_des' %}"> aqui </a>editar_perfil </p>
+	<p> Ckick aqui <a href = "{% url 'perfiles:perfil_propio' %}"> aqui </a> para ver tu perfil </p>
+	<p> Ckick aqui <a href = "{% url 'temas:main' %}"> aqui </a> para ver el index de Temas </p>
+</body>

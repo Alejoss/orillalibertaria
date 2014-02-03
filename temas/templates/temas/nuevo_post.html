@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<body>
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+	<p> Template para nuevo_post </p>
+	{% if user.is_authenticated%}
+	<p> {{user.username}}
+	{% endif %}
+
+	<h2> Nuevo Post en {{tema.nombre}}</h2>
+	<form action = "{% url 'temas:sumar_post' tema.nombre %}" method = "post"> {% csrf_token %}
+		{{form_nuevo_post.as_ul}}
+		<input type = "submit" value = "Enviar"/>
+	</form>
+	<p> Click aqui <a href = "{% url 'temas:main' %}"> aqui </a> para el index de temas </p>
+	<p> Ckick aqui <a href = "{% url 'temas:index_tema' tema.nombre %}"> aqui </a> para ver la página de {{tema.nombre}} </p>
+
+</body>

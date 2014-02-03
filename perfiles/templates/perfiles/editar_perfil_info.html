@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset = "utf-8">
+</head>
+
+<body>
+
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+
+<p>Edita tus datos {{user.username}}</p>
+<form action = "/perfiles/editar_perfil_info/" method = "post">
+	{% csrf_token %}
+	<ul>
+		{{perfil_info_form.as_ul}}
+	</ul>
+	<input type = "submit" name = "submit" value = "Guardar">
+</form>
+
+<p> Ckick aqui <a href = "{% url 'perfiles:perfil_propio' %}"> aqui </a> para ver tu perfil </p>
+</body>
+</html>

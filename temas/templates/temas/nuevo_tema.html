@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<body>
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+	<p> Template para nuevo_tema </p>
+	<h2> Nuevo Tema </h2>
+	<form action = "{% url 'temas:nuevo_tema' %}" method = "post"> {% csrf_token %}
+		{{form_crear_tema.as_ul}}
+		<input type = "submit" value = "Añadir Tema"/>
+	</form>
+	<p> Click aqui <a href = "{% url 'temas:main' %}"> aqui </a> ver la pagina de Temas </p>
+</body>

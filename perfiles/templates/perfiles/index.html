@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<body>
+	{% for user in usuarios %}
+
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+	<ul>
+		<li> {{user.usuario}} </li>
+		<li> {{user.descripcion}} </li>
+		<li> {{user.link1}} </li>
+		<li> {{user.link2}} </li>
+		<!--pasa user.usuario a url patterns para que utilice la función-->
+		<li> <a href = "{% url 'perfiles:perfil' user.usuario %}"> link </a>
+	</ul>
+	<br/>
+	{% endfor %}
+<p> Click aqui <a href = "/perfiles/perfil"> aqui </a> para ver tu perfil </p>
+<p> Ckick aqui <a href = "{% url 'temas:main' %}"> aqui </a> para ver el index de Temas </p>
+</body>

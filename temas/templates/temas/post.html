@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<body>
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+	<ul>
+		<li>Tema: {{ tema }}</li>
+	</ul>
+
+	<ul>
+		<li> Post: {{ post.texto }} </li>
+		<li> Creador: {{ post.creador }} </li>
+		<div>
+			<form action = "{% url 'temas:respuesta' tema.nombre post.id %}" method = "POST">
+				{{form_respuesta.as_ul}}
+			<imput type = "submit" value = "Responder">
+		</div>	
+	</ul>
+	
+	<p> Click aqui <a href = "{% url 'temas:main' %}"> aqui </a> para ver el index de temas</p>	
+
+
+</body>

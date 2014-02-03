@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<body>
+<div>
+	<h4> Usuario: {{user.username}} </h4>
+</div>
+
+	<ul>
+		<li>Título: {{ tema.nombre }}</li>
+		<li>Descripción: {{ tema.descripcion }}</li>
+	</ul>
+
+	<h2> Posts </h2>
+	{% for post in posts_tema %}
+	<ul>
+		<li> <a href = "{% url 'temas:post' tema.nombre post.id %} "> Link </a>
+		<li>{{post.texto}}</li>
+		<li>{{post.fecha}}</li>
+		<li>{{post.creador.usuario}}</li>
+	</ul>
+	{% endfor %}
+
+	<p> Click aqui <a href = "{% url 'temas:nuevo_post' tema.nombre %}"> aqui </a> para añadir un post</p>
+	
+	<p> Click aqui <a href = "{% url 'temas:main' %}"> aqui </a> para ver el index de temas</p>	
+
+
+</body>
