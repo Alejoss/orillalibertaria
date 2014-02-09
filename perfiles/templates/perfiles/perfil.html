@@ -1,29 +1,85 @@
 <!DOCTYPE html>
+{% load bootstrap3 %}
+
+<html>
+<!DOCTYPE html>
+{% load bootstrap3 %}
+
+<html>
+<head>
+	<meta charset = "utf-8"/>
+	<title> Inicio </title>
+	{% load staticfiles %}
+	<link href = "{% static 'css/bootstrap.min.css' %}"rel="stylesheet">
+	<link href = "{% static 'css/cerulean.bootstrap.min.css' %}"rel="stylesheet">
+	<link href = "{% static 'css/main.hoy.css' %}"rel="stylesheet">
+	<link href = "{% static 'css/perfiles.perfil.css' %}"rel="stylesheet">
+	<script src = "{% static 'js/jquery.min.js' %}"></script>
+	<script src = "{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
 <body>
-	<ul>
-		<li>Nombre de usuario: {{usuario.usuario}}</li>
-		<li>Descripción: {{usuario.descripcion}}</li>
-		<li>Link1: {{usuario.link1}}</li>
-	</ul>
+	<header class="container">
+		<div id="menu" class="navbar navbar-default">
+			<div class = "navbar-header">
+				<button class = "btn btn-primary navbar-toggle"
+				data-toggle="collapse"
+				data-target=".navbar-collapse">
+				<span class = "glyphicon glyphicon-chevron-down"></span></button>
+				<div id="logo">
+					<img class = "logo" src = " {% static '/static/olib.logo.png' %} "> 
+				</div> <!--logo-->
+			</div><!--nav-header-->
+			<div class = "navbar-collapse collapse">
+			<ul class = "nav navbar-nav navbar-right">
+				<li class = "nav"> <a href = "{% url 'temas:main' %}"> Temas </a></li>
+				<li class = "nav"> <a href = "{% url 'perfiles:index' %}"> Perfiles</a> </li>
+				{% if user.is_authenticated %}
+				<li class = "nav active"> <a href = "{% url 'perfiles:perfil_propio' %}"> 
+				{{ user.username }} </a> </li>
+				<li class = "nav"> <a href = "{% url 'perfiles:logout' %}"> 
+				logout </a> </li>
+				{% else%}
+				<li class = "nav"> <a href = "{% url 'perfiles:login' %}"> 
+				Login </a> </li>
+				{% endif %}
+				
+			</ul>
+			</div>
+		</div> <!--menu-->
 
-	{% if user.is_authenticated %}
-	<ul>
-		<li> {{ user.first_name }} </li>
-		<li> {{ user.last_name }} </li>
-		<li> {{ user.email }} </li>
-	</ul>
-	{% endif %}
+	</header>
 
+	<div class = "col-md-5 col-md-offset-7">
+	
+		<h2> {{usuario.usuario}} </h2>
+			{% if user.is_authenticated %}
+				 {{nombre_completo}}
+			{% endif %}
+		<h4> {{usuario.descripcion}} </h4>
+		<p> Puntos {{usuario.votos_recibidos}} </p>
+		<div class = "links">
+			<ul>
+			<li>{{usuario.link1}}</li>
+			<li>{{usuario.link2}}</li>
+			<li>{{usuario.link3}}</li>
+			</ul>
+		</div>
+	</div>
+
+<div class = "col-md-6 col-md-offset-2">
+	<h2> Posts </h2>
+	<br/>
+	<br/>
 	{% for post in posts %}
-	<ul>
-		<li> Posts </li>
-		<li> {{ post.texto }} </li>
-		<li> {{ post.tema }} </li>
-		<li> {{ post.fecha }} </li>
-	</ul>
+	<div> 
+		<p> {{ post.texto }} </p>
+		<h6> {{ post.fecha }} en <a href=" {% url 'temas:index_tema' post.tema.nombre %} "> {{ post.tema.nombre }} </a> </h6>
+	</div>
+	<br/>
+	<br/>
+	
 	{% endfor %}
 
-	<p> Click aqui <a href = "{% url 'perfiles:editar_perfil_des' %}"> aqui </a> editar_perfil </p>
-	<p> Ckick aqui <a href = "{% url 'perfiles:index' %}"> aqui </a> para ver el index de Perfiles </p>
-	<p> Ckick aqui <a href = "{% url 'temas:main' %}"> aqui </a> para la página de Temas </p>
+
 </body>

@@ -1,4 +1,19 @@
 <!DOCTYPE html>
+{% load bootstrap3 %}
+
+<html>
+<head>
+	<meta charset = "utf-8"/>
+	<title> Inicio </title>
+	{% load staticfiles %}
+	<link href = "{% static 'css/bootstrap.min.css' %}"rel="stylesheet">
+	<link href = "{% static 'css/cerulean.bootstrap.min.css' %}"rel="stylesheet">
+	<link href = "{% static 'css/main.hoy.css' %}"rel="stylesheet">
+	<script src = "{% static 'js/jquery.min.js' %}"></script>
+	<script src = "{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
 <body>
 	<p> Hasta pronto {{nombre}} </p>
+	<a href = "{% url 'perfiles:login' %}"> Login </a>
 </body>

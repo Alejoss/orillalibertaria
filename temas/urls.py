@@ -9,5 +9,7 @@ urlpatterns = patterns('',
 	url(r'^(?P<tema>\w+)/sumar_post/$', views.sumar_post, name = 'sumar_post'),
 	url(r'^(?P<tema>\w+)/nuevo_post/$', views.nuevo_post, name = 'nuevo_post'),
 	url(r'^(?P<tema>\w+)/post/(?P<post_id>\d+)/$', views.post, name = 'post'),
-	url(r'^(?P<tema>\w+)/post/(?P<post_id>\d+)/respuesta$', views.respuesta, name = 'respuesta'),
-	)
+	url(r'^(?P<tema>\w+)/post/(?P<post_id>\d+)/respuesta$', 
+		views.respuesta, name = 'respuesta'),
+	url(r'^(?P<tema>\w+)/(?P<post_id>\d+)/voto$', views.voto, name = 'voto'),
+	)  

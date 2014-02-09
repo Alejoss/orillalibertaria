@@ -2,7 +2,7 @@
 from django.db import models
 from perfiles.models import Perfiles
 # Create your models here.
-
+ 
 
 class Temas(models.Model):
 	nombre = models.CharField(max_length=100, null=True)
@@ -10,7 +10,9 @@ class Temas(models.Model):
 	descripcion = models.CharField(max_length=250, blank = True, null=True)
 	activo = models.BooleanField(default=True)
 	creador = models.ForeignKey(Perfiles, null=True)
-
+	nivel_actividad = models.SmallIntegerField(default=0)
+	nivel_popularidad = models.SmallIntegerField(default=0)
+ 
 class Posts(models.Model):
 	fecha = models.DateTimeField(auto_now_add = True)
 	texto = models.TextField(max_length=10000, null=True)
@@ -24,7 +26,6 @@ class Respuestas(models.Model):
 	post_respuesta = models.ForeignKey(Posts, related_name = "respuesta", null=True)
 	post_padre = models.ForeignKey(Posts, related_name = "post_original", null=True)
 
-
 class Votos(models.Model):
 	fecha = models.DateTimeField(auto_now_add=True)
 	usuario_votado = models.ForeignKey(Perfiles, related_name = 'votado', null=True)
@@ -33,7 +34,6 @@ class Votos(models.Model):
 	tema = models.ForeignKey(Temas, null=True)
 	tipo = models.SmallIntegerField(default=0)
 
-	
 class Notificaciones(models.Model):
 	fecha = models.DateTimeField(auto_now_add=True)
 	usuario_id = models.ForeignKey(Perfiles, null=True)

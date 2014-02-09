@@ -5,14 +5,34 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from forms import FormCrearTema, FormNuevoPost
 from django.core.urlresolvers import reverse
-from models import Temas, Posts
+from models import *
 from perfiles.models import Perfiles
 from django.contrib.auth.models import User
+import random
+from datetime import datetime
+
 
 def main(request):
 	#muestra la pagina principal de todos los temas
-	temas = Temas.objects.all()
-	context = {'temas': temas}
+	temas = Temas.objects.all().order_by('nombre')
+	indexes = range(7)
+	random.shuffle(indexes)
+	posts_populares = []
+	for i in range(3):
+		pp = Posts.objects.filter(es_respuesta=False).order_by('-votos_positivos')[indexes.pop()]
+		posts_populares.append(pp)
+
+	z = 0
+	if len(temas) < 20:
+		z = len(temas)
+	else:
+		z = 15
+
+	temas_populares = Temas.objects.order_by('-nivel_popularidad')[:z]
+	temas_activos = Temas.objects.order_by('-nivel_actividad')[:z]
+
+	context = {'temas': temas, 'posts_populares': posts_populares,
+	'temas_populares':temas_populares, 'temas_activos': temas_activos}
 	return render(request, 'temas/main.html', context)
 
 def nuevo_tema(request):
@@ -35,7 +55,7 @@ def nuevo_tema(request):
 def index_tema(request, titulo):
 	#muestra la pagina principal del tema
 	tema = Temas.objects.get(nombre=titulo)
-	posts_tema = Posts.objects.filter(tema = tema).order_by('-id')
+	posts_tema = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-id')
 	context = {'tema':tema, 'posts_tema':posts_tema}
 	return render(request, 'temas/tema.html', context)
 
@@ -49,6 +69,25 @@ def sumar_post(request, tema):
 			tema_contenedor = Temas.objects.get(nombre = tema)
 			post = Posts(texto = texto, creador = perfil_usuario, tema = tema_contenedor)
 			post.save()
+			#sumar a nivel de popularidad del Tema
+			tema_contenedor.nivel_popularidad += 1
+			#calcular nivel actividad del Tema
+			cinco_posts = Posts.objects.filter(tema=tema_contenedor).order_by('-fecha')[:5]
+			n_actividad = 0
+			hoy = datetime.today()
+			for post in cinco_posts:
+				f = post.fecha
+				if hoy.month == f.month:
+					if hoy.day - f.day < 7:
+						n_actividad += 5
+					elif hoy.day - f.day <15:
+						n_actividad += 3
+					else:
+						n_actividad += 1
+			tema_contenedor.nivel_actividad = n_actividad
+
+			tema_contenedor.save()
+
 			return HttpResponseRedirect(reverse('temas:index_tema', args = (tema,)))
 		else:
 			pass #!!! enviar errores
@@ -64,7 +103,17 @@ def nuevo_post(request, tema):
 def post(request, tema, post_id):
 	form_respuesta = FormNuevoPost() #utiliza el mismo form que los posts normales
 	post = Posts.objects.get(id=post_id)
-	context = {'tema': tema, 'post':post, 'form_respuesta': form_respuesta}
+	res_crudo = Respuestas.objects.filter(post_padre = post).order_by('-id')
+	#obtiene los objetos de la tabla respuestas para trabajar con ellos.
+	respuestas = []
+	#lista en la que se van a guardar los objetos de la tabla Posts correspondientes.
+	for r in res_crudo:
+		respuestas.append(r.post_respuesta)
+	tema = Temas.objects.get(nombre=tema)
+
+	suma_votos = post.votos_positivos - post.votos_negativos
+	context = {'tema': tema, 'post':post, 'form_respuesta': form_respuesta, 
+	'respuestas':respuestas, 'suma_votos':suma_votos}
 	return render(request, 'temas/post.html', context)
 
 def respuesta(request, tema, post_id):
@@ -75,15 +124,132 @@ def respuesta(request, tema, post_id):
 			perfil_usuario = Perfiles.objects.get(usuario=request.user)
 			tema_contenedor = Temas.objects.get(nombre = tema)
 			post_padre = Posts.objects.get(id=post_id)
-			post_respuesta = Post(texto=texto, es_respuesta = True, creador = perfil_usuario,
+			post_respuesta = Posts(texto=texto, es_respuesta = True,
+				creador = perfil_usuario,
 				tema = tema_contenedor)
-			respuesta_db = Respuestas(post_respuesta=post_respuesta, post_padre = post_padre)
 			post_respuesta.save()
+
+			respuesta_db = Respuestas(post_respuesta=post_respuesta,
+				post_padre = post_padre)
 			respuesta_db.save()
-			return HttpResponseRedirect(reverse('temas:post', args =(tema_contenedor.nombre, post_padre.id)))
+			
+			return HttpResponseRedirect(reverse('temas:post', 
+				args =(tema_contenedor.nombre, post_padre.id)))
 		else:
 			pass #!!! enviar errores
 	else:
 		tema = Temas.objects.get(nombre = tema)
 
-		return HttpResponseRedirect(reverse('temas:post', args =(tema.nombre, post_id)))
+		return HttpResponseRedirect(reverse('temas:post', 
+			args =(tema.nombre, post_id)))
+
+def voto(request, post_id, tema):
+	if request.method == "POST":
+		voto = request.POST.get("voto")
+		if voto == "positivo":
+			#si la funcion recibe en el Post el string "positivo".
+			#encuentra el Post object, el Perfil del votante y del votado.
+			#revisa si ya voto el usuario en ese post. Boolean, variable "ya_voto".
+			post_votado = Posts.objects.get(id=post_id)
+			autor_post = post_votado.creador
+			usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
+			usuario_votante = Perfiles.objects.get(usuario = request.user)
+			ya_voto = Votos.objects.filter(post_votado = post_votado, 
+				usuario_votante = usuario_votante).exists()
+			
+			if ya_voto:
+				#si ya voto, obtiene el objecto Voto que esta guardado en la bd.
+				voto_actual = Votos.objects.get(post_votado = post_votado, 
+				usuario_votante = usuario_votante)
+				if voto_actual.tipo == 1:
+					#si el voto actual es positivo recarga la pagina.
+					#no se puede votar 2 veces positivo.
+					#pasa el string tema que recibe la funcion como argumento.
+					return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+				elif voto_actual.tipo == -1:
+					#si el voto actual es negativo cambia el voto a positivo
+					voto_actual.tipo = 1
+					voto_actual.save()
+					#resta 1 a los negativos y suma 1 a los positivos del objeto Post
+					#el objeto Post lleva cuenta aparte para simplificar querys
+					post_votado.votos_negativos -= 1
+					post_votado.votos_positivos += 1
+					post_votado.save()
+
+					#suma a la cantidad de votos positivos que ha recibido el usuario.
+					usuario_votado.votos_recibidos += 1
+					usuario_votado.save()
+
+					return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+			else:
+				#Si no existe un voto del usuario en ese post
+				#crea un voto Positivo de ese usario en ese post.
+				voto = Votos(usuario_votado=usuario_votado,
+					usuario_votante=usuario_votante,
+					post_votado = post_votado, tema = post_votado.tema, tipo = 1)
+				#1 positivo. -1 negativo
+				voto.save()
+
+				#suma 1 a los votos_positivos del objeto usuario
+				post_votado.votos_positivos += 1
+				post_votado.save()
+
+				#suma 1 a los votos recibidos del usuario_votado.
+				usuario_votado.votos_recibidos += 1
+				usuario_votado.save()
+
+				return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+	
+		elif voto == "negativo":
+			#los mismo que con los votos positivos con una diferencia:
+			#no resta votos_recibidos al usuario_votado si el voto es nuevo.
+			#asi, se evita usuarios con puntaje negativo.
+			post_votado = Posts.objects.get(id=post_id)
+			autor_post = post_votado.creador
+			usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
+			usuario_votante = Perfiles.objects.get(usuario = request.user)
+			ya_voto = Votos.objects.filter(post_votado = post_votado, 
+				usuario_votante = usuario_votante).exists()
+			if ya_voto:
+				voto_actual = Votos.objects.get(post_votado = post_votado, 
+				usuario_votante = usuario_votante)
+				if voto_actual.tipo == -1:
+					return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+				elif voto_actual.tipo == 1:
+					voto_actual.tipo = -1
+					voto_actual.save()
+
+					post_votado.votos_negativos += 1
+					post_votado.votos_positivos -= 1
+					post_votado.save()
+
+					usuario_votado.votos_recibidos -= 1
+					usuario_votado.save()
+
+					return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+			else:
+				voto = Votos(usuario_votado=usuario_votado,
+					usuario_votante=usuario_votante,
+					post_votado = post_votado, tema = post_votado.tema, tipo = -1)
+				#1 positivo. -1 negativo
+				voto.save()
+
+				post_votado.votos_negativos += 1
+				post_votado.save()
+			
+				return HttpResponseRedirect(reverse('temas:index_tema', 
+					args =(tema,)))
+
+		else:
+			pass #!!! 404
+	else:
+		pass #!!! 404 request no es post
+
+
+
+

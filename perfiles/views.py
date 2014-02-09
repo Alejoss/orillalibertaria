@@ -72,7 +72,7 @@ def editar_perfil_des(request):
 	if request.method == 'POST':
 		form = PerfilesForm(request.POST)
 		if form.is_valid():
-			#una vez validado el form. Regoge el user guardado en request (loggeado)
+			#una vez validado el form. Recoge el user guardado en request (loggeado)
 			user = request.user
 			#crea una tabla de Perfiles para el user
 			#si no existe una ya y obtiene esa tabla como "obj"
@@ -153,13 +153,21 @@ def editar_perfil_info(request):
 def perfil_propio(request):
 	#funciona cuando el usuario da click en su propio perfil.
 	#guarda la tabla Perfiles del request.user en "usuario"
-	usuario = Perfiles.objects.get(usuario=request.user)
-	#redirije a perfiles"perfil y pasa el usuario como kwargs para manejo del urlpattrn.
-	return render(request, 'perfiles/perfil.html', {'usuario':usuario})
+	if request.user.is_authenticated():
+		usuario = Perfiles.objects.get(usuario=request.user)
+		posts = Posts.objects.filter(creador=usuario)
+		nombre_completo = request.user.get_full_name()
+		context = {'usuario':usuario, 'posts': posts, 
+		'nombre_completo':nombre_completo}
+		#redirije a perfiles"perfil y pasa el usuario como kwargs para manejo del urlpattrn.
+		return render(request, 'perfiles/perfil.html', context)
+	else:
+		return HttpResponseRedirect(reverse('perfiles:login'))
 
 def perfil(request, username):
 	#funciona cuando se visita el perfil de otro usuario
 	#recibe del urlpattern un "username"
+	print "llego al perfil de %s" %(username)
 	#obtiene el User correspondiende a ese username
 	usuario_user = User.objects.get(username=username)
 	#obtiene el Perfiles correspondiente al User
