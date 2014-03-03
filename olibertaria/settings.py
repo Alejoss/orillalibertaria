@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django_extensions',
     'temas',
     'perfiles',
+    'citas',
+    'imagenes',
     'south',
     'bootstrap3',
 )

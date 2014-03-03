@@ -1,85 +1,305 @@
 <!DOCTYPE html>
 {% load bootstrap3 %}
-
-<html>
-<!DOCTYPE html>
-{% load bootstrap3 %}
-
 <html>
 <head>
-	<meta charset = "utf-8"/>
-	<title> Inicio </title>
-	{% load staticfiles %}
-	<link href = "{% static 'css/bootstrap.min.css' %}"rel="stylesheet">
-	<link href = "{% static 'css/cerulean.bootstrap.min.css' %}"rel="stylesheet">
-	<link href = "{% static 'css/main.hoy.css' %}"rel="stylesheet">
+	<meta charset="utf-8">
+  <title>Olibertaria</title>
+  {% load staticfiles %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href =  "{% static 'css/bootstrap.css' %}" rel="stylesheet">
+	<link href =  "{% static 'css/style.css' %}" rel="stylesheet">
 	<link href = "{% static 'css/perfiles.perfil.css' %}"rel="stylesheet">
-	<script src = "{% static 'js/jquery.min.js' %}"></script>
-	<script src = "{% static 'js/bootstrap.min.js' %}"></script>
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+  
+<script src="{% static 'js/jquery.min.js' %} "></script>
+<script src="{% static 'js/bootstrap.js' %} "></script>
+<script src="{% static 'js/scripts.js' %} "></script>
+
 </head>
 
 <body>
-	<header class="container">
-		<div id="menu" class="navbar navbar-default">
-			<div class = "navbar-header">
-				<button class = "btn btn-primary navbar-toggle"
-				data-toggle="collapse"
-				data-target=".navbar-collapse">
-				<span class = "glyphicon glyphicon-chevron-down"></span></button>
-				<div id="logo">
-					<img class = "logo" src = " {% static '/static/olib.logo.png' %} "> 
-				</div> <!--logo-->
-			</div><!--nav-header-->
-			<div class = "navbar-collapse collapse">
-			<ul class = "nav navbar-nav navbar-right">
-				<li class = "nav"> <a href = "{% url 'temas:main' %}"> Temas </a></li>
-				<li class = "nav"> <a href = "{% url 'perfiles:index' %}"> Perfiles</a> </li>
-				{% if user.is_authenticated %}
-				<li class = "nav active"> <a href = "{% url 'perfiles:perfil_propio' %}"> 
-				{{ user.username }} </a> </li>
-				<li class = "nav"> <a href = "{% url 'perfiles:logout' %}"> 
-				logout </a> </li>
-				{% else%}
-				<li class = "nav"> <a href = "{% url 'perfiles:login' %}"> 
-				Login </a> </li>
-				{% endif %}
-				
-			</ul>
-			</div>
-		</div> <!--menu-->
-
-	</header>
-
-	<div class = "col-md-5 col-md-offset-7">
 	
-		<h2> {{usuario.usuario}} </h2>
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+
+					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> 
+					 <img class = "logo" src = " {% static '/static/img/pr.jpg' %} ">
+					 <a class="navbar-brand" href=" {% url 'temas:main' %} "> Orilla Libertaria</a> 
+
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					
+					<form class="navbar-form navbar-left" method = "get" role="search"
+					action = "{% url 'temas:buscar' %}" >
+						<div class="form-group">
+							<input type="text" class="form-control" name = "q">
+						</div> <button type="submit" class="btn btn-default">Buscar Tema</button>
+					</form>
+					<ul class="nav navbar-nav navbar-right">
+							{% if user.is_authenticated %}
+						<li>
+							<a href="{% url 'perfiles:perfil' user.username %} ">{{user.username}}</a>
+						</li>
+							{% else %}
+						<li>
+							<a href="{% url 'perfiles:login' %} ">Login</a>
+						</li>
+						<li>
+							<a href="{% url 'perfiles:registrar' %} ">Registrarse</a>
+						</li>
+							{% endif %}
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href=" {% url 'perfiles:editar_perfil_des' %} ">Editar Perfil</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									<a href=" {% url 'perfiles:logout' %} ">Logout</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+			</nav>
+		</div>
+	</div>
+
+<div class = "row clearfix">
+	<div class = "col-md-12">
+	<div class = "col-md-6">
+		<div class = "div_carrusel">
+			<div class="carousel slide" id="carousel-422900">			
+				<div class="carousel-inner">
+					<div class="item active"> <!--portada-->
+						<img class = "imagen_carrusel" alt="problema cargando imágenes libertarias"class = "logo" src = " {{portada}} ">
+					</div>
+					{% for x in imagenes_favoritas %}
+					<div class="item">
+						<img class = "imagen_carrusel" alt="problema cargando imágenes libertarias"class = "logo" src = " {{ x }} ">
+					</div>
+					{% endfor %}
+				</div> 
+				<a class="left carousel-control" href="#carousel-422900" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> 
+				<a class="right carousel-control" href="#carousel-422900" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+			</div>
+		</div><!--carrousel-->
+		<p><a href = "{% url 'imagenes:favoritas' usuario_fav %}"> Ver todas </a></p>
+	</div> <!--col 6 -->
+	<div class = "col-md-6">
+		<div style = "float:right; margin-right:40px">
+		<h3 class = "text-center">
+			{{usuario.usuario}}
+		</h3>
+		<p class="text-muted text-center">
 			{% if user.is_authenticated %}
 				 {{nombre_completo}}
 			{% endif %}
-		<h4> {{usuario.descripcion}} </h4>
-		<p> Puntos {{usuario.votos_recibidos}} </p>
-		<div class = "links">
-			<ul>
+		</p>
+		
+		<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
+		<div>
+			<ul class="nav nav-pills">
+			<br>
+				<li>
+					<span class="badge pull-right">42</span> Puntos
+				</li>
+			<br>
+				<li>
+					<span class="badge pull-right">16</span> Posts
+				</li>
+			<br>
+				<li>
+					<span class="badge pull-right">2</span> Temas
+					<ul style = "margin-left: 10px" class = "list-unstyled">
+						<li> Tema1 </li>
+						<li> Tema2 </li>
+					</ul>
+				</ul>
+				</li>
+		</div>
+	</div> <!--col 6 -->
+	</div> <!-- col 12 -->
+
+	<div class="col-md-8 column">
+		<div class="page-header">
+				<h1>
+					Posts
+				</h1>
+		</div>
+			<div class="tabbable" id="tabs-245545">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#panel-915270" data-toggle="tab">Últimos Posts</a>
+					</li>
+					<li>
+						<a href="#panel-870235" data-toggle="tab">Más Populares</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="panel-915270">
+			{% for post in posts %} <!-- Tab Ultimos Posts -->
+			<div class = "post">
+			<div class = "col-md-1">
+					<div class = "control_votos">
+						<div class = "btn-group-vertical">
+							<button type="button" class = "btn btn-default"> 
+								<span class="glyphicon glyphicon-chevron-up"></span>
+							</button>
+							<button type="button" class = "btn btn-default puntaje"> 
+							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
+							</button>
+							<button type="button" class = "btn btn-default"> 
+								<span class="glyphicon glyphicon-chevron-down"></span>
+							</button>
+						</div>
+					</div>
+			</div>
+			<div class = "col-md-11">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						{{post.texto|truncatewords:50}}
+						<br/>
+
+		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
+						<br/>
+					</div>
+					<div class="panel-footer">
+						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.nombre %} ">{{post.tema.nombre}}</a>
+						</p>
+					</div>
+				</div>
+			</div> <!-- class md 11 -->
+			</div> <!--post -->
+			{% endfor %}
+				</div><!--pane-->
+			<div class="tab-pane" id="panel-870235">
+			{% for post in posts_populares %} <!-- Tab Posts Populares-->
+			<div class = "post">
+			<div class = "col-md-1">
+					<div class = "control_votos">
+						<div class = "btn-group-vertical">
+							<button type="button" class = "btn btn-default"> 
+								<span class="glyphicon glyphicon-chevron-up"></span>
+							</button>
+							<button type="button" class = "btn btn-default puntaje"> 
+							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
+							</button>
+							<button type="button" class = "btn btn-default"> 
+								<span class="glyphicon glyphicon-chevron-down"></span>
+							</button>
+						</div>
+					</div>
+			</div>
+			<div class = "col-md-11">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						{{post.texto|truncatewords:50}}
+						<br/>
+
+		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
+						<br/>
+					</div>
+					<div class="panel-footer">
+						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.nombre %} ">{{post.tema.nombre}}</a>
+						</p>
+					</div>
+				</div>
+			</div> <!-- class md 11 -->
+			</div> <!--post -->
+			{% endfor %}
+
+					</div>
+				</div>
+			</div> <!--tabs-->
+
+			 
+			<ul class="pagination">
+				<li>
+					<a href="#">Prev</a>
+				</li>
+				<li>
+					<a href="#">1</a>
+				</li>
+				<li>
+					<a href="#">2</a>
+				</li>
+				<li>
+					<a href="#">3</a>
+				</li>
+				<li>
+					<a href="#">4</a>
+				</li>
+				<li>
+					<a href="#">5</a>
+				</li>
+				<li>
+					<a href="#">Next</a>
+				</li>
+			</ul>
+	</div> <!--column8 -->
+
+	<div class="col-md-4 column">
+		
+		<p class="text-muted">
+			{{usuario.descripcion}}
+		</p>
+		<hr>
+			<ul class="list-unstyled">
 			<li>{{usuario.link1}}</li>
 			<li>{{usuario.link2}}</li>
 			<li>{{usuario.link3}}</li>
 			</ul>
-		</div>
-	</div>
-
-<div class = "col-md-6 col-md-offset-2">
-	<h2> Posts </h2>
-	<br/>
-	<br/>
-	{% for post in posts %}
-	<div> 
-		<p> {{ post.texto }} </p>
-		<h6> {{ post.fecha }} en <a href=" {% url 'temas:index_tema' post.tema.nombre %} "> {{ post.tema.nombre }} </a> </h6>
-	</div>
-	<br/>
-	<br/>
-	
-	{% endfor %}
-
-
+		<hr>
+			<br>
+			<br>
+			<div class = "row">
+			{% for cita in citas_favoritas %}
+			<div class = "col-md-12">
+			<blockquote class="pull-right">
+				<p>
+					{{cita.cita.texto}}
+				</p> <small>{{cita.cita.autor}} <cite>{{cita.cita.fuente}}</cite></small>
+			</blockquote> 
+			</div>
+			{% endfor%}
+			</div>
+			<div class = "row">
+				<ul class="pagination">
+				<li>
+					<a href="#">Prev</a>
+				</li>
+				<li>
+					<a href="#">Next</a>
+				</li>
+			</ul>
+			</div>
+		</div> <!--column4 -->
+</div>
+</div>
 </body>

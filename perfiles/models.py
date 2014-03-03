@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-  
+   
 # Create your models here.
 class Perfiles(models.Model):
 	usuario = models.OneToOneField(User, null = True)
@@ -19,6 +19,6 @@ class Perfiles(models.Model):
 	link10 =models.CharField(max_length=200, blank=True, null=True)
 
 	def __unicode__(self):
-		return self.usuario
+		return "perfil de %s" %(self.usuario.username)
 
 

@@ -33,7 +33,7 @@
 			<ul class = "nav navbar-nav navbar-right">
 				<li class = "nav"> <a href = "{% url 'temas:main' %}"> Temas </a></li>
 				<li class = "nav active"> <a href = "{% url 'perfiles:index' %}"> Perfiles</a> </li>
-				<li class = "nav"> <a href = "{% url 'perfiles:perfil_propio' %}"> Perfil </a> </li>
+				<li class = "nav"> <a href = "{% url 'perfiles:perfil' user.username %}"> Perfil </a> </li>
 			</ul>
 			</div>
 		</div> <!--menu-->
@@ -44,6 +44,6 @@
 	<p> Bienvenido {{user.username}} gracias por conectarte</p>
 	{% endif %}
 	<p> Ckick aqui <a href = "{% url 'perfiles:editar_perfil_des' %}"> aqui </a>editar_perfil </p>
-	<p> Ckick aqui <a href = "{% url 'perfiles:perfil_propio' %}"> aqui </a> para ver tu perfil </p>
+	<p> Ckick aqui <a href = "{% url 'perfiles:perfil' user.username %}"> aqui </a> para ver tu perfil </p>
 	<p> Ckick aqui <a href = "{% url 'temas:main' %}"> aqui </a> para ver el index de Temas </p>
 </body>

@@ -1,0 +1,84 @@
+.div_carrusel {
+	height: 300px;
+	overflow: hidden;
+}
+
+.dorado {
+	color: #ffd700;
+}
+
+.borde {
+	border: 1px solid red;
+}
+
+.logo {
+	height: 50px;
+	width: auto;
+}
+
+.crear_link {
+	margin-left:400px;
+}
+
+.nuevopost {
+	margin-left:400px;
+}
+
+.post {
+	margin-top: 20px
+}
+
+
+.control_votos {
+	vertical-align: center;
+}
+.puntaje {
+	height: 50px
+}
+.numero_puntaje {
+	height: 40px;
+	vertical-align: top;
+	margin-top: 5px;
+}
+}
+.cuadro_carrusel {
+	margin-top: 30px;
+	height: 300px;
+	overflow: hidden;
+}
+.btn_galeria {
+	float: right;
+}
+.btn_nuevo_post {
+	margin-top: 30px	
+}
+.link_post {
+	float: right;
+	vertical-align: center;
+}
+
+.thumb_medio {
+	margin-right: 20px;
+	margin-left: 20px;
+}
+
+/* clases para paneles y flecha de links */
+
+.flecha {
+	top:30%;
+	height: 60%;
+	margin:-25% 0 0 -10%;
+}
+.col_flecha {
+	height: 110px;
+}
+
+.cuadro_panel {
+	height: 120px;
+}
+
+.imagen {
+	max-height: 120px;
+	width: auto;
+	display: inline-block;
+}

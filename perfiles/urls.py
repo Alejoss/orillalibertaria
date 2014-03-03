@@ -17,6 +17,5 @@ urlpatterns = patterns('',
 	url(r'^registrar/$', views.registrar, name = 'registrar'),
 	url(r'^registro_ok/$', views.registro_ok, name = 'registro_ok'),
 	#urls de perfil. perfil/ pasa un string "username" a la view function
-	url(r'^perfilpropio/$', views.perfil_propio, name = 'perfil_propio'),
 	url(r'^perfil/(?P<username>\w+)/$', views.perfil, name = 'perfil'),
 	)

@@ -1,16 +1,64 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+import random
+import re
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib import auth
-from forms import FormCrearTema, FormNuevoPost
 from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.contrib import auth
+from django.contrib.auth.models import User
+
+from forms import FormCrearTema, FormNuevoPost
 from models import *
 from perfiles.models import Perfiles
-from django.contrib.auth.models import User
-import random
-from datetime import datetime
+from citas.models import Cita
+from imagenes.models import Imagen
 
+def normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
+        and grouping quoted words together.
+        Example:
+        
+        >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+    
+    '''
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
+
+def get_query(query_string, search_fields):
+    ''' Returns a query, that is a combination of Q objects. That combination
+        aims to search keywords within a model by testing the given search fields.
+    
+    '''
+    query = None # Query to search for every search term        
+    terms = normalize_query(query_string)
+    for term in terms:
+        or_query = None # Query to search for a given term in each field
+        for field_name in search_fields:
+            q = Q(**{"%s__icontains" % field_name: term})
+            if or_query is None:
+                or_query = q
+            else:
+                or_query = or_query | q
+        if query is None:
+            query = or_query
+        else:
+            query = query & or_query
+    return query
+
+def buscar(request):
+	query_string = ""
+	found_entries = None
+	if ('q' in request.GET) and request.GET['q'].strip():
+		query_string = request.GET['q']
+		entry_query = get_query(query_string, ['nombre',])
+		found_entries = Temas.objects.filter(entry_query).order_by('-nivel_popularidad')
+		context = {'query_string':query_string, 'found_entries':found_entries}
+		return render(request, 'temas/busqueda.html', context)
 
 def main(request):
 	#muestra la pagina principal de todos los temas
@@ -31,8 +79,11 @@ def main(request):
 	temas_populares = Temas.objects.order_by('-nivel_popularidad')[:z]
 	temas_activos = Temas.objects.order_by('-nivel_actividad')[:z]
 
+	cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
+
 	context = {'temas': temas, 'posts_populares': posts_populares,
-	'temas_populares':temas_populares, 'temas_activos': temas_activos}
+	'temas_populares':temas_populares, 'temas_activos': temas_activos,
+	'cita':cita}
 	return render(request, 'temas/main.html', context)
 
 def nuevo_tema(request):
@@ -56,7 +107,21 @@ def index_tema(request, titulo):
 	#muestra la pagina principal del tema
 	tema = Temas.objects.get(nombre=titulo)
 	posts_tema = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-id')
-	context = {'tema':tema, 'posts_tema':posts_tema}
+	
+	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
+	imagenes_display = []
+	primera_imagen = ""
+	primero = True
+	for i in imagenes_objects:
+		if primero == True:
+			primera_imagen = i.url
+			primero = False
+		else:
+			imagenes_display.append(i.url)
+
+	context = {'tema':tema, 'posts_tema':posts_tema, 
+	'imagenes_display': imagenes_display,
+	'primera_imagen':primera_imagen}
 	return render(request, 'temas/tema.html', context)
 
 

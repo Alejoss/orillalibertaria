@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
-
-from django.shortcuts import render
+ 
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from django.contrib import auth
-from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from django.contrib import auth
+
+from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
 from temas.models import Posts
-from django.contrib.auth.models import User
+from citas.models import Cita, Cfavoritas
+from imagenes.models import Imagen, Ifavoritas
 
 
 
@@ -112,7 +115,7 @@ def editar_perfil_des(request):
 			obj.save()
 			#Redirije al perfil del usuario. pasa el username como
 			#kwargs para manejo de urlpattern
-			HttpResponseRedirect(reverse('perfiles:perfil_propio'))
+			return redirect('perfiles:perfil', username = request.user.username)
 		else:
 			#Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
 			error = "error en form.is_valid" #!!! Falta enviar errores.
@@ -127,7 +130,7 @@ def editar_perfil_info(request):
 	if request.method == "POST":
 		form = UserForm(request.POST)
 		if form.is_valid():
-			obj = User.objects.get(username=request.user)
+			obj = User.objects.get(username=request.user.username)
 			e = form.cleaned_data['email']
 			f = form.cleaned_data['first_name']
 			l = form.cleaned_data['last_name']
@@ -142,7 +145,7 @@ def editar_perfil_info(request):
 				obj.last_name = l
 			
 			obj.save()
-			return HttpResponseRedirect(reverse('perfiles:perfil_propio'))
+			return redirect('perfiles:perfil', username = request.user.username)
 		else:
 			pass #!!! enviar errores	
 	
@@ -150,32 +153,41 @@ def editar_perfil_info(request):
 	context = {'perfil_info_form': perfil_info_form}
 	return render(request, 'perfiles/editar_perfil_info.html', context)
 
-def perfil_propio(request):
-	#funciona cuando el usuario da click en su propio perfil.
-	#guarda la tabla Perfiles del request.user en "usuario"
-	if request.user.is_authenticated():
-		usuario = Perfiles.objects.get(usuario=request.user)
-		posts = Posts.objects.filter(creador=usuario)
-		nombre_completo = request.user.get_full_name()
-		context = {'usuario':usuario, 'posts': posts, 
-		'nombre_completo':nombre_completo}
-		#redirije a perfiles"perfil y pasa el usuario como kwargs para manejo del urlpattrn.
-		return render(request, 'perfiles/perfil.html', context)
-	else:
-		return HttpResponseRedirect(reverse('perfiles:login'))
-
 def perfil(request, username):
 	#funciona cuando se visita el perfil de otro usuario
 	#recibe del urlpattern un "username"
-	print "llego al perfil de %s" %(username)
 	#obtiene el User correspondiende a ese username
 	usuario_user = User.objects.get(username=username)
 	#obtiene el Perfiles correspondiente al User
 	usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
 	nombre_completo = usuario_user.get_full_name()
-	posts = Posts.objects.filter(creador=usuario_user)
-	context = {'usuario_user': usuario_user, 'usuario': usuario_perfil, 
-	'nombre_completo': nombre_completo, 'posts':posts}
+	posts = Posts.objects.filter(creador=usuario_perfil).order_by('-fecha')
+	posts_populares = Posts.objects.filter(creador=usuario_perfil, votos_positivos__gt=1).order_by('votos_positivos')
+	citas_favoritas = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
+	
+	portada = ""
+	imagenes_favoritas = []
+	numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
+	if numero_imgfavoritas > 10:
+		numero_imgfavoritas = 10
+	if numero_imgfavoritas > 0:		
+		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('fecha')[:numero_imgfavoritas]
+		for i in ifavoritas_objects:
+			imagenes_favoritas.append(i.imagen.url)
+			print i.imagen.url
+		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
+			portada_obj = Ifavoritas.objects.get(perfil=usuario_perfil, eliminado = False, portada=True)
+		else:
+			portada_obj = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).latest('id')
+		portada = portada_obj.imagen.url
+
+	#usuario al que se le va a redirigir cuando de click en "Ver todas"
+	usuario_fav = usuario_user.username 
+
+	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
+	'nombre_completo': nombre_completo, 'posts':posts, 'posts_populares':posts_populares,
+	'citas_favoritas':citas_favoritas, 'imagenes_favoritas':imagenes_favoritas, 
+	'usuario_fav':usuario_fav}
 	#renderea perfiles.html con el user y el perfil correspondiente
 	return render(request, 'perfiles/perfil.html', context)
 

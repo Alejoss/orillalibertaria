@@ -1,0 +1,15 @@
+from django.conf.urls import patterns, url
+   
+from citas import views
+ 
+urlpatterns = patterns('',
+	url(r'^$', views.index, name = 'index'),
+	url(r'nueva/$', views.nueva, name = 'nueva'),
+	url(r'favoritas/$', views.favoritas, name = 'favoritas'),
+	url(r'marcar_favorito/(?P<cita_id>\d+)/$', views.marcar_favorito, name = 'marcar_favorito'),
+	url(r'denunciar_cita/(?P<cita_id>\d+)/$', views.denunciar_cita, name = 'denunciar_cita'),
+	#urls de colaborar_organizar
+	url(r'colaborar_organizar/$', views.colaborar_organizar, name = 'colaborar_organizar'),
+	url(r'marcar_visto/(?P<cita_id>\d+)/$', views.marcar_visto, name = 'marcar_visto'),
+	url(r'marcar_x/(?P<cita_id>\d+)/$', views.marcar_x, name = 'marcar_x'),
+	)

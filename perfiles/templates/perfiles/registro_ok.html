@@ -33,14 +33,14 @@
 			<ul class = "nav navbar-nav navbar-right">
 				<li class = "nav"> <a href = "{% url 'temas:main' %}"> Temas </a></li>
 				<li class = "nav active"> <a href = "{% url 'perfiles:index' %}"> Perfiles</a> </li>
-				<li class = "nav"> <a href = "{% url 'perfiles:perfil_propio' %}"> Perfil </a> </li>
+				<li class = "nav"> <a href = "{% url 'perfiles:perfil' user.username %}"> Perfil </a> </li>
 			</ul>
 			</div>
 		</div> <!--menu-->
 
 	</header>
 	
-	<p> Template para registrar_ok </p>
+	<p> Importante añadir confirmación por mail! </p>
 	<h2> Gracias {{user.username}} por entrar a Orilla Libertaria </h2>
 	<p> Ckick aqui <a href = "/perfiles/login"> aqui </a> para completar el proceso de registro </p>
 </body>
