@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 	url(r'denunciar_cita/(?P<cita_id>\d+)/$', views.denunciar_cita, name = 'denunciar_cita'),
 	#urls de colaborar_organizar
 	url(r'colaborar_organizar/$', views.colaborar_organizar, name = 'colaborar_organizar'),
+	url(r'colaborar_organizar/editar/(?P<cita_id>\d+)/$', views.coorg_editar, name = 'coorg_editar'),
 	url(r'marcar_visto/(?P<cita_id>\d+)/$', views.marcar_visto, name = 'marcar_visto'),
 	url(r'marcar_x/(?P<cita_id>\d+)/$', views.marcar_x, name = 'marcar_x'),
 	)

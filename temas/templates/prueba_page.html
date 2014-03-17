@@ -1,0 +1,10 @@
+
+{% load endless %}
+
+{% paginate citas %}
+{% for x in citas %}
+<p style = "color:blue"> {{x.texto}} <p>
+
+{% endfor %}
+{% get_pages %}
+{{ pages.previous }} {{ pages.next }}

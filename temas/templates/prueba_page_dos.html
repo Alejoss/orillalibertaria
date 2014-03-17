@@ -1,0 +1,10 @@
+
+{% load endless %}
+
+{% paginate primeras using "page_template_dos" %}
+{% for x in primeras %}
+<p style = "color:green"> {{x.texto}} <p>
+
+{% endfor %}
+{% get_pages %}
+{{ pages.previous }} {{ pages.next }}

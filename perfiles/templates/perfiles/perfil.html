@@ -1,148 +1,71 @@
-<!DOCTYPE html>
-{% load bootstrap3 %}
-<html>
-<head>
-	<meta charset="utf-8">
-  <title>Olibertaria</title>
-  {% load staticfiles %}
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
+{% extends "base.html" %}
 
-	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
-	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
-	<!--script src="js/less-1.3.3.min.js"></script-->
-	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
-	
-	<link href =  "{% static 'css/bootstrap.css' %}" rel="stylesheet">
-	<link href =  "{% static 'css/style.css' %}" rel="stylesheet">
-	<link href = "{% static 'css/perfiles.perfil.css' %}"rel="stylesheet">
-
-  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-  <![endif]-->
-
-  <!-- Fav and touch icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
-  <link rel="shortcut icon" href="img/favicon.png">
-  
-<script src="{% static 'js/jquery.min.js' %} "></script>
-<script src="{% static 'js/bootstrap.js' %} "></script>
-<script src="{% static 'js/scripts.js' %} "></script>
-
-</head>
-
-<body>
-	
-	<div class="row clearfix">
-		<div class="col-md-12 column">
-			<nav class="navbar navbar-default" role="navigation">
-				<div class="navbar-header">
-
-					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> 
-					 <img class = "logo" src = " {% static '/static/img/pr.jpg' %} ">
-					 <a class="navbar-brand" href=" {% url 'temas:main' %} "> Orilla Libertaria</a> 
-
-				</div>
-				
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					
-					<form class="navbar-form navbar-left" method = "get" role="search"
-					action = "{% url 'temas:buscar' %}" >
-						<div class="form-group">
-							<input type="text" class="form-control" name = "q">
-						</div> <button type="submit" class="btn btn-default">Buscar Tema</button>
-					</form>
-					<ul class="nav navbar-nav navbar-right">
-							{% if user.is_authenticated %}
-						<li>
-							<a href="{% url 'perfiles:perfil' user.username %} ">{{user.username}}</a>
-						</li>
-							{% else %}
-						<li>
-							<a href="{% url 'perfiles:login' %} ">Login</a>
-						</li>
-						<li>
-							<a href="{% url 'perfiles:registrar' %} ">Registrarse</a>
-						</li>
-							{% endif %}
-						<li class="dropdown">
-							 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><strong class="caret"></strong></a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href=" {% url 'perfiles:editar_perfil_des' %} ">Editar Perfil</a>
-								</li>
-								<li class="divider">
-								</li>
-								<li>
-									<a href=" {% url 'perfiles:logout' %} ">Logout</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				
-			</nav>
-		</div>
-	</div>
-
+{% block content %}
 <div class = "row clearfix">
 	<div class = "col-md-12">
 	<div class = "col-md-6">
 		<div class = "div_carrusel">
-			<div class="carousel slide" id="carousel-422900">			
-				<div class="carousel-inner">
+			<div class="carousel slide carrusel_slide" id="carousel-422900">			
+				<div class="carousel-inner cuadro_carrusel">
+					{% if tiene_imagenesfav %}
 					<div class="item active"> <!--portada-->
-						<img class = "imagen_carrusel" alt="problema cargando imágenes libertarias"class = "logo" src = " {{portada}} ">
+						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{portada}} ">
 					</div>
 					{% for x in imagenes_favoritas %}
 					<div class="item">
-						<img class = "imagen_carrusel" alt="problema cargando imágenes libertarias"class = "logo" src = " {{ x }} ">
+						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{ x }} ">
 					</div>
 					{% endfor %}
+					{% else %}
+					<div class="item active">
+						<img alt="problema cargando imágenes libertarias"class = "logo" src = "http://1.bp.blogspot.com/-GNAia9OuhVo/UFJWtji5kjI/AAAAAAAAG9s/RDsHEI0inTo/s640/dont+tread+on+me+porcupine.jpg">
+					</div>
+					<div class="item">
+						<img alt="problema cargando imágenes libertarias"class = "logo" src = "http://www.examiner.com/images/blog/EXID30613/images/dont_tread_on_me_gadsden_flag.png">
+					</div>
+					{% endif %}
 				</div> 
-				<a class="left carousel-control" href="#carousel-422900" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> 
-				<a class="right carousel-control" href="#carousel-422900" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				<a class="left carousel-control" href="#carousel-422900" data-slide="prev"></a> 
+				<a class="right carousel-control" href="#carousel-422900" data-slide="next"></a>
 			</div>
 		</div><!--carrousel-->
+		{% if tiene_imagenesfav %}
 		<p><a href = "{% url 'imagenes:favoritas' usuario_fav %}"> Ver todas </a></p>
+		{% endif %}
 	</div> <!--col 6 -->
 	<div class = "col-md-6">
 		<div style = "float:right; margin-right:40px">
-		<h3 class = "text-center">
-			{{usuario.usuario}}
-		</h3>
-		<p class="text-muted text-center">
-			{% if user.is_authenticated %}
-				 {{nombre_completo}}
-			{% endif %}
-		</p>
+			<h3 class = "text-center">
+				{{usuario.usuario}}
+			</h3>
+			<p class="text-muted text-center">
+				{% if user.is_authenticated %}
+					 {{nombre_completo}}
+				{% endif %}
+			</p>
 		
-		<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
-		<div>
-			<ul class="nav nav-pills">
-			<br>
-				<li>
-					<span class="badge pull-right">42</span> Puntos
-				</li>
-			<br>
-				<li>
-					<span class="badge pull-right">16</span> Posts
-				</li>
-			<br>
-				<li>
-					<span class="badge pull-right">2</span> Temas
-					<ul style = "margin-left: 10px" class = "list-unstyled">
-						<li> Tema1 </li>
-						<li> Tema2 </li>
-					</ul>
+			<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
+			<div>
+				<ul class="nav nav-pills">
+				<br>
+					<li>
+						<span class="badge pull-right">42</span> Puntos
+					</li>
+				<br>
+					<li>
+						<span class="badge pull-right">16</span> Posts
+					</li>
+				<br>
+					<li>
+						<span class="badge pull-right">2</span> Temas
+						<ul style = "margin-left: 10px" class = "list-unstyled">
+							<li> Tema1 </li>
+							<li> Tema2 </li>
+						</ul>
+					</li>
 				</ul>
-				</li>
-		</div>
+			</div>
+		</div> <!-- float right -->
 	</div> <!--col 6 -->
 	</div> <!-- col 12 -->
 
@@ -166,26 +89,27 @@
 			{% for post in posts %} <!-- Tab Ultimos Posts -->
 			<div class = "post">
 			<div class = "col-md-1">
-					<div class = "control_votos">
-						<div class = "btn-group-vertical">
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-up"></span>
-							</button>
-							<button type="button" class = "btn btn-default puntaje"> 
-							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
-							</button>
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-down"></span>
-							</button>
-						</div>
+				<div class = "control_votos">
+					<div class = "btn-group-vertical">
+						<button type="button" class = "btn btn-default"> 
+							<span class="glyphicon glyphicon-chevron-up"></span>
+						</button>
+						<button type="button" class = "btn btn-default puntaje"> 
+						<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
+						</button>
+						<button type="button" class = "btn btn-default"> 
+							<span class="glyphicon glyphicon-chevron-down"></span>
+						</button>
 					</div>
+				</div>
 			</div>
 			<div class = "col-md-11">
 				<div class="panel panel-info">
 					<div class="panel-body">
+						<p class = "text">
 						{{post.texto|truncatewords:50}}
+						</p>
 						<br/>
-
 		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
 						<br/>
 					</div>
@@ -219,7 +143,9 @@
 			<div class = "col-md-11">
 				<div class="panel panel-info">
 					<div class="panel-body">
-						{{post.texto|truncatewords:50}}
+						<p class = "text">
+							{{post.texto|truncatewords:50}}
+						</p>
 						<br/>
 
 		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
@@ -267,13 +193,15 @@
 	<div class="col-md-4 column">
 		
 		<p class="text-muted">
-			{{usuario.descripcion}}
+			<p class = "text">
+				{{usuario.descripcion}}
+			</p>
 		</p>
 		<hr>
 			<ul class="list-unstyled">
-			<li>{{usuario.link1}}</li>
-			<li>{{usuario.link2}}</li>
-			<li>{{usuario.link3}}</li>
+			<li>{{usuario.link1|urlize}}</li>
+			<li>{{usuario.link2|urlize}}</li>
+			<li>{{usuario.link3|urlize}}</li>
 			</ul>
 		<hr>
 			<br>
@@ -300,6 +228,4 @@
 			</ul>
 			</div>
 		</div> <!--column4 -->
-</div>
-</div>
-</body>
+{% endblock %}

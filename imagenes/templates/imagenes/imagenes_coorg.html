@@ -1,0 +1,59 @@
+{% extends "base_galeria.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="span3">
+            <div class="nav-headers instrucciones_coorg">
+    
+                <div class="progress">
+                      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_bar}}%;">
+                        <span class="sr-only"></span>
+                      </div>
+                </div>
+                <p> Estas imágenes han sido reportadas más de tres veces. Revísalas, si encuentras que no hay razón para que estén acá y no en la Galería, márcalas con un visto. Si te parece que una de una de ellas no pertenece a este sitio, márcala con una X. Recuerda ser objectivo.
+                <br><br>
+                Cuando una imagen tenga tres vistos será devuelta a la Galería.
+                <br>
+                Si una imagen llega a tres "X" será removida de forma permanente.
+                <br>
+                Marcar con una "X" a una imagen que tiene "vistos" elimina un visto, y viceversa. La barra de progreso se completa cuando no existen imágenes que revisar.
+                </p>
+            </div>
+           <ul class="nav nav-tabs nav-stacked">
+                <li><a href=" {% url 'imagenes:index' %} "><i class="icon-picture"></i> Regreso a la Galería </a></li>
+            </ul>
+        </div>
+        {% if hay_imagenes_denunciadas %}
+            {% for i in imagenes_denunciadas %}
+            <div style = "background-color: {{i.0.3}}; height: 300px" class="span3 galery">
+                <div class="menu-galery">
+                    {% for e in i.0.4 %}
+                    <ul>
+                        <li><i class="icon-{{e}}"></i></li>
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div class="image-galery">
+                    <a class="group" rel="group1" href="{{i.0.1}}">
+                    <img src=" {{i.0.1}} " /></a>
+                </div>
+                  <div>
+    				<span style = "margin-left: 30px">
+    				<i class="icon-star"></i>
+            		<span class = "favoritos"> {{i.0.2}} </span>
+            		</span>
+    				<a href = "{% url 'imagenes:marcar_visto' i.0.0 %}">
+    				<span class="icon-ok visto_imagen"> </span></a>
+                    <a href = "{% url 'imagenes:marcar_x' i.0.0 %}">
+                    <span class="icon-remove x_imagen"> </span></a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <p class = "no_hay_imagenes"> Por ahora todo va bien. No hay imágenes reportadas más de tres veces. </p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

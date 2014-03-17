@@ -1,0 +1,22 @@
+{% extends "base_forms.html" %}
+
+{% block form %}
+<p class = "text">
+{{ultima_edicion.texto}}
+</p>
+<form action = "{% url 'temas:editar_tema' tema.nombre %}" method = "post"> 
+	{% csrf_token %}
+	{{form_editar_tema.as_table}}
+	<br/>
+	<input type = "submit" value = "Enviar"/>
+</form>
+{% endblock form %}
+
+{% block form_warning %}
+{% endblock form_warning %}
+
+{% block description %}
+{% if ha_sido_editado %}
+<p class = "text"> Descripcion Original {{primera_edicion.texto}} </p>
+{% endif %}
+{% endblock description %}

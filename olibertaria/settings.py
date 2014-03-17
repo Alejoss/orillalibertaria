@@ -10,7 +10,25 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os.path import join
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+
+#endless pagination
+TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
+ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
+ENDLESS_PAGINATION_NEXT_LABEL = "Siguiente"
+ENDLESS_PAGINATION_PER_PAGE = 5
+
+#crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+TEMPLATE_DIRS = (
+    join(BASE_DIR,  'templates'),
+)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,7 +60,8 @@ INSTALLED_APPS = (
     'citas',
     'imagenes',
     'south',
-    'bootstrap3',
+    'endless_pagination',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (

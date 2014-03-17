@@ -12,8 +12,7 @@ from temas.models import Posts
 from citas.models import Cita, Cfavoritas
 from imagenes.models import Imagen, Ifavoritas
 
-
-
+# print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
 def login(request):
 	#Custom login. No es el login normal de Django.
@@ -28,9 +27,9 @@ def authcheck(request):
 	if user is not None:
 		#Si existe, hace login a ese usuario y lo guarda en "request"
 		auth.login(request, user)
-		return render(request, 'perfiles/loggedin.html', {'username': username})
+		return redirect('temas:main')
 	else:
-		return render(request, 'perfiles/invalid.html', {'username': username})
+		return redirect('perfiles:login')
 	
 def logout(request):
 	auth.logout(request) # Logout el user guardado en Request
@@ -58,6 +57,9 @@ def registrar(request):
 		#valida el form conforme a las reglas preestablecidas en form.py
 		if form.is_valid():
 			form.save() #Guarda los valores en la base de datos auth.User.
+			user = User.objects.get(username=form.cleaned_data['username'])
+			perfil_nuevo = Perfiles(usuario = user)
+			perfil_nuevo.save()
 			return HttpResponseRedirect(reverse('perfiles:registro_ok'))
 		else:
 			error = "error en form.is_valid" #!!!
@@ -72,16 +74,18 @@ def registro_ok(request):
 	return render(request, 'perfiles/registro_ok.html', context)
 
 def editar_perfil_des(request):
+	user = request.user
+	#crea una tabla de Perfiles para el user
+	#si no existe una ya y obtiene esa tabla como "obj"
+	obj, created = Perfiles.objects.get_or_create(usuario = user)
+	perfil_usuario = Perfiles.objects.get(usuario=user)
+	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=perfil_usuario).exists()
+	tiene_frasesfav = Cfavoritas.objects.filter(perfil=perfil_usuario).exists()
 	if request.method == 'POST':
 		form = PerfilesForm(request.POST)
 		if form.is_valid():
 			#una vez validado el form. Recoge el user guardado en request (loggeado)
-			user = request.user
-			#crea una tabla de Perfiles para el user
-			#si no existe una ya y obtiene esa tabla como "obj"
-			obj, created = Perfiles.objects.get_or_create(usuario = user)
 			#Llena los valores del obj con los valores del form request.Post.
-	
 			def revisar_campo(campo):
 				#revisa si el campo de cleaned data tiene mas de 4 caracteres
 				if len(form.cleaned_data[campo])>4:
@@ -121,11 +125,10 @@ def editar_perfil_des(request):
 			error = "error en form.is_valid" #!!! Falta enviar errores.
 	
 	editar_perfil_form = PerfilesForm()
-	context = {'editar_perfil_form':editar_perfil_form}
+	context = {'editar_perfil_form':editar_perfil_form, 'tiene_imagenesfav':tiene_imagenesfav,
+	'tiene_frasesfav':tiene_frasesfav}
 	return render(request, 'perfiles/editar_perfil_des.html', context)
 		
-
-
 def editar_perfil_info(request):
 	if request.method == "POST":
 		form = UserForm(request.POST)
@@ -167,27 +170,28 @@ def perfil(request, username):
 	
 	portada = ""
 	imagenes_favoritas = []
-	numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
-	if numero_imgfavoritas > 10:
-		numero_imgfavoritas = 10
-	if numero_imgfavoritas > 0:		
+	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil).exists()
+
+	if tiene_imagenesfav:
+		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
+		if numero_imgfavoritas > 10:
+			numero_imgfavoritas = 10		
 		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('fecha')[:numero_imgfavoritas]
 		for i in ifavoritas_objects:
+			print "perfiles views - i.imagen.url: %s" %(i.imagen.url)
 			imagenes_favoritas.append(i.imagen.url)
-			print i.imagen.url
 		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
 			portada_obj = Ifavoritas.objects.get(perfil=usuario_perfil, eliminado = False, portada=True)
 		else:
 			portada_obj = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).latest('id')
 		portada = portada_obj.imagen.url
-
 	#usuario al que se le va a redirigir cuando de click en "Ver todas"
 	usuario_fav = usuario_user.username 
 
 	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
 	'nombre_completo': nombre_completo, 'posts':posts, 'posts_populares':posts_populares,
 	'citas_favoritas':citas_favoritas, 'imagenes_favoritas':imagenes_favoritas, 
-	'usuario_fav':usuario_fav}
+	'usuario_fav':usuario_fav, 'tiene_imagenesfav':tiene_imagenesfav}
 	#renderea perfiles.html con el user y el perfil correspondiente
 	return render(request, 'perfiles/perfil.html', context)
 

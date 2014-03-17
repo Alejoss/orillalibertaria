@@ -5,15 +5,20 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
+from endless_pagination.decorators import page_templates
 from models import Cita, Cfavoritas, Ceditadas
 from perfiles.models import Perfiles
-from forms import FormNuevaCita
+from forms import FormNuevaCita, FormEditarCita
 from imagenes.models import Imagen
 
 # Create your views here.
-def index(request):
+
+@page_templates({'citas/citas_recientes_page.html':'citas_recientes_page',
+'citas/citas_nombre_page.html':'citas_nombre_page',
+'citas/citas_populares_page.html':'citas_populares_page'})
+def index(request, template = 'citas/index.html', extra_context = None):
 	citas_fecha = Cita.objects.filter(eliminada=False).order_by('-fecha')
-	citas_por_autor = Cita.objects.filter(eliminada=False).order_by('autor')
+	citas_nombre = Cita.objects.filter(eliminada=False).order_by('autor')
 	citas_populares = Cita.objects.filter(eliminada=False).order_by('-favoritos_recibidos')
 	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
 	imagenes_display = []
@@ -27,10 +32,13 @@ def index(request):
 		else:
 			imagenes_display.append(i.url)
 
-	context = {'citas_fecha': citas_fecha, 'citas_por_autor':citas_por_autor, 
+	context = {'citas_fecha': citas_fecha, 'citas_nombre':citas_nombre, 
 	'citas_populares':citas_populares, 'imagenes_display': imagenes_display,
 	'primera_imagen':primera_imagen}
-	return render(request, 'citas/index.html', context)
+
+	if extra_context is not None:
+		context.update(extra_context)
+	return render(request, template, context)
 
 def nueva(request):
 	if request.method == "POST":
@@ -117,7 +125,7 @@ def colaborar_organizar(request):
 				razon = c.razon
 				perfil = c.perfil.usuario.username
 				correccion = [fecha, razon, perfil]
-				correciones.append(correcion)
+				correcciones.append(correccion)
 		color = ""
 		estado = []
 		vistos = cita.vistos_recibidos
@@ -187,6 +195,40 @@ def marcar_x(request, cita_id):
 			cita.denunciada = 0
 	cita.save()
 	return redirect('citas:colaborar_organizar')
+
+def coorg_editar(request, cita_id):
+	cita = Cita.objects.get(id=cita_id)
+	perfil_usuario = Perfiles.objects.get(usuario = request.user)
+	if request.method == 'POST':
+		form = FormEditarCita(request.POST)
+		if form.is_valid():
+			texto = form.cleaned_data['texto']
+			autor = form.cleaned_data['autor']
+			fuente = form.cleaned_data['fuente']
+			razon = form.cleaned_data['razon']
+			if texto != cita.texto:
+				cita.texto = texto
+			if autor != cita.autor:
+				cita.autor = autor
+			if fuente != cita.fuente:
+				cita.fuente = fuente
+			cita.save()
+			ceditadas_obj = Ceditadas(cita=cita, perfil = perfil_usuario, razon = razon)
+			ceditadas_obj.save()
+			return redirect('citas:colaborar_organizar')
+		else:
+			form_editar_cita = FormEditarCita(initial={'texto':cita.texto, 
+				'autor':cita.autor, 'fuente':cita.fuente}) 
+			#!!! enviar errores
+
+	else:
+		form_editar_cita = FormEditarCita(initial={'texto':cita.texto, 
+				'autor':cita.autor, 'fuente':cita.fuente})
+
+	context = {'form_editar_cita':form_editar_cita, 'cita_id':cita_id}
+	return render(request, 'citas/editar_cita.html', context)
+
+
 
 
 

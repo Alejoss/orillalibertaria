@@ -1,0 +1,55 @@
+/* css para el navbar */
+.logo {
+	height: 50px;
+	width: auto;
+}
+
+/*css para el carrusel de imágenes */
+.cuadro_carrusel{
+	margin-top: 30px;
+	height: 400px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+}
+
+.carrusel_slide{
+}
+
+.div_carrusel{
+	height: 400px;
+	overflow: hidden;
+	margin-left: 30px;
+}
+
+.btn_galeria{
+	float: right;
+}
+
+/* css para el panel con el post y los votos */
+.control_votos{
+	vertical-align: center;
+}
+.puntaje{
+	height: 50px
+}
+.numero_puntaje{
+	height: 40px;
+	vertical-align: top;
+	margin-top: 5px;
+}
+.link_post{
+	float: right;
+	vertical-align: center;
+}
+
+/* css para el panel con el tema y el link */
+.flecha{
+	top:30%;
+	height: 60%;
+	margin:-25% 0 0 -10%;
+}
+.col_flecha{
+	height: 110px;
+}

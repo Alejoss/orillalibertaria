@@ -7,7 +7,6 @@ from perfiles.models import Perfiles
 class Temas(models.Model):
 	nombre = models.CharField(max_length=100, null=True)
 	fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
-	descripcion = models.CharField(max_length=250, blank = True, null=True)
 	activo = models.BooleanField(default=True)
 	creador = models.ForeignKey(Perfiles, null=True)
 	nivel_actividad = models.SmallIntegerField(default=0)
@@ -71,3 +70,14 @@ class Mensajes(models.Model):
 	def __unicode__(self):
 		return "mnsg de %s a %s el %s" %(self.usuario_envia.usuario.username,
 			self.usuario_recibe.usuario.username, self.fecha)
+
+class Tema_descripcion(models.Model):
+	fecha = models.DateTimeField(auto_now_add=True)
+	tema = models.ForeignKey(Temas)
+	usuario = models.ForeignKey(Perfiles)
+	texto = models.CharField(max_length=1000, blank=True, null=True)
+
+	def __unicode__(self):
+		return "descripcion num %s de %s" %(self.id, self.tema)
+
+

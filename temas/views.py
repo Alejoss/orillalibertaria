@@ -3,18 +3,22 @@ from datetime import datetime
 import random
 import re
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from forms import FormCrearTema, FormNuevoPost
+from endless_pagination.decorators import page_template
+from forms import FormCrearTema, FormNuevoPost, FormEditarTema
 from models import *
 from perfiles.models import Perfiles
 from citas.models import Cita
 from imagenes.models import Imagen
+
+#print "variable %s" %(variable) <--- para debug
 
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
@@ -90,10 +94,16 @@ def nuevo_tema(request):
 	if request.method == "POST":
 		form = FormCrearTema(request.POST)
 		if form.is_valid():
-			nuevo_tema = form.save(commit=False)
-			perfil_usuario = Perfiles.objects.get(usuario = request.user)
-			nuevo_tema.creador = perfil_usuario
-			nuevo_tema.save()
+			perfil_usuario = Perfiles.objects.get(usuario=request.user)
+			nombre = form.cleaned_data.get('nombre')
+			texto = form.cleaned_data.get('texto')
+			tema_obj = Temas(nombre=nombre, creador=perfil_usuario)
+			tema_obj.save()
+
+			tema_descripcion_obj = Tema_descripcion(texto=texto, usuario=perfil_usuario,
+				tema=tema_obj)
+
+			tema_descripcion_obj.save()
 
 			return HttpResponseRedirect(reverse('temas:main'))
 		else:
@@ -103,11 +113,46 @@ def nuevo_tema(request):
 	context = {'form_crear_tema':form_crear_tema}
 	return render(request, 'temas/nuevo_tema.html', context)
 
+@page_template('temas/templates/prueba_page.html')
+@page_template('temas/templates/prueba_page_dos.html', key = 'page_template_dos')
+def pruebapag(request, template = 'temas/prueba_page.html', extra_context=None):
+	tema = Temas.objects.get(id=1)
+	template = 'temas/pruebapag.html'
+	primeras = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-id')
+	segundas = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-votos_positivos')
+	citas = Cita.objects.all()
+	context = {'primeras': primeras, 'segundas':segundas, 'citas': citas}
+	if extra_context is not None:
+		context.update(extra_context)
+	return render(request, template, context)
+
+
 def index_tema(request, titulo):
 	#muestra la pagina principal del tema
+	posts_por_pagina = 3
 	tema = Temas.objects.get(nombre=titulo)
-	posts_tema = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-id')
+	posts_tema_obj = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-id')
+	posts_populares_obj = Posts.objects.filter(tema = tema, es_respuesta = False).order_by('-votos_positivos')
 	
+	# Paginators --> https://docs.djangoproject.com/en/1.6/topics/pagination/
+	paginator = Paginator(posts_tema_obj, posts_por_pagina)
+	page_fecha = request.GET.get('page')
+	try:
+		posts_tema = paginator.page(page_fecha)
+	except PageNotAnInteger:
+		posts_tema = paginator.page(1)
+	except EmptyPage:
+		posts_tema = paginator.page(paginator.num_pages)
+
+	paginator_populares = Paginator(posts_populares_obj, posts_por_pagina)
+	page_populares = request.GET.get('page')
+	try:
+		posts_populares = paginator_populares.page(page_populares)
+	except PageNotAnInteger:
+		posts_populares = paginator_populares.page(1)
+	except EmptyPage:
+		posts_populares = paginator_populares.page(paginator_populares.num_pages)
+
 	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
 	imagenes_display = []
 	primera_imagen = ""
@@ -119,9 +164,14 @@ def index_tema(request, titulo):
 		else:
 			imagenes_display.append(i.url)
 
-	context = {'tema':tema, 'posts_tema':posts_tema, 
-	'imagenes_display': imagenes_display,
-	'primera_imagen':primera_imagen}
+	descripcion = ""
+	if Tema_descripcion.objects.filter(tema=tema).exists():
+		descripcion_obj = Tema_descripcion.objects.filter(tema=tema).latest('id')
+		descripcion = descripcion_obj.texto
+
+	context = {'tema':tema, 'posts_tema':posts_tema, 'posts_populares':posts_populares,
+	'imagenes_display': imagenes_display, 'primera_imagen':primera_imagen,
+	'descripcion':descripcion}
 	return render(request, 'temas/tema.html', context)
 
 
@@ -315,6 +365,49 @@ def voto(request, post_id, tema):
 	else:
 		pass #!!! 404 request no es post
 
+def editar_tema(request, tema):
+	template = "temas/editar_tema.html"
+	form_editar_tema = FormEditarTema()
+	reputacion_necesaria = 10
+	tema = Temas.objects.get(nombre=tema)
+	perfil_usuario = Perfiles.objects.get(usuario=request.user)
+	
+	if request.method == "POST":
+		form = FormEditarTema(request.POST)
+		if form.is_valid():
+			texto = form.cleaned_data['texto']
+			tema_descripcion_obj = Tema_descripcion(texto=texto,
+			usuario=perfil_usuario, tema=tema)
+			tema_descripcion_obj.save()
+		else:
+			pass
+			#!!! enviar errores
+		return redirect('temas:index_tema', titulo=tema.nombre)
+	
+	puede_editar = True
+	if perfil_usuario.votos_recibidos < reputacion_necesaria:
+		puede_editar = False
+
+	ha_sido_editado = False
+	primera_edicion, ultima_edicion = "",""
+	numero_de_ediciones = 0
+
+	if Tema_descripcion.objects.filter(tema=tema).exists():
+		ediciones = Tema_descripcion.objects.filter(tema=tema).order_by('id')
+		numero_de_ediciones = ediciones.count()
+		primera_edicion = ediciones[0]
+		if numero_de_ediciones > 1:
+			ha_sido_editado = True
+			ultima_edicion = ediciones.reverse()[0]
+		else:
+			ultima_edicion = primera_edicion
+
+	context = {'puede_editar':puede_editar, 'primera_edicion':primera_edicion,
+	'ultima_edicion':ultima_edicion, 'numero_de_ediciones':numero_de_ediciones,
+	'tema':tema, 'form_editar_tema':form_editar_tema,
+	'ha_sido_editado':ha_sido_editado}
+
+	return render(request, template, context)
 
 
 

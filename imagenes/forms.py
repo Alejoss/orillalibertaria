@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from models import Imagen
 from django import forms
 
-class FormNuevaImagen(forms.ModelForm):
-	class Meta:
-		model = Imagen
-		fields = ('url',)
+class FormNuevaImagen(forms.Form):
+	favorita = forms.BooleanField(initial=False, required=False)
+	url = forms.CharField(max_length=200)
