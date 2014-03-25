@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from models import Temas, Posts, Votos, Notificaciones, Mensajes, Tema_descripcion
 from django import forms
+from django.forms import ModelForm, Textarea
 
 
 class FormCrearTema(forms.Form):
@@ -12,6 +13,17 @@ class FormNuevoPost(forms.ModelForm):
 	class Meta:
 		model = Posts
 		fields = ('texto',)
+		labels = {
+		'texto': ''
+		}
+		help_texts = {
+			'texto': 'Comparte contenido sobre el tema.'
+		}
+		widgets = {
+			'texto': Textarea(attrs={
+				'rows':3,
+				})
+		}
 
 class FormEditarTema(forms.Form):
 	descripcion = forms.CharField(max_length=1000, required=False)
