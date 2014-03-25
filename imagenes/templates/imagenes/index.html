@@ -10,12 +10,15 @@
                 <p><a href="{% url 'imagenes:nueva' %}" class="btn">Añadir Imagen &rarr;</a></p>
             </div>
                <ul class="nav nav-tabs nav-stacked">
-                <li class="active"><a href="{% url 'imagenes:index' %}"><i class="icon-bookmark"></i> Recientes </a></li>
-                <li><a href="{% url 'imagenes:populares' %}"><i class="icon-star"></i> Populares</a></li>
-                <li><a href="{% url 'imagenes:favoritas' user.username %}"><i class="icon-certificate"></i> Favoritas </a></li>
+                <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
+                    <i class="icon-bookmark"></i> Recientes </a></li>
+                <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
+                    <i class="icon-star"></i> Populares</a></li>
+                <li><a href="{% url 'imagenes:favoritas' user.username %}">
+                    <i class="icon-certificate"></i> Favoritas </a></li>
             </ul>
            <ul class="nav nav-tabs nav-stacked">
-                <li><a href=" {% url 'temas:main' %} "><i class="icon-home"></i> Orilla Libertaria </a></li>
+                <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="icon-home"></i> Orilla Libertaria </a></li>
                 
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'perfiles:perfil' user.username %}"><i class="icon-user"></i> Tu Perfil, {{user.username}} </a></li>
@@ -25,20 +28,10 @@
                 {% endif %}
             </ul>
         </div>
-        {% for i in imagenes_fecha %}
-        <div class="span3 galery"> <!--span cambiado -->
-            <div class="image-galery"><a class="group" rel="group1" href="{{i.url}}"><img src=" {{i.url}} " /></a></div>
-              <div>
-        		<span class = "estrella">
-                <a href= "{% url 'imagenes:marcar_favorito' i.id %}"rel="tooltip" title="Marcar Favorito"><i class="icon-star"></i></a>
-            	</span>
-            	<span class = "favoritos"> {{i.favoritos_recibidos}} </span>
-                <span class = "reportar">
-                <a href=" {% url 'imagenes:denunciar' i.id %} " rel="tooltip" title="Reportar"><i class="icon-flag"></i></a>
-            	</span>
-            </div>
+        <div class="row clearfix">
+            {% include page_template %}
         </div>
-        {% endfor %}
+</div>
     </div>
 </div>
        

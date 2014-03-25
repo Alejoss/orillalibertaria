@@ -1,10 +1,16 @@
 {% extends "base_forms.html" %}
 
+{% block imagen %}
+<div class = "div_editar_tema_imagen">
+	<img class = "imagen_tema" src = "{{imagen}}">
+</div>
+{% endblock imagen %}
+
 {% block form %}
 <p class = "text">
 {{ultima_edicion.texto}}
 </p>
-<form action = "{% url 'temas:editar_tema' tema.nombre %}" method = "post"> 
+<form action = "{% url 'temas:editar_tema' tema.slug %}" method = "post"> 
 	{% csrf_token %}
 	{{form_editar_tema.as_table}}
 	<br/>

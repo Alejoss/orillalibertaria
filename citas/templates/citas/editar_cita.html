@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -7,23 +8,8 @@
     {% csrf_token %}
    {{ form_editar_cita.non_field_errors }}
    	<div>
-	   		{{form_editar_cita.texto.errors}}
-	   	<label for = "texto"> Frase:</label>
-	   		{{form_editar_cita.texto}}
-
-	   		{{form_editar_cita.autor.errors}}
-		<label for = "texto"> autor:</label>
-			{{form_editar_cita.autor}}
-		
-			{{form_editar_cita.fuente.errors}}
-		<label for = "texto"> fuente:</label>
-			{{form_editar_cita.fuente}}
-			
-			{{form_editar_cita.razon.errors}}
-		<label for = "texto"> razón:</label>
-			{{form_editar_cita.razon}}
-	  	
-	  	<input type="submit" value="Enviar" />
+   		{{ form_editar_cita|crispy }}	  	
+	  	<input class = "btn" type="submit" value="Enviar" />
   	</div>
 </form>
 

@@ -1,154 +1,38 @@
-{% extends "base.html" %}
+{% extends "base_index.html" %}
 {% load staticfiles %}
 
-{% block content %}
-{% load endless %}
+{% block arriba %}
+<div class="col-md-8 column">
+	<div class="page-header">
+		<h1>
+			{{ tema.nombre }}
+		</h1>
+	</div>
+</div>
+{% endblock arriba %}
+
+{% block botones_control %}
+<div class="btn-group btn-group-sm control ">
+	<button class="btn btn-default {{recientes}} "
+	type="button" onclick="location.href='{% url 'temas:index_tema' tema.slug 'recientes' %}';">
+	<span class="glyphicon glyphicon-signal"> </span> Recientes
+	</button> 
+	<button class="btn btn-default {{populares}} " 
+	type="button" onclick="location.href='{% url 'temas:index_tema' tema.slug 'populares' %}';">
+	<span class="glyphicon glyphicon-star"> </span> Populares
+	</button>
+</div>
+{% endblock botones_control %}
+
+{% block tab_content %}
+<div class="col-md-8 column ">
 	<div class="row clearfix">
-		<div class="col-md-8 column">
-			<div class="page-header">
-				<h1>
-					{{ tema.nombre }}
-				</h1>
-			</div>
-			<div class="tabbable" id="tabs-245545">
-				<ul class="nav nav-tabs">
-					<li class="active">
-						<a href="#panel-915270" data-toggle="tab">Últimos Posts</a>
-					</li>
-					<li>
-						<a href="#panel-870235" data-toggle="tab">Populares</a>
-					</li>
-				</ul>
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_content %}
 
-				<div class="tab-content">
-		
-		<div class="tab-pane active" id="panel-915270">
-
-			{% paginate posts_tema %}
-			{% for post in posts_tema %} <!-- Tab Ultimos Posts -->
-
-			<div class = "post">
-			<div class = "col-md-1">
-					<div class = "control_votos">
-						<div class = "btn-group-vertical">
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-up"></span>
-							</button>
-							<button type="button" class = "btn btn-default puntaje"> 
-							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
-							</button>
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-down"></span>
-							</button>
-						</div>
-					</div>
-			</div>
-			<div class = "col-md-11">
-				<div class="panel panel-info">
-					<div class="panel-body">
-						<p class = "text">
-						{{post.texto|truncatewords:50}}
-						</p>
-						<br/>
-
-		 				<a href = "{% url 'temas:post' tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
-						<br/>
-					</div>
-					<div class="panel-footer">
-						<p><a href ="{% url 'perfiles:perfil' post.creador.usuario %}">
-							{{post.creador.usuario.username}}</a> <small> el {{post.fecha}} </small>
-						</p>
-					</div>
-				</div>
-			</div> <!-- class md 10 -->
-			</div> <!--post -->
-			{% endfor %}
-			{% show_pages %}
-			{{ pages }}
-
-		<!--	<ul class="pagination">
-				{% if posts_tema.has_previous %}
-				<li>
-					<a href="?page_fecha={{posts_tema.previous_page_number}}">Anterior</a>
-				</li>
-				{% endif %}
-
-				<li>
-					<a href="">{{posts_tema.number}}</a>
-				</li>
-				{% if posts_tema.has_next %}
-				<li>
-					<a href="?page_fecha= {{posts_tema.next_page_number}}">Siguiente</a>
-				</li>
-				{% endif %}
-			</ul>
-		-->
-
-		</div>
-					<div class="tab-pane" id="panel-870235">
-		{% for post in posts_populares %} <!-- Tab Posts Populares -->
-
-			<div class = "post">
-			<div class = "col-md-1">
-					<div class = "control_votos">
-						<div class = "btn-group-vertical">
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-up"></span>
-							</button>
-							<button type="button" class = "btn btn-default puntaje"> 
-							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
-							</button>
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-down"></span>
-							</button>
-						</div>
-					</div>
-			</div>
-			<div class = "col-md-11">
-				<div class="panel panel-info">
-					<div class="panel-body">
-						<p class = "text"> 
-						{{post.texto|truncatewords:50}}
-						</p>
-						<br/>
-
-		 				<a href = "{% url 'temas:post' tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
-						<br/>
-					</div>
-					<div class="panel-footer">
-						<p><a href ="{% url 'perfiles:perfil' post.creador.usuario %}">
-							{{post.creador.usuario.username}}</a> <small> el {{post.fecha}} </small>
-						</p>
-					</div>
-				</div>
-			</div> <!-- class md 10 -->
-			</div> <!--post -->
-			{% endfor %}
-
-			<ul class="pagination">
-				{% if posts_populares.has_previous %}
-				<li>
-					<a href="?page_populares={{posts_populares.previous_page_number}}">Anterior</a>
-				</li>
-				{% endif %}
-
-				<li>
-					<a href="">{{posts_populares.number}}</a>
-				</li>
-				{% if posts_populares.has_next %}
-				<li>
-					<a href="?page_populares= {{posts_populares.next_page_number}}">Siguiente</a>
-				</li>
-				{% endif %}
-			</ul>
-
-					</div>
-				</div>
-			</div>
-
-			
-		</div> 
-		
+{% block sidebar %}
 		<div class="col-md-4 column">
 			<div class = "div_carrusel">
 			<div class = "cuadro_carrusel">
@@ -172,15 +56,17 @@
 
 			<hr>
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'imagenes:index'%}';">
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 				Ver galería de imágenes</button>
 			<br>
 			<div class="row clearfix">
 				<div class="col-md-12 column">
 				<div class = "btn_nuevo_post">
-					 <button type="button" class="btn btn-default" onclick="location.href='{% url 'temas:nuevo_post' tema.nombre %}';"> Nuevo Post en {{tema.nombre}}
-					 </button>
+				<button type="button" class="btn btn-default" 
+				onclick = "location.href='{% url 'temas:sumar_post' tema.slug %}';">
+				Nuevo Post en {{tema.nombre}}</button>
 				</div>
+				
 				<div class = "btn_nuevo_post">
 				<button type="button" class="btn btn-default" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
 				</div>
@@ -189,11 +75,17 @@
 			<hr>
 			<div>
 				<h2>
-					{{ tema.nombre }} <br/><small><h3> {{descripcion}} </h3>
-					<h6><a href="{% url 'temas:editar_tema' tema.nombre %}"><i>editar descripción</i></a></h6></small>
+					<div style = "margin-left: 60px">
+						<img class = "imagen_tema" src = "{{imagen}}">
+					</div>
+					<br/>
+					{{ tema.nombre }} 
+					<br/>
+					<small><h3> {{descripcion}} </h3>
+					<h6><a href="{% url 'temas:editar_tema' tema.slug %}"><i>editar descripción</i></a></h6></small>
 				</h2>
 			</div>
 		</div>
 	</div>
 </div>
-{% endblock content %}
+{% endblock sidebar %}

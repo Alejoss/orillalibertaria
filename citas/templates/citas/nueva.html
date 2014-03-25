@@ -4,7 +4,7 @@
 {% block form %}
 	<ul class="breadcrumb">
 			<li>
-				<h4><a href="{% url 'citas:index' %}">Frases</a></h4> 
+				<h4><a href="{% url 'citas:index' 'recientes' %}">Frases</a></h4> 
 				<span class="divider"></span>
 			</li>
 			<li>
@@ -14,7 +14,7 @@
 	<h2> Añade una Frase </h2>
 	<form action = "{% url 'citas:nueva' %}" method = "post">
 		{% csrf_token %}
-		{{FormNuevaCita.as_ul}}
+		{{FormNuevaCita|crispy}}
 		<input class = "btn" type = "submit" value ="enviar"/>
 	</form>
 {% endblock form %}

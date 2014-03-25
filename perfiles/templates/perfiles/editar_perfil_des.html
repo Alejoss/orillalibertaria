@@ -16,20 +16,20 @@
 				se verán en tu perfil, por orden de fecha.</p>
 
 		{% elif not tiene_imagenesfav and tiene_frasesfav %}
-		<p> ¿Has visitado la <a href=" {% url 'imagenes:index' %} ">
+		<p> ¿Has visitado la <a href=" {% url 'imagenes:index' 'recientes' %} ">
 			Galería de Imágenes</a>?
 			es similar al banco de frases. Tus imágenes favoritas aparecerán en tu perfil.</p>
 		<p> Revisa <a href=" {% url 'citas:favoritas' %} ">tus frases</a> favoritas.
 
 		{% elif not tiene_frasesfav and tiene_imagenesfav %}
-			<p> ¿Has visitado el <a href=" {% url 'citas:index' %} ">
+			<p> ¿Has visitado el <a href=" {% url 'citas:index' 'recientes' %} ">
 			Banco de Frases</a>? es similar a la galería de imágenes. Las frases que marques como favoritas aparecerán en tu perfil.</p>
 			<p> Revisa tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas</a></p>
 
 		{% elif not tiene_imagenesfav and not tiene_frasesfav %}
-			<p> Visita la <a href=" {% url 'imagenes:index' %} ">
+			<p> Visita la <a href=" {% url 'imagenes:index' 'recientes' %} ">
 				Galería de Imágenes</a> y el 
-				<a href=" {% url 'citas:index' %} ">Banco de Frases</a>, 
+				<a href=" {% url 'citas:index' 'recientes' %} ">Banco de Frases</a>, 
 				puedes elegir tus favoritas y aparecerán en tu perfil. </p>
 		{% endif %}
 

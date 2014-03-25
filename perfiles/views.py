@@ -15,8 +15,9 @@ from imagenes.models import Imagen, Ifavoritas
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
 def login(request):
+	template = 'perfiles/login.html'
 	#Custom login. No es el login normal de Django.
-	return render(request, 'perfiles/login.html')
+	return render(request, template)
 
 def authcheck(request):
 	#standard auth de Django.
@@ -32,14 +33,17 @@ def authcheck(request):
 		return redirect('perfiles:login')
 	
 def logout(request):
+	template = 'perfiles/logout.html'
+
 	auth.logout(request) # Logout el user guardado en Request
-	return render(request, 'perfiles/logout.html', {})
+	return render(request, template , {})
 
 def loggedin(request):
+	template = 'perfiles/loggedin.html'
 	#Mensaje de Bienvenida. 
 	#!!! En el futuro redireccionar (despues de 3 seg) a dnd estaba antes (next)
 	#o a la página de Temas
-	return render(request, 'perfiles/loggedin.html', {})
+	return render(request, template, {})
 
 def invalid(request):
 	#Invalid login. Esta pagina hay que eliminar. 
@@ -48,6 +52,7 @@ def invalid(request):
 	return render(request, 'perfiles/invalid.html', {})
 
 def registrar(request):
+	template = 'perfiles/registrar.html'
 	#Registra nuevos usuarios.
 	error = ""#Hay que eliminar esta variable y cambiar por los errors del form.
 	if request.method == 'POST':
@@ -66,14 +71,17 @@ def registrar(request):
 	#Crea un nuevo form vacio. (unbound)
 	user_creation_form = FormRegistroUsuario()
 	context = {'user_creation_form': user_creation_form, 'error':error}
-	return render(request, 'perfiles/registrar.html', context)
+	return render(request, template, context)
 
 def registro_ok(request):
+
 	#Lleva a una página de Bienvenida.
 	context = {}
 	return render(request, 'perfiles/registro_ok.html', context)
 
 def editar_perfil_des(request):
+	template = 'perfiles/editar_perfil_des.html'
+
 	user = request.user
 	#crea una tabla de Perfiles para el user
 	#si no existe una ya y obtiene esa tabla como "obj"
@@ -127,9 +135,11 @@ def editar_perfil_des(request):
 	editar_perfil_form = PerfilesForm()
 	context = {'editar_perfil_form':editar_perfil_form, 'tiene_imagenesfav':tiene_imagenesfav,
 	'tiene_frasesfav':tiene_frasesfav}
-	return render(request, 'perfiles/editar_perfil_des.html', context)
+	return render(request, template, context)
 		
 def editar_perfil_info(request):
+	template = 'perfiles/editar_perfil_info.html'
+
 	if request.method == "POST":
 		form = UserForm(request.POST)
 		if form.is_valid():
@@ -154,9 +164,10 @@ def editar_perfil_info(request):
 	
 	perfil_info_form = UserForm()
 	context = {'perfil_info_form': perfil_info_form}
-	return render(request, 'perfiles/editar_perfil_info.html', context)
+	return render(request, template, context)
 
 def perfil(request, username):
+	template = 'perfiles/perfil.html'
 	#funciona cuando se visita el perfil de otro usuario
 	#recibe del urlpattern un "username"
 	#obtiene el User correspondiende a ese username
@@ -178,7 +189,6 @@ def perfil(request, username):
 			numero_imgfavoritas = 10		
 		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('fecha')[:numero_imgfavoritas]
 		for i in ifavoritas_objects:
-			print "perfiles views - i.imagen.url: %s" %(i.imagen.url)
 			imagenes_favoritas.append(i.imagen.url)
 		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
 			portada_obj = Ifavoritas.objects.get(perfil=usuario_perfil, eliminado = False, portada=True)
@@ -193,11 +203,12 @@ def perfil(request, username):
 	'citas_favoritas':citas_favoritas, 'imagenes_favoritas':imagenes_favoritas, 
 	'usuario_fav':usuario_fav, 'tiene_imagenesfav':tiene_imagenesfav}
 	#renderea perfiles.html con el user y el perfil correspondiente
-	return render(request, 'perfiles/perfil.html', context)
+	return render(request, template, context)
 
 
 def index(request):
+	template = 'perfiles/index.html'
 	#pagina principal de usuarios. Muestra los usuarios.
 	#En el futuro mostrar actividad 
 	usuarios = Perfiles.objects.all()
-	return render(request, 'perfiles/index.html', {'usuarios': usuarios})
+	return render(request,template , {'usuarios': usuarios})

@@ -1,0 +1,37 @@
+{% load endless %}
+
+{% paginate temas %}
+<div class = "row">
+	<div class = "endless_page_template">
+		{% for t in temas %} <!-- Tab Temas Activos -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<a href = "{% url 'temas:index_tema' t.0.slug 'ultimos' %}">  {{t.0.nombre}} </a>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class = "div_imagen_tema">
+					<img class = "imagen_tema" src = "{{t.2}}">
+				</div>
+			<p class = "text">
+				{{t.1|truncatewords:70}} <br/> {{t.0.fecha_creacion}}
+			</p>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+<div class = "row">
+<div class ="col-md-12">
+	<hr>
+	<div class = "paginacion">
+		{% show_pages %}
+	</div>
+	</br>
+	</br>
+	</br>
+</div>
+</div>
+

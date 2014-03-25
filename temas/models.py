@@ -1,19 +1,27 @@
 
 from django.db import models
+from django.template import defaultfilters
 from perfiles.models import Perfiles
 # Create your models here.
  
 
 class Temas(models.Model):
 	nombre = models.CharField(max_length=100, null=True)
+	slug = models.SlugField(max_length=100, null = True)
 	fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 	activo = models.BooleanField(default=True)
 	creador = models.ForeignKey(Perfiles, null=True)
 	nivel_actividad = models.SmallIntegerField(default=0)
 	nivel_popularidad = models.SmallIntegerField(default=0)
+	imagen = models.CharField(max_length=250, null = True)
 
 	def __unicode__(self):
 		return self.nombre
+
+	def save(self, *args, **kwargs):
+		if not self.id:
+			self.slug = defaultfilters.slugify(self.nombre)
+		super(Temas, self).save(*args, **kwargs)
  
 class Posts(models.Model):
 	fecha = models.DateTimeField(auto_now_add = True)
@@ -23,6 +31,7 @@ class Posts(models.Model):
 	votos_negativos = models.PositiveSmallIntegerField(default=0)
 	creador = models.ForeignKey(Perfiles, null = True)
 	tema = models.ForeignKey(Temas, null = True)
+	eliminado = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return "%s... en %s" %(self.texto[:20], self.tema.nombre)

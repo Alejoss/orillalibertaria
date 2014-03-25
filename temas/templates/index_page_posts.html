@@ -1,0 +1,76 @@
+{% load endless %}
+
+{% paginate posts %}
+<div class = "row">
+	<div class = "endless_page_template">
+		{% for post in posts %}
+			<div class = "post">
+			<div class = "col-md-1">
+				<div class = "control_votos">
+					<div class = "btn-group-vertical">
+						<button type="button" class = "btn btn-default"> 
+							<span class="glyphicon glyphicon-chevron-up"></span>
+						</button>
+						<button type="button" class = "btn btn-default puntaje"> 
+						<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
+						</button>
+						<button type="button" class = "btn btn-default"> 
+							<span class="glyphicon glyphicon-chevron-down"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class = "col-md-11">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						<p class = "text">
+						{{post.texto|truncatewords:50}}
+						</p>
+						<br/>
+
+		 				<a href = "{% url 'temas:post' tema.slug post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
+						<br/>
+					</div>
+					<div class="panel-footer">
+						<div class = "nombre_fecha">
+						<p><a href ="{% url 'perfiles:perfil' post.creador.usuario %}">
+							{{post.creador.usuario.username}}</a> <small> el {{post.fecha}} </small>
+						</p>
+						</div>
+						{% if post.creador.usuario == request.user %}
+						<div class = "eliminar_editar">
+							<div class = "btn-group dropup">
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{% url 'temas:eliminar_propio_post' post.id %}">Eliminar Post</a>
+								</li>
+								<li class = "divider"></li>
+								<li>
+									<a href="#">Editar</a> <!-- -->
+								</li>
+							</ul>
+							</div>
+						</div>
+						{% endif %}
+					</div>
+				</div>
+			</div> <!-- class md 10 -->
+			</div> <!--post -->
+			{% endfor %}
+	</div>
+</div>
+
+<div class = "row">
+<div class ="col-md-12">
+	<hr>
+	<div class = "paginacion">
+		{% show_pages %}
+	</div>
+	</br>
+	</br>
+	</br>
+</div>
+</div>
+

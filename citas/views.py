@@ -5,21 +5,35 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
-from endless_pagination.decorators import page_templates
+from endless_pagination.decorators import page_template
 from models import Cita, Cfavoritas, Ceditadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
 from imagenes.models import Imagen
 
 # Create your views here.
+@page_template('index_page_citas.html')
+def index(request, queryset, template = 'citas/index.html', extra_context = None):
+	autor = ""
+	recientes = ""
+	populares = ""
+	q = ""
+	if queryset == "autor":
+		q = "autor"
+		autor = "active"
+	elif queryset == "populares":
+		q = "-favoritos_recibidos"
+		populares = "active"
+	else:
+		q = "-fecha"
+		recientes = "active"
 
-@page_templates({'citas/citas_recientes_page.html':'citas_recientes_page',
-'citas/citas_nombre_page.html':'citas_nombre_page',
-'citas/citas_populares_page.html':'citas_populares_page'})
-def index(request, template = 'citas/index.html', extra_context = None):
-	citas_fecha = Cita.objects.filter(eliminada=False).order_by('-fecha')
-	citas_nombre = Cita.objects.filter(eliminada=False).order_by('autor')
-	citas_populares = Cita.objects.filter(eliminada=False).order_by('-favoritos_recibidos')
+	citas = Cita.objects.filter(eliminada=False).order_by(q)
+
+	if request.is_ajax():
+		template = page_template
+		print "ajax!"
+
 	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
 	imagenes_display = []
 	primera_imagen = ""
@@ -32,15 +46,16 @@ def index(request, template = 'citas/index.html', extra_context = None):
 		else:
 			imagenes_display.append(i.url)
 
-	context = {'citas_fecha': citas_fecha, 'citas_nombre':citas_nombre, 
-	'citas_populares':citas_populares, 'imagenes_display': imagenes_display,
-	'primera_imagen':primera_imagen}
+	context = {'citas': citas, 'imagenes_display': imagenes_display, 'primera_imagen':primera_imagen,
+	'autor':autor, 'recientes':recientes, 'populares':populares}
 
 	if extra_context is not None:
 		context.update(extra_context)
+		
 	return render(request, template, context)
 
 def nueva(request):
+	template = 'citas/nueva.html'
 	if request.method == "POST":
 		form = FormNuevaCita(request.POST)
 		if form.is_valid():
@@ -54,7 +69,7 @@ def nueva(request):
 	else:
 		form = FormNuevaCita()
 		context = {'FormNuevaCita':FormNuevaCita}
-		return render(request, 'citas/nueva.html', context)
+		return render(request,template, context)
 
 def marcar_favorito(request, cita_id):
 	cita = Cita.objects.get(pk=cita_id)
@@ -89,6 +104,7 @@ def marcar_favorito(request, cita_id):
 		return HttpResponseRedirect(reverse('citas:index'))
 
 def favoritas(request):
+	template = 'citas/favoritas.html'
 	perfil_usuario = Perfiles.objects.get(usuario=request.user)
 	Cfavoritas_objects = Cfavoritas.objects.filter(perfil = perfil_usuario).order_by('-fecha')
 	citas_favoritas = []
@@ -110,9 +126,10 @@ def favoritas(request):
 	context = {'citas_favoritas':citas_favoritas, 'imagenes_display': imagenes_display,
 	'primera_imagen':primera_imagen}
 	
-	return render(request, 'citas/favoritas.html', context)
+	return render(request, template , context)
 
 def colaborar_organizar(request):
+	template = 'citas/citas_coorg.html'
 	citas_eliminadas = Cita.objects.filter(eliminada=True, removidatotalmente = False)
 	tabla_citas = []
 	for cita in citas_eliminadas:
@@ -157,7 +174,7 @@ def colaborar_organizar(request):
 	progress_bar = str(porcentaje_avanzado)
 
 	context = {'tabla_citas':tabla_citas, 'progress_bar':progress_bar}
-	return render(request, 'citas/citas_coorg.html', context)
+	return render(request, template , context)
 
 def denunciar_cita(request, cita_id):
 	cita_denunciada = Cita.objects.get(id=cita_id)
@@ -197,6 +214,7 @@ def marcar_x(request, cita_id):
 	return redirect('citas:colaborar_organizar')
 
 def coorg_editar(request, cita_id):
+	template = 'citas/editar_cita.html'
 	cita = Cita.objects.get(id=cita_id)
 	perfil_usuario = Perfiles.objects.get(usuario = request.user)
 	if request.method == 'POST':
@@ -226,7 +244,7 @@ def coorg_editar(request, cita_id):
 				'autor':cita.autor, 'fuente':cita.fuente})
 
 	context = {'form_editar_cita':form_editar_cita, 'cita_id':cita_id}
-	return render(request, 'citas/editar_cita.html', context)
+	return render(request,template , context)
 
 
 

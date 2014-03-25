@@ -1,55 +1,45 @@
-{% extends "base.html" %}
+{% extends "base_index.html" %}
 
 {% block content %}
-<div class="container">
-		<div class="col-md-8 column">
-			<ul class="breadcrumb">
-				<li>
-					<h4><a href="{% url 'citas:index' %}">Frases</a></h4> 
-					<span class="divider"></span>
-				</li>
-			</ul>
-			<div class="tabbable" id="tabs-994211">
-				<ul class="nav nav-tabs">
-					<li>
-						<a href="#panel-280880" data-toggle="tab">A-Z</a>
-					</li>
-					<li class="active">
-						<a href="#panel-268185" data-toggle="tab">Reciente</a>
-					</li>
-					<li>
-						<a href="#panel-268700" data-toggle="tab">Populares</a>
-					</li>
-				</ul>
-				<div class="tab-content">
-				<div class="tab-pane" id="panel-268700"> <!-- pane por nombre -->
-					<div class="row clearfix">
-						<div class="endless_page_template">
-						    {% include "citas_populares_page.html" %}
-						</div>
-					</div> <!--clearfix -->
-				</div> <!--pane citas populares -->
-				
-				<div class="tab-pane active" id="panel-268185"> <!--pane citas recientes -->
-					<div class="row clearfix">
-						<div class="endless_page_template">
-						    {% include "citas_recientes_page.html" %}
-						</div>
-					</div> <!--clearfix -->
-				</div> <!--pane citas recientes -->
 
-				<div class="tab-pane" id="panel-280880"> <!-- pane por nombre -->
-					<div class="row clearfix">
-						<div class="endless_page_template">
-						    {% include "citas_nombre_page.html" %}
-						</div>
-					</div> <!--clearfix -->
-				</div> <!--pane por nombre -->
-				</div> <!--tab content -->
-			</div> <!-- tabbable -->
-		</div><!--column 8 -->
+{% block arriba %}
+<div class="col-md-8 column ">
+	<ul class="breadcrumb">
+		<li>
+			<h4><a href="{% url 'citas:index' 'autor' %}">Frases</a></h4> 
+			<span class="divider"></span>
+		</li>
+	</ul>
+</div>
+{% endblock arriba %}
 
-	<div class="col-md-4 column">
+{% block botones_control %}
+<div class="btn-group btn-group-sm control">
+	<button class="btn btn-default {{autor}}" 
+	type="button" onclick="location.href='{% url 'citas:index' 'autor' %}';">
+	<span class="glyphicon glyphicon-th-list"> </span> Todos
+	</button> 
+	<button class="btn btn-default {{recientes}} "
+	type="button" onclick="location.href='{% url 'citas:index' 'recientes' %}';">
+	<span class="glyphicon glyphicon-signal"> </span> Recientes
+	</button> 
+	<button class="btn btn-default {{populares}} " 
+	type="button" onclick="location.href='{% url 'citas:index' 'populares' %}';">
+	<span class="glyphicon glyphicon-star"> </span> Populares
+	</button>
+</div>
+{% endblock botones_control %}
+
+{% block tab_control %}
+<div class="col-md-8 column ">
+	<div class="row clearfix">
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_control %}
+
+{% block sidebar %}
+	<div class="col-md-4 column ">
 		<div class = "div_carrusel">
 			<div class = "cuadro_carrusel">
 			<div class="carousel slide" id="carousel-422808">
@@ -72,7 +62,7 @@
 
 			<hr>
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'imagenes:index'%}';">
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 				Ver galería de imágenes</button>
 			<br>
 			
@@ -90,8 +80,8 @@
 				<hr>
 			</div>
 		</div> <!--column 4-->
+{% endblock sidebar %}
+
 </div>
 {% endblock content %}
 {% load staticfiles %}
-<script src="{% static 'js/endless-pagination.js' %}"></script>
-<script>$.endlessPaginate();</script>

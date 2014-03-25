@@ -1,3 +1,7 @@
+.borde {
+	border: 1px solid red;
+}
+
 /* css para el navbar */
 .logo {
 	height: 50px;
@@ -43,6 +47,24 @@
 	float: right;
 	vertical-align: center;
 }
+.nombre_fecha{
+	display: inline-block;
+}
+.eliminar_editar{
+	float: right;
+	text-align: right;
+	text-decoration: none;
+	font-size: 8px;
+}
+.eliminar_post{
+	display: block;
+	padding: 3px 20px;
+	clear: both;
+	font-weight: normal;
+	line-height: 1.428571429;
+	color: #333333;
+	white-space: nowrap;
+}
 
 /* css para el panel con el tema y el link */
 .flecha{
@@ -53,3 +75,86 @@
 .col_flecha{
 	height: 110px;
 }
+
+/* css para el control de tipo de entradas. "Activo", "Popular", etc. */
+.control{
+	margin-bottom: 10px;
+	display: inline-block;
+	margin-left: 450px;
+}
+
+/* paginacion */
+.paginacion{
+	float:right;
+}
+
+/* thumbnail imagen tema */
+.imagen_tema{
+max-height: 150px;
+width:auto;
+border-top-left-radius: 10px 5px;
+border-bottom-right-radius: 10% 5%;
+border-top-right-radius: 10px;
+border-color: #FFBD32; 
+border-style: ridge;
+border-width: 2px;
+padding: 5px
+}
+
+.div_imagen_tema{
+	display: inline-block;
+	float:right;
+}
+
+.div_imagen_tema_post{
+	display: block;
+	margin-left: 75px;
+}
+
+/*css para el post y las respuestas */
+
+.post_datos_tema{
+	display:block;
+	margin-left: 70px;
+	margin-top: 10px;
+}
+
+/* css para los thumbnails de temas/main */
+.thumbnail_imagen {
+  display: inline-block;
+  display: block;
+  height: auto;
+  max-width: 100%;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.428571429;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+
+.thumbnail_main_div{
+	overflow: hidden;
+	height: 200px;
+}
+
+.thumbnail_main_div > img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* css para temas/main general */
+.main_cita{
+	margin-left: 30px
+}
+
+.main_sidebar_btns{
+	margin-left: 30px
+}
+
+.main_sidebar_btns .btn_nuevo_post

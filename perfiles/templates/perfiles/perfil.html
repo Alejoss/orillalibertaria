@@ -114,7 +114,7 @@
 						<br/>
 					</div>
 					<div class="panel-footer">
-						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.nombre %} ">{{post.tema.nombre}}</a>
+						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.slug 'recientes' %} ">{{post.tema.nombre}}</a>
 						</p>
 					</div>
 				</div>
@@ -152,7 +152,7 @@
 						<br/>
 					</div>
 					<div class="panel-footer">
-						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.nombre %} ">{{post.tema.nombre}}</a>
+						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.slug 'recientes' %} ">{{post.tema.nombre}}</a>
 						</p>
 					</div>
 				</div>

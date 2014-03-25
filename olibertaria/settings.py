@@ -15,9 +15,10 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 #endless pagination
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
+ENDLESS_PAGINATION_PER_PAGE = 10
 ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
 ENDLESS_PAGINATION_NEXT_LABEL = "Siguiente"
-ENDLESS_PAGINATION_PER_PAGE = 5
+
 
 #crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

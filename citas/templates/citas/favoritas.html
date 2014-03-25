@@ -6,7 +6,7 @@
 		<div class="col-md-8 column">
 			<ul class="breadcrumb">
 				<li>
-					<h4><a href="{% url 'citas:index' %}">Frases</a></h4> 
+					<h4><a href="{% url 'citas:index' 'recientes' %}">Frases</a></h4> 
 					<span class="divider"></span>
 				</li>
 				<li>
@@ -81,14 +81,14 @@
 
 			<hr>
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'imagenes:index'%}';">
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 				Ver galería de imágenes</button>
 			<br>
 
 			<div>
 				<br>
 				<br>
-				<button type="button" class="btn btn-default" onclick="location.href='{% url 'citas:index'%}';"> Ver banco de frases
+				<button type="button" class="btn btn-default" onclick="location.href='{% url 'citas:index' 'recientes' %}';"> Ver banco de frases
 				</button>
 				<br> <br>
 				<button type="button" class="btn btn-default" 
