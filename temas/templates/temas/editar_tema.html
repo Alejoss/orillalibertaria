@@ -1,28 +1,74 @@
 {% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
 
-{% block imagen %}
-<div class = "div_editar_tema_imagen">
-	<img class = "imagen_tema" src = "{{imagen}}">
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Editar tema <a href = "{% url 'temas:index_tema' tema.slug 'recientes' %}"> {{tema.nombre}}</a> </h2>
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
 </div>
-{% endblock imagen %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			{% if tiene_descripcion %}
+			Imagen y descripción actual.
+			{% else %}
+			El tema {{tema.nombre}} no tiene descripción, todavía.
+			{% endif %}
+		</h3>
+	</div>
+	<div class="panel-body">
+		<img class = "imagen_tema" src = "{{imagen}}">
+		<p style = "margin-top:10px" class = "text">
+			{{ultima_edicion}}
+		</p>
+	</div>
+</div>
+
+{% endblock arriba %}
 
 {% block form %}
-<p class = "text">
-{{ultima_edicion.texto}}
-</p>
 <form action = "{% url 'temas:editar_tema' tema.slug %}" method = "post"> 
 	{% csrf_token %}
-	{{form_editar_tema.as_table}}
-	<br/>
-	<input type = "submit" value = "Enviar"/>
+	{{form_editar_tema|crispy}}
+	<input class = "btn pull-right" type = "submit" value = "Enviar"/>
 </form>
 {% endblock form %}
 
-{% block form_warning %}
-{% endblock form_warning %}
-
 {% block description %}
+
 {% if ha_sido_editado %}
-<p class = "text"> Descripcion Original {{primera_edicion.texto}} </p>
+	<dt> Es importante que cualquier edición se refiera al mismo concepto, así mantenemos el contenido coherente. Esta es la descripción original del tema:</dt><br>
+	<dd>
+	<p class = "text"> {{primera_edicion}} </p>
+	</dd>
+{% elif tiene_descripcion %}
+	<dt> Asegúrate que tu edición se refiera al mismo concepto, así mantenemos el contenido coherente.</dt>
+{% else %}
+	<dt>
+		Cobora con la comunidad de Orilla Libertaria escribiendo una descripción del tema {{tema.nombre}}.
+	</dt>
+		<br>
+	<dd>
+		La descripción del tema debe explicar de qué se trata. Se recomienda ofrecer detalles objectivos que acerquen a los cibernautas, libertarios o no, al concepto sobre el cual se va a compartir contanido. 
+		<br>
+		Cualquier usuario con suficiente reputación podrá editar la descripción del tema, así, con el tiempo se podrá desarrollar una explicación más completa.
+	</dd>
+		
+
 {% endif %}
+
+<dt>
+	<br><br>
+	Imagen:
+</dt>
+<dd>
+	Pega el url de una imagen que pueda representar al tema. <br>
+	Por ahora no hay como subir imágenes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. <br>
+	Se recomienda imágenes de tamaño mediano: menores a 800x600px. <br>
+	Revisa que el url que elegiste termine en ".jpg" o ".png".
+</dd>
+
+
+
 {% endblock description %}

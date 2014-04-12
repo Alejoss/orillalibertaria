@@ -17,12 +17,14 @@
 	</div>
 
 	<div class="row clearfix">
-		{% block sidebar %}
-		{% endblock sidebar %}	
+	<div class = "visible-lg visible-md visible-sm">
+	{% block sidebar %}
+	{% endblock sidebar %}	
 	</div>
 </div>
 
 {% endblock content %}
 
 {% block javascript %}
+<script src="{% static 'js/votos.js' %} "></script>
 {% endblock javascript %}

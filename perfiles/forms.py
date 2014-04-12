@@ -1,6 +1,5 @@
-
 # -*- coding: utf-8 -*-
-
+from django.forms import ModelForm, Textarea
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -25,14 +24,19 @@ class FormRegistroUsuario(UserCreationForm):
 
 		return user
 
-class PerfilesForm(forms.ModelForm):
-
-	class Meta:
-		model = Perfiles
-		#fields para el form de editar_perfil
-		fields = ('descripcion', 'link1','link2','link3','link4',
-			'link5','link6','link7','link8','link9','link10')
-
+class PerfilesForm(forms.Form):
+	
+	descripcion = forms.CharField(label = "Descripción", max_length=250, required=False,
+		help_text="Quién eres en los clásicos 250 caracteres.", 
+		widget=forms.Textarea(attrs={
+				'rows':3,
+				}))
+	link1 = forms.CharField(label = "Links:", required=False)
+	link2 = forms.CharField(label= "", required = False)
+	link3 = forms.CharField(label= "", required = False)
+	link4 = forms.CharField(label= "", required = False)
+	link5 = forms.CharField(label= "", required = False, 
+		help_text="Comparte cinco links que digan algo sobre ti.")
 
 class UserForm(forms.Form):
 	email = forms.EmailField(required=False)

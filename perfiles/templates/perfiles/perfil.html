@@ -1,42 +1,33 @@
-{% extends "base.html" %}
+{% extends "base_index.html" %}
 
-{% block content %}
+{% block arriba %}
 <div class = "row clearfix">
 	<div class = "col-md-12">
-	<div class = "col-md-6">
-		<div class = "div_carrusel">
-			<div class="carousel slide carrusel_slide" id="carousel-422900">			
-				<div class="carousel-inner cuadro_carrusel">
-					{% if tiene_imagenesfav %}
-					<div class="item active"> <!--portada-->
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{portada}} ">
-					</div>
-					{% for x in imagenes_favoritas %}
-					<div class="item">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{ x }} ">
-					</div>
-					{% endfor %}
-					{% else %}
-					<div class="item active">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = "http://1.bp.blogspot.com/-GNAia9OuhVo/UFJWtji5kjI/AAAAAAAAG9s/RDsHEI0inTo/s640/dont+tread+on+me+porcupine.jpg">
-					</div>
-					<div class="item">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = "http://www.examiner.com/images/blog/EXID30613/images/dont_tread_on_me_gadsden_flag.png">
-					</div>
-					{% endif %}
-				</div> 
-				<a class="left carousel-control" href="#carousel-422900" data-slide="prev"></a> 
-				<a class="right carousel-control" href="#carousel-422900" data-slide="next"></a>
-			</div>
-		</div><!--carrousel-->
+	<div class = "col-md-6 col-md-offset-1">
+		<div class = "imagenes_portada">
 		{% if tiene_imagenesfav %}
-		<p><a href = "{% url 'imagenes:favoritas' usuario_fav %}"> Ver todas </a></p>
-		{% endif %}
+			<ul class="pgwSlider">
+			    <li>
+			    	<img src="{{portada}}"> 
+			    </li>
+			    {% for i in imagenes_favoritas %}
+			    <li>
+			    	<img src=" {{i}} ">
+			    </li>
+			    {% endfor %}
+			</ul>
+				<script>
+				$(document).ready(function() {
+				    $('.pgwSlider').pgwSlider();
+				});
+				</script>
+			{% endif %}
+		</div>
 	</div> <!--col 6 -->
-	<div class = "col-md-6">
+	<div class = "col-md-5">
 		<div style = "float:right; margin-right:40px">
 			<h3 class = "text-center">
-				{{usuario.usuario}}
+				{{usuario_user.username}}
 			</h3>
 			<p class="text-muted text-center">
 				{% if user.is_authenticated %}
@@ -68,128 +59,31 @@
 		</div> <!-- float right -->
 	</div> <!--col 6 -->
 	</div> <!-- col 12 -->
+{% endblock arriba %}
 
-	<div class="col-md-8 column">
-		<div class="page-header">
-				<h1>
-					Posts
-				</h1>
-		</div>
-			<div class="tabbable" id="tabs-245545">
-				<ul class="nav nav-tabs">
-					<li class="active">
-						<a href="#panel-915270" data-toggle="tab">Últimos Posts</a>
-					</li>
-					<li>
-						<a href="#panel-870235" data-toggle="tab">Más Populares</a>
-					</li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="panel-915270">
-			{% for post in posts %} <!-- Tab Ultimos Posts -->
-			<div class = "post">
-			<div class = "col-md-1">
-				<div class = "control_votos">
-					<div class = "btn-group-vertical">
-						<button type="button" class = "btn btn-default"> 
-							<span class="glyphicon glyphicon-chevron-up"></span>
-						</button>
-						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
-						</button>
-						<button type="button" class = "btn btn-default"> 
-							<span class="glyphicon glyphicon-chevron-down"></span>
-						</button>
-					</div>
-				</div>
-			</div>
-			<div class = "col-md-11">
-				<div class="panel panel-info">
-					<div class="panel-body">
-						<p class = "text">
-						{{post.texto|truncatewords:50}}
-						</p>
-						<br/>
-		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
-						<br/>
-					</div>
-					<div class="panel-footer">
-						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.slug 'recientes' %} ">{{post.tema.nombre}}</a>
-						</p>
-					</div>
-				</div>
-			</div> <!-- class md 11 -->
-			</div> <!--post -->
-			{% endfor %}
-				</div><!--pane-->
-			<div class="tab-pane" id="panel-870235">
-			{% for post in posts_populares %} <!-- Tab Posts Populares-->
-			<div class = "post">
-			<div class = "col-md-1">
-					<div class = "control_votos">
-						<div class = "btn-group-vertical">
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-up"></span>
-							</button>
-							<button type="button" class = "btn btn-default puntaje"> 
-							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
-							</button>
-							<button type="button" class = "btn btn-default"> 
-								<span class="glyphicon glyphicon-chevron-down"></span>
-							</button>
-						</div>
-					</div>
-			</div>
-			<div class = "col-md-11">
-				<div class="panel panel-info">
-					<div class="panel-body">
-						<p class = "text">
-							{{post.texto|truncatewords:50}}
-						</p>
-						<br/>
+{% block botones_control %}
+<div class="btn-group btn-group-sm control ">
+	<button class="btn btn-default {{recientes}} "
+	type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'recientes' %}';">
+	<span class="glyphicon glyphicon-signal"> </span> Recientes
+	</button> 
+	<button class="btn btn-default {{populares}} " 
+	type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'populares' %}';">
+	<span class="glyphicon glyphicon-star"> </span> Populares
+	</button>
+</div>
+{% endblock botones_control %}
 
-		 				<a href = "{% url 'temas:post' post.tema.nombre post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
-						<br/>
-					</div>
-					<div class="panel-footer">
-						<p><small>{{post.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.tema.slug 'recientes' %} ">{{post.tema.nombre}}</a>
-						</p>
-					</div>
-				</div>
-			</div> <!-- class md 11 -->
-			</div> <!--post -->
-			{% endfor %}
+{% block tab_content %}
+<div class="col-md-8 column ">
+	<hr>
+	<div class="row clearfix">
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_content %}
 
-					</div>
-				</div>
-			</div> <!--tabs-->
-
-			 
-			<ul class="pagination">
-				<li>
-					<a href="#">Prev</a>
-				</li>
-				<li>
-					<a href="#">1</a>
-				</li>
-				<li>
-					<a href="#">2</a>
-				</li>
-				<li>
-					<a href="#">3</a>
-				</li>
-				<li>
-					<a href="#">4</a>
-				</li>
-				<li>
-					<a href="#">5</a>
-				</li>
-				<li>
-					<a href="#">Next</a>
-				</li>
-			</ul>
-	</div> <!--column8 -->
-
+{% block sidebar %}
 	<div class="col-md-4 column">
 		
 		<p class="text-muted">
@@ -207,25 +101,14 @@
 			<br>
 			<br>
 			<div class = "row">
-			{% for cita in citas_favoritas %}
 			<div class = "col-md-12">
-			<blockquote class="pull-right">
+			<blockquote>
 				<p>
-					{{cita.cita.texto}}
-				</p> <small>{{cita.cita.autor}} <cite>{{cita.cita.fuente}}</cite></small>
+					{{cita_favorita.texto}}
+				</p> <small>{{cita_favorita.autor}} <cite>{{cita_favorita.fuente}}</cite></small>
 			</blockquote> 
+			<p> </small><a href = "{% url 'citas:favoritas' usuario_fav %}"> Ver todas </a> </small> </p>
 			</div>
-			{% endfor%}
-			</div>
-			<div class = "row">
-				<ul class="pagination">
-				<li>
-					<a href="#">Prev</a>
-				</li>
-				<li>
-					<a href="#">Next</a>
-				</li>
-			</ul>
 			</div>
 		</div> <!--column4 -->
-{% endblock %}
+{% endblock sidebar %}

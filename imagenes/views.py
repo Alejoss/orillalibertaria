@@ -50,7 +50,7 @@ def nueva(request):
 				Ifavorita_obj.save()
 				nueva_imagen.save()
 
-			return HttpResponseRedirect(reverse('imagenes:index'))
+			return HttpResponseRedirect(reverse('imagenes:index', args= [u'recientes'] ))
 		else:
 			pass #!!! enviar errores
 	else:
@@ -123,6 +123,7 @@ def favoritas(request, username):
 	propio_usuario = False
 	if request.user == user_object:
 		propio_usuario = True
+		
 	cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
 
 	context = {'imagenes_favoritas':imagenes_favoritas, 'usuario_fav':usuario_fav,

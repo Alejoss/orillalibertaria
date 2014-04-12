@@ -1,55 +1,49 @@
 {% extends "base_forms.html" %}
 {% load crispy_forms_tags %}
 
-{% block form %}
-	<ul class="breadcrumb">
-			<li>
-				<h4><a href="{% url 'citas:index' 'recientes' %}">Frases</a></h4> 
-				<span class="divider"></span>
-			</li>
-			<li>
-				<small>Nueva</small> <span class="divider"></span>
-			</li>
-		</ul>
-	<h2> Añade una Frase </h2>
-	<form action = "{% url 'citas:nueva' %}" method = "post">
-		{% csrf_token %}
-		{{FormNuevaCita|crispy}}
-		<input class = "btn" type = "submit" value ="enviar"/>
-	</form>
-{% endblock form %}
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Añade una frase </h2>
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba%}
 
-{% block form_warning %}
-	<h4> Nota </h4>
-	<p> Recuerda revisar que tu frase esté bien escrita </p>
-{% endblock form_warning %}
+{% block form %}
+<div class = "form_margins">
+	<div class = "row">
+		<form action = "{% url 'citas:nueva' %}" method = "post">
+			{% csrf_token %}
+			{{FormNuevaCita|crispy}}
+			<input class = "btn pull-right" type = "submit" value ="enviar"/>
+		</form>
+	</div>
+	<div class = "row">
+	<h5 class = "text-muted pull-right">
+		<span class="glyphicon glyphicon-ok-sign"></span> Gracias por aportar a la comunidad
+	</h5>
+	</div>
+</div>
+{% endblock form %}
 
 {% block description %}
 	<dt>
-		Description lists
+		Para añadir una frase:
 	</dt>
 	<dd>
-		A description list is perfect for defining terms.
+		Asegúrate que la frase no exista en el <a href=" {% url 'citas:index' 'autor' %} ">banco de frases</a>. También, para mantener el banco de frases ordenado, revisa la lista de autores y trata de usar los nombres de la manera en que ya están escritos. El objetivo es no existan tres autores "F.Hayek", "Friedrich Hayek" y "Friedrich August von Hayek", sino solamente uno: Friedrich Hayek.
 	</dd>
+
+<div>
+	<br><br><br>
 	<dt>
-		Euismod
+		Lista de autores:
 	</dt>
-	<dd>
-		Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.
-	</dd>
-	<dd>
-		Donec id elit non mi porta gravida at eget metus.
-	</dd>
-	<dt>
-		Malesuada porta
-	</dt>
-	<dd>
-		Etiam porta sem malesuada magna mollis euismod.
-	</dd>
-	<dt>
-		Felis euismod semper eget lacinia
-	</dt>
-	<dd>
-		Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-	</dd>
+	<ul class="list-group citas_lista_autores">
+		{% for autor in lista_de_autores %}
+	  <li class="list-group-item"> {{autor}} </li>
+	  	{% endfor %}
+	</ul>
+</div>
+
 {% endblock description %}

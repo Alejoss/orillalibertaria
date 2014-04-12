@@ -6,21 +6,14 @@
 		<div class="col-md-12 column">
 			<div class="row clearfix">
 				<div class="col-md-8 column">
-					{% block imagen %}
-					{% endblock imagen %}
+					{% block arriba %}
+					{% endblock arriba %}
 					{% block form %}
 					{% endblock form %}
 				</div>
 				<div class="col-md-4 column">
-					<div class="alert alert-dismissable alert-warning">
-						 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						{% block form_warning %}
-						{% endblock form_warning %}
-					</div>
-					<dl>
-						{% block description %}
-						{% endblock description %}
-					</dl>
+					{% block description %}
+					{% endblock description %}
 				</div>
 			</div>
 		</div>

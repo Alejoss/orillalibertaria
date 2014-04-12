@@ -1,20 +1,19 @@
 {% load endless %}
 
 {% paginate posts %}
-
 <div class = "row">
 	<div class = "endless_page_template">
 		{% for post in posts %}
 			<div class = "post">
-			<div class = "col-md-2 col-sm-2 col-xs-2">
+			<div class = "col-md-1">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 						<p class = "vote-id hidden">{{post.0.id}}</p>
 						<button type="button" class = "btn btn-default vote-up"> 
 							<span class="glyphicon glyphicon-chevron-up"></span>
 						</button>
-						<button class = "btn puntaje"> 
-						<h2 class = "numero_puntaje {{post.2}}"> {{post.3}} </h2>
+						<button type="button" class = "btn btn-default puntaje"> 
+						<h2 class = "numero_puntaje {{post.3}} "> {{post.0.votos_positivos}} </h2>
 						</button>
 						<button type="button" class = "btn btn-default vote-down"> 
 							<span class="glyphicon glyphicon-chevron-down"></span>
@@ -22,17 +21,33 @@
 					</div>
 				</div>
 			</div>
-			<div class = "col-md-10 col-sm-10 col-xs-10">
+			<div class = "col-md-11">
 				<div class="panel panel-info">
 					<div class="panel-body">
 						<p class = "text">
 						{{post.0.texto|truncatewords:50}}
 						</p>
 						<br/>
+
+		 				<a href = "{% url 'temas:post' post.0.tema.slug post.0.id %}"> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
+						<br/>
 					</div>
 					<div class="panel-footer">
+						{% if post.1 %}
+						<div class = "nombre_fecha">
+						<p><small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} "> {{post.2}}</a> 
+							sobre <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}} </a> el {{post.0.fecha|date:"D d M"}}. </small>
+						</p>
+						</div>
+						{% else %}
+						<div class = "nombre_fecha">
+						<p><small>{{post.0.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}}</a>
+						</p>
+						</div>
+						{% endif %}
+
 						{% if post.0.creador.usuario == request.user %}
-						<div class = "eliminar_editar pull-left">
+						<div class = "eliminar_editar">
 							<div class = "btn-group dropup">
 							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
 							</button>
@@ -48,19 +63,11 @@
 							</div>
 						</div>
 						{% endif %}
-						<div class = "nombre_fecha">
-							<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-								{{post.0.creador.usuario.username}}</a> <small> el {{post.0.fecha}} </small>
-							</p>
-						</div>
-						<div class = "footer_respuestas pull-right">
-		 				<a href = "{% url 'temas:post' tema.slug post.0.id %} "> <span class="glyphicon glyphicon-comment link_post"></span> {{post.1}} </a>
-		 				</div>
 					</div>
 				</div>
 			</div> <!-- class md 10 -->
 			</div> <!--post -->
-		{% endfor %}
+			{% endfor %}
 	</div>
 </div>
 
@@ -75,4 +82,3 @@
 	</br>
 </div>
 </div>
-

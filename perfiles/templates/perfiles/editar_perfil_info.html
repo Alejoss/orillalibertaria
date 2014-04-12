@@ -1,26 +1,32 @@
-{% extends "base.html" %}
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
+{% block arriba %}
+<div class = "col-md-6 col-md-offset-5">
+	<div class = "thumbnail">
+		<img class = "imagen_perfil" src = "http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg">
+	</div>
 
+<div class = "pull-right">
+	<h4> {{user.first_name}} {{user.last_name}} </h4>
+	<h4 class = "text-muted"> illidan@gmail.com </h4>
+	<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
+	<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
+	<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' %}">frases favoritas.</a></h5>
+</div>
+</div>
+{% endblock arriba %}
 
-	{% if user.is_authenticated %}
+{% block form %}
+
 	<div class = "col-md-10 col-md-offset-2">
-	<p> <a href = "{% url 'perfiles:editar_perfil_des' %}"> Edita </a>tu descripción </p> <br/>
-	<p>Edita tu info {{user.username}}</p>
-
 		<form action = "/perfiles/editar_perfil_des/" method = "post">
 			{% csrf_token %}
 			<ul>
-				{{perfil_info_form.as_ul}}
+				{{perfil_info_form|crispy}}
 			</ul>
-			<input type = "submit" name = "submit" value = "Guardar">
+			<input class = "btn pull-right" type = "submit" name = "submit" value = "Guardar">
 		</form>
 	</div>
 
-	{% else %}
-
-	<p> Por favor has <a href = " {% url 'perfiles:login' %}">  login </a> para editar tu perfil </p>
-
-	{% endif %}
-
-{% endblock content %}
+{% endblock form %}

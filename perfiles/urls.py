@@ -8,7 +8,7 @@ urlpatterns = patterns('',
 	url(r'^editar_perfil_info/$', views.editar_perfil_info, name = 'editar_perfil_info'),
 	url(r'^editar_perfil_des/$', views.editar_perfil_des, name = 'editar_perfil_des'),
 	#urls de login
-	url(r'^login/$', views.login, name = "login"),
+	url(r'^login/$', views.login_page, name = "login"),
 	url(r'^authcheck/$', views.authcheck, name = "authcheck"),
 	url(r'^logout/$', views.logout, name = "logout"),
 	url(r'^loggedin/$', views.loggedin, name = "loggedin"),
@@ -17,5 +17,5 @@ urlpatterns = patterns('',
 	url(r'^registrar/$', views.registrar, name = 'registrar'),
 	url(r'^registro_ok/$', views.registro_ok, name = 'registro_ok'),
 	#urls de perfil. perfil/ pasa un string "username" a la view function
-	url(r'^perfil/(?P<username>\w+)/$', views.perfil, name = 'perfil'),
+	url(r'^(?P<username>\w+)/(?P<queryset>\w+)/$', views.perfil, name = 'perfil'),
 	)

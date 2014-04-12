@@ -13,11 +13,6 @@ class Perfiles(models.Model):
 	link3 =models.CharField(max_length=200, blank=True, null=True)
 	link4 =models.CharField(max_length=200, blank=True, null=True)
 	link5 =models.CharField(max_length=200, blank=True, null=True)
-	link6 =models.CharField(max_length=200, blank=True, null=True)
-	link7 =models.CharField(max_length=200, blank=True, null=True)
-	link8 =models.CharField(max_length=200, blank=True, null=True)
-	link9 =models.CharField(max_length=200, blank=True, null=True)
-	link10 =models.CharField(max_length=200, blank=True, null=True)
-
+	
 	def __unicode__(self):
 		return "perfil de %s" %(self.usuario.username)

@@ -1,13 +1,28 @@
 # -*- coding: utf-8 -*-
 from models import Cita
 from django import forms
+from django.forms import ModelForm, Textarea
 
 
 class FormNuevaCita(forms.ModelForm):
-	fuente = forms.CharField(required=False)
+	#fuente = forms.CharField(required=False)
+	def __init__(self, *args, **kwargs):
+		super (FormNuevaCita, self).__init__(*args,**kwargs)
+		self.fields['fuente'].required = False
+
 	class Meta:
 		model = Cita
 		fields = ('texto', 'autor', 'fuente')
+		widgets = {
+			'texto': Textarea(attrs={'rows':3})
+		}
+		labels = {
+		'texto': 'Frase'
+		}
+		help_texts = {
+		'fuente': 'Libro, artículo, video, audio',
+		}
+
 
 class FormEditarCita(forms.Form):
 	texto = forms.CharField(max_length=500, widget=forms.Textarea)

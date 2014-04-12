@@ -1,6 +1,19 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+<!--navbar mobile. li con class = "hidden-md hidden-lg"-->
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'citas:index' 'recientes' %}">Ver galería de frases</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Ver galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
 <!--arriba-->
 {% block arriba %}
 <div class="row clearfix">
@@ -17,7 +30,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario %}"> {{posts_populares.0.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.0.tema.slug 'recientes' %} ">
 							{{posts_populares.0.tema.nombre}}</a></small>
 						</h4>
@@ -35,7 +48,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario %}"> {{posts_populares.1.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.1.tema.slug 'recientes' %} ">
 							{{posts_populares.1.tema.nombre}}</a></small>
 						</h4>
@@ -53,7 +66,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario %}"> {{posts_populares.2.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.2.tema.slug 'recientes' %} ">
 							{{posts_populares.2.tema.nombre}}</a></small>
 						</h4>
@@ -67,24 +80,45 @@
 {% endblock arriba %}
 	
 {% block botones_control %}
-<div class="btn-group btn-group-sm control ">
-	<button class="btn btn-default {{todos}}" 
-	type="button" onclick="location.href='{% url 'temas:main' 'todos' %}';">
-	<span class="glyphicon glyphicon-th-list"> </span> Todos
-	</button> 
-	<button class="btn btn-default {{activos}} "
-	type="button" onclick="location.href='{% url 'temas:main' 'activos' %}';">
-	<span class="glyphicon glyphicon-signal"> </span> Activos
-	</button> 
-	<button class="btn btn-default {{populares}} " 
-	type="button" onclick="location.href='{% url 'temas:main' 'populares' %}';">
-	<span class="glyphicon glyphicon-star"> </span> Populares
-	</button>
+<div style = "margin-bottom:5px" class = "hidden-xs">
+	<hr>
+	<h3 style = "display: inline-block"> Temas </h3>
+	<div class="btn-group btn-group-sm control">
+		<button class="btn btn-default {{todos}}" 
+		type="button" onclick="location.href='{% url 'temas:main' 'todos' %}';">
+		<span class="glyphicon glyphicon-th-list"> </span> Todos
+		</button> 
+		<button class="btn btn-default {{activos}} "
+		type="button" onclick="location.href='{% url 'temas:main' 'activos' %}';">
+		<span class="glyphicon glyphicon-signal"> </span> Activos
+		</button> 
+		<button class="btn btn-default {{populares}} " 
+		type="button" onclick="location.href='{% url 'temas:main' 'populares' %}';">
+		<span class="glyphicon glyphicon-star"> </span> Populares
+		</button>
+	</div>
+</div>
+<div class = "div_control row visible-xs">
+	<hr>
+	<div class= "btn-group control">
+		 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Temas <span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li class = " {{todos}} ">
+				<a href="{% url 'temas:main' 'todos' %}">Todos</a>
+			</li>
+			<li class = " {{activos}} ">
+				<a href="{% url 'temas:main' 'activos' %}">Activos</a>
+			</li>
+			<li class = " {{populares}}">
+				<a href="{% url 'temas:main' 'populares' %}">Populares</a>
+			</li>
+		</ul>
+	</div>
 </div>
 {% endblock botones_control %}
 
 {% block tab_content %}
-<div class="col-md-8 column ">
+<div class="col-md-8 col-sm-7 column ">
 	<div class="row clearfix">
 		{% include page_template %}
 	</div>
@@ -92,7 +126,7 @@
 {% endblock tab_content %}
 
 {% block sidebar %}
-<div class="col-md-4 column ">
+<div class="col-md-4 col-sm-3 column ">
 	<div class = "main_cita">
 		<blockquote>
 			<p>
@@ -112,11 +146,11 @@
 			<div class="col-md-12 column">
 			<div class = "btn">
 				<button type="button" class="btn btn-default" 
-				onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Ver Galería de Imágenes
+				onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
 				</button>
 			</div>
 			<div class = "btn">
-				 <button type="button" class="btn btn-default" onclick="location.href='{% url 'temas:nuevo_tema'%}';"> Crear un Tema nuevo
+				 <button type="button" class="btn btn-default" onclick="location.href='{% url 'temas:nuevo_tema'%}';"> Crear un tema nuevo
 				 </button>
 			</div>
 			</div>

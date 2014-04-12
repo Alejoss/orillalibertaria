@@ -30,10 +30,6 @@ def index(request, queryset, template = 'citas/index.html', extra_context = None
 
 	citas = Cita.objects.filter(eliminada=False).order_by(q)
 
-	if request.is_ajax():
-		template = page_template
-		print "ajax!"
-
 	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
 	imagenes_display = []
 	primera_imagen = ""
@@ -66,10 +62,17 @@ def nueva(request):
 			return HttpResponseRedirect(reverse('citas:index'))
 		else:
 			pass #!!! enviar errores
-	else:
-		form = FormNuevaCita()
-		context = {'FormNuevaCita':FormNuevaCita}
-		return render(request,template, context)
+
+	lista_de_autores = []
+	lista_de_autores_obj = Cita.objects.filter(eliminada=False).values('autor').order_by('autor')
+	for x in lista_de_autores_obj:
+		if x['autor'] not in lista_de_autores:
+			lista_de_autores.append(x['autor'])
+
+	form = FormNuevaCita()
+	context = {'FormNuevaCita':FormNuevaCita, 
+	'lista_de_autores':lista_de_autores}
+	return render(request,template, context)
 
 def marcar_favorito(request, cita_id):
 	cita = Cita.objects.get(pk=cita_id)
@@ -87,25 +90,27 @@ def marcar_favorito(request, cita_id):
 			registro_favorito.eliminado = False
 			cita.save()
 			registro_favorito.save()
-			return HttpResponseRedirect(reverse('citas:index'))
+			return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
 		else:
 			print 3
 			cita.favoritos_recibidos -= 1
 			registro_favorito.eliminado = True
 			cita.save()
 			registro_favorito.save()
-			return HttpResponseRedirect(reverse('citas:index'))
+			return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
 	else:
 		print 4
 		cita.favoritos_recibidos += 1
 		registro_favorito = Cfavoritas(cita=cita, perfil = perfil_usuario)
 		registro_favorito.save()
 		cita.save()
-		return HttpResponseRedirect(reverse('citas:index'))
+		return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
 
-def favoritas(request):
+def favoritas(request, username):
 	template = 'citas/favoritas.html'
-	perfil_usuario = Perfiles.objects.get(usuario=request.user)
+	user_object = User.objects.get(username=username)
+	perfil_usuario = Perfiles.objects.get(usuario=user_object)
+
 	Cfavoritas_objects = Cfavoritas.objects.filter(perfil = perfil_usuario).order_by('-fecha')
 	citas_favoritas = []
 	for c in Cfavoritas_objects:
@@ -123,8 +128,12 @@ def favoritas(request):
 		else:
 			imagenes_display.append(i.url)
 
+	propio_usuario = False
+	if request.user == user_object:
+		propio_usuario = True
+
 	context = {'citas_favoritas':citas_favoritas, 'imagenes_display': imagenes_display,
-	'primera_imagen':primera_imagen}
+	'primera_imagen':primera_imagen, 'user_object':user_object, 'propio_usuario':propio_usuario}
 	
 	return render(request, template , context)
 

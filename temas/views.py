@@ -2,9 +2,10 @@
 from datetime import datetime
 import random
 import re
+import json
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.contrib import auth
@@ -12,6 +13,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from endless_pagination.decorators import page_template
+from django.views.decorators.csrf import ensure_csrf_cookie
 from forms import FormCrearTema, FormNuevoPost, FormEditarTema
 from models import *
 from perfiles.models import Perfiles
@@ -20,6 +22,27 @@ from imagenes.models import Imagen
 from utils import obtener_posts_populares, obtener_imagen
 
 #print "variable %s" %(variable) <--- para debug
+@ensure_csrf_cookie
+def prueba(request):
+	template = "temas/prueba.html"
+	print "llego def prueba"
+
+	data = {}
+	context = {}
+	return render(request, template, context)
+
+def prueba_ajax(request):
+	print "llego a def prueba_ajax"
+	if request.is_ajax():
+		print "request is ajax!"
+		variable = request.GET.get('data', '')
+		print variable
+		data = {}
+		data['variable']='se recibio la data y esta es la respuesta :)'
+		return HttpResponse(json.dumps(data), content_type = "application/json")
+	else:
+		return HttpResponse('no_ajax')
+
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
                     normspace=re.compile(r'\s{2,}').sub):
@@ -159,27 +182,42 @@ def index_tema(request, slug , queryset, template = 'temas/tema.html', extra_con
 	else:
 		q = "-id"
 		recientes = "active"
-	posts = Posts.objects.filter(tema = tema, eliminado=False, es_respuesta=False).order_by(q)
+	posts_obj = Posts.objects.filter(tema = tema, eliminado=False, es_respuesta=False).order_by(q)
+	posts = []
+	for post in posts_obj:
+		#lista de posts con respuestas y con voted status incluido
+		num_respuestas = Respuestas.objects.filter(post_padre=post).count()
+		voted_status = "no-vote"
+		if post.creador.usuario == request.user:
+			voted_status = "propio_post"
+			print "propio post"
+		else:
+			if Votos.objects.filter(post_votado=post, usuario_votante=request.user).exists():
+				voto = Votos.objects.get(post_votado=post, usuario_votante=request.user)
+				if voto.tipo == 1:
+					voted_status = "voted-up"
+				elif voto.tipo == -1:
+					voted_status = "voted-down"
+				else:
+					voted_status = "no-vote"
 
+		puntaje = post.votos_positivos-post.votos_negativos
+
+		posts.append([post,num_respuestas, voted_status, puntaje])
 
 	# thumbnail de imágenes.
-	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
+	imagenes_ids = [44,47,38,41,35,42]
+	random.shuffle(imagenes_ids)
 	imagenes_display = []
-	primera_imagen = ""
-	primero = True
-	for i in imagenes_objects:
-		if primero == True:
-			primera_imagen = i.url
-			primero = False
-		else:
-			imagenes_display.append(i.url)
+
+	for x in imagenes_ids:
+		img = Imagen.objects.get(id=x)
+		imagenes_display.append(img.url)
 
 
-	context = {'tema':tema, 'imagen': imagen, 'posts':posts,
-	'imagenes_display': imagenes_display, 
-	'primera_imagen':primera_imagen, 'recientes':recientes, 
-	'populares':populares,
-	'descripcion':descripcion}
+	context = {'tema':tema, 'imagen': imagen, 'posts':posts,'descripcion':descripcion,
+	'imagenes_display': imagenes_display, 'recientes':recientes, 'populares':populares,
+	}
 
 	if extra_context is not None:
 		context.update(extra_context)
@@ -229,25 +267,48 @@ def sumar_post(request, slug):
 def post(request, slug, post_id):
 	template = 'temas/post.html'
 
-	form_respuesta = FormNuevoPost() #utiliza el mismo form que los posts normales
-	post = Posts.objects.get(id=post_id)
-	res_crudo = Respuestas.objects.filter(post_padre = post).order_by('-id')
-	#obtiene los objetos de la tabla respuestas para trabajar con ellos.
+	#post_padre
+	post_padre = Posts.objects.get(id=post_id)
+	post_es_respuesta = False
+	suma_votos = post_padre.votos_positivos - post_padre.votos_negativos
+
+	post_padre_padre = ""
+	post_pp_respuestas = 0
+	if post_padre.es_respuesta == True:
+		post_es_respuesta = True
+		#respuestas_post_padre_object. El post padre del post si el post es respuesta.
+		rpp_obj = Respuestas.objects.get(post_respuesta=post_padre)
+		post_padre_padre = rpp_obj.post_padre
+		post_pp_respuestas = Respuestas.objects.filter(post_padre=post_padre_padre).count()
+
+	#respuestas
+	respuestas_obj = Respuestas.objects.filter(post_padre = post_padre).order_by('-id')
+	print "respuestas_obj: %s" %(respuestas_obj)
 	respuestas = []
+	#obtiene los objetos de la tabla respuestas para trabajar con ellos.
 	#lista en la que se van a guardar los objetos de la tabla Posts correspondientes.
-	for r in res_crudo:
-		respuestas.append(r.post_respuesta)
+	for r in respuestas_obj:
+		post_obj = r.post_respuesta
+		print "post_obj.id: %s" %(post_obj.id)
+		num_respuestas_respuesta = Respuestas.objects.filter(post_padre=post_obj).count()
+		respuestas.append([r.post_respuesta, num_respuestas_respuesta])
+		print "num_respuestas_respuesta: %s" %(num_respuestas_respuesta)
+	#tema
 	tema = Temas.objects.get(slug=slug)
 	imagen_tema = obtener_imagen(tema.id)
 	descripcion_tema = Tema_descripcion.objects.filter(tema=tema).latest('id')
+	posts_count = Posts.objects.filter(tema=tema, eliminado=False, es_respuesta=False).count()
 
-	posts_count = Posts.objects.filter(tema=tema, eliminado=False).count()
-
-	suma_votos = post.votos_positivos - post.votos_negativos
-	context = {'tema': tema, 'imagen_tema':imagen_tema,
-	'post':post, 'form_respuesta': form_respuesta, 
+	#otros
+	form_respuesta = FormNuevoPost() #utiliza el mismo form que los posts normales
+	
+	context = {'tema': tema, 'imagen_tema':imagen_tema, 'post_es_respuesta':post_es_respuesta,
+	'post_padre':post_padre, 'form_respuesta': form_respuesta, 
 	'respuestas':respuestas, 'suma_votos':suma_votos,
-	'descripcion_tema':descripcion_tema, 'posts_count':posts_count}
+	'descripcion_tema':descripcion_tema, 'posts_count':posts_count,
+	'post_es_respuesta':post_es_respuesta, 'post_padre_padre':post_padre_padre,
+	'post_pp_respuestas':post_pp_respuestas}
+
 	return render(request, template, context)
 
 def respuesta(request, slug, post_id):
@@ -277,32 +338,57 @@ def respuesta(request, slug, post_id):
 		return HttpResponseRedirect(reverse('temas:post', 
 			kwargs = {'slug': tema.slug, 'post_id': post_id}))
 
-def voto(request, slug, post_id):
-	tema = Temas.objects.get(slug=slug)
-	if request.method == "POST":
-		voto = request.POST.get("voto")
-		if voto == "positivo":
-			#si la funcion recibe en el Post el string "positivo".
-			#encuentra el Post object, el Perfil del votante y del votado.
-			#revisa si ya voto el usuario en ese post. Boolean, variable "ya_voto".
-			post_votado = Posts.objects.get(id=post_id)
-			autor_post = post_votado.creador
-			usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
-			usuario_votante = Perfiles.objects.get(usuario = request.user)
+def remover_voto_ajax(request):
+	if request.is_ajax():
+		post_id = request.GET.get('post_id','')
+		post_votado = Posts.objects.get(id=post_id)
+		autor_post = post_votado.creador
+		usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
+		usuario_votante = Perfiles.objects.get(usuario = request.user)
+		voto_actual = Votos.objects.get(post_votado = post_votado, 
+			usuario_votante = usuario_votante)
+		if voto_actual.tipo == 1:
+			post_votado.votos_positivos -=1
+			usuario_votado.votos_recibidos -= 1
+		elif voto_actual.tipo == -1:
+			post_votado.votos_positivos += 1
+			usuario_votado.votos_recibidos += 1
+
+		voto_actual.tipo = 0
+		post_votado.save()
+		usuario_votado.save()
+		voto_actual.save()
+		return HttpResponse('remover_voto_ajax hecho')
+	else:
+		return HttpResponse('error_no_ajax')
+
+def vote_up_ajax(request):
+	if request.is_ajax():
+		print "voted-up"
+		post_id = request.GET.get('post_id','')
+		#encuentra el Post object, el Perfil del votante y del votado.
+		#revisa si ya voto el usuario en ese post. Boolean, variable "ya_voto".
+		post_votado = Posts.objects.get(id=post_id)
+		print "post_id %s" %(post_id)
+		print "post_votado.votos_positivos %s" %(post_votado.votos_positivos)
+		print "post_votado.votos_negativos %s" %(post_votado.votos_negativos)
+		autor_post = post_votado.creador
+		usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
+		usuario_votante = Perfiles.objects.get(usuario = request.user)
+
+		if usuario_votado == usuario_votante:
+			return HttpResponse('no puedes votar tus propios post')
+		else:
 			ya_voto = Votos.objects.filter(post_votado = post_votado, 
 				usuario_votante = usuario_votante).exists()
-			
 			if ya_voto:
 				#si ya voto, obtiene el objecto Voto que esta guardado en la bd.
 				voto_actual = Votos.objects.get(post_votado = post_votado, 
 				usuario_votante = usuario_votante)
-				if voto_actual.tipo == 1:
-					#si el voto actual es positivo recarga la pagina.
-					#no se puede votar 2 veces positivo.
-					#pasa el string tema que recibe la funcion como argumento.
-					return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
-				elif voto_actual.tipo == -1:
+				print "ya voto"
+				print "voto_actual.tipo %s" %(voto_actual.tipo)
+
+				if voto_actual.tipo == -1:
 					#si el voto actual es negativo cambia el voto a positivo
 					voto_actual.tipo = 1
 					voto_actual.save()
@@ -312,13 +398,23 @@ def voto(request, slug, post_id):
 					post_votado.votos_positivos += 1
 					post_votado.save()
 
+					print "post_votado.votos_positivos %s" %(post_votado.votos_positivos)
+					print "post_votado.votos_negativos %s" %(post_votado.votos_negativos)
+					print "total: %s" %(post_votado.votos_positivos-post_votado.votos_negativos)
+
 					#suma a la cantidad de votos positivos que ha recibido el usuario.
 					usuario_votado.votos_recibidos += 1
 					usuario_votado.save()
 
-					return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
+				elif voto_actual.tipo == 0:
+					voto_actual.tipo = 1
+					post_votado.votos_positivos += 1
+					usuario_votado.votos_recibidos += 1
+					voto_actual.save()
+					post_votado.save()
+					usuario_votado.save()
 			else:
+				"nuevo voto creado"
 				#Si no existe un voto del usuario en ese post
 				#crea un voto Positivo de ese usario en ese post.
 				voto = Votos(usuario_votado=usuario_votado,
@@ -327,7 +423,7 @@ def voto(request, slug, post_id):
 				#1 positivo. -1 negativo
 				voto.save()
 
-				#suma 1 a los votos_positivos del objeto usuario
+				#suma 1 a los votos_positivos del objeto post
 				post_votado.votos_positivos += 1
 				post_votado.save()
 
@@ -335,26 +431,32 @@ def voto(request, slug, post_id):
 				usuario_votado.votos_recibidos += 1
 				usuario_votado.save()
 
-				return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
-	
-		elif voto == "negativo":
-			#los mismo que con los votos positivos con una diferencia:
-			#no resta votos_recibidos al usuario_votado si el voto es nuevo.
-			#asi, se evita usuarios con puntaje negativo.
-			post_votado = Posts.objects.get(id=post_id)
-			autor_post = post_votado.creador
-			usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
-			usuario_votante = Perfiles.objects.get(usuario = request.user)
+			return HttpResponse('vote-up ajax procesado')
+	else:
+		return HttpResponse('error_no_ajax')
+
+def vote_down_ajax(request):
+	if request.is_ajax():
+		post_id = request.GET.get('post_id','')
+		#los mismo que con los votos positivos con una diferencia:
+		#no resta votos_recibidos al usuario_votado si el voto es nuevo.
+		#asi, se evita usuarios con puntaje negativo.
+		post_votado = Posts.objects.get(id=post_id)
+
+		autor_post = post_votado.creador
+		usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
+		usuario_votante = Perfiles.objects.get(usuario = request.user)
+
+		if usuario_votado == usuario_votante:
+			return HttpResponse('no puedes votar tus propios post')
+		else:
 			ya_voto = Votos.objects.filter(post_votado = post_votado, 
 				usuario_votante = usuario_votante).exists()
 			if ya_voto:
 				voto_actual = Votos.objects.get(post_votado = post_votado, 
 				usuario_votante = usuario_votante)
-				if voto_actual.tipo == -1:
-					return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
-				elif voto_actual.tipo == 1:
+
+				if voto_actual.tipo == 1:
 					voto_actual.tipo = -1
 					voto_actual.save()
 
@@ -365,34 +467,32 @@ def voto(request, slug, post_id):
 					usuario_votado.votos_recibidos -= 1
 					usuario_votado.save()
 
-					return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
+				elif voto_actual.tipo == 0:
+					voto_actual.tipo = -1
+					post_votado.votos_negativos += 1
+					usuario_votado.votos_recibidos -= 1
+					voto_actual.save()
+					post_votado.save()
+					usuario_votado.save()
 			else:
 				voto = Votos(usuario_votado=usuario_votado,
 					usuario_votante=usuario_votante,
 					post_votado = post_votado, tema = post_votado.tema, tipo = -1)
-				#1 positivo. -1 negativo
 				voto.save()
 
 				post_votado.votos_negativos += 1
 				post_votado.save()
 			
-				return HttpResponseRedirect(reverse('temas:index_tema', 
-						kwargs={'slug':slug, 'queryset':u'recientes'}))
-
-		else:
-			pass #!!! 404
+			return HttpResponse('vote-down ajax procesado')
 	else:
-		pass #!!! 404 request no es post
+		return HttpResponse('error_no_ajax')
 
 def editar_tema(request, slug):
 	template = "temas/editar_tema.html"
 
-	form_editar_tema = FormEditarTema()
-	reputacion_necesaria = 10
 	tema = Temas.objects.get(slug=slug)
 	perfil_usuario = Perfiles.objects.get(usuario=request.user)
-	
+	reputacion_necesaria = 10
 	if request.method == "POST":
 		form = FormEditarTema(request.POST)
 		if form.is_valid():
@@ -416,25 +516,38 @@ def editar_tema(request, slug):
 		puede_editar = False
 
 	ha_sido_editado = False
+	tiene_descripcion = False
 	primera_edicion, ultima_edicion = "",""
 	numero_de_ediciones = 0
 
 	if Tema_descripcion.objects.filter(tema=tema).exists():
+		tiene_descripcion = True
 		ediciones = Tema_descripcion.objects.filter(tema=tema).order_by('id')
 		numero_de_ediciones = ediciones.count()
-		primera_edicion = ediciones[0]
+		primera_edicion_obj = ediciones[0]
+		primera_edicion = primera_edicion_obj.texto
 		if numero_de_ediciones > 1:
 			ha_sido_editado = True
-			ultima_edicion = ediciones.reverse()[0]
+			ultima_edicion_obj = ediciones.reverse()[0]
+			ultima_edicion = ultima_edicion_obj.texto
 		else:
 			ultima_edicion = primera_edicion
 
 	imagen = obtener_imagen(tema.id)
 
+	if primera_edicion == "":
+		primera_edicion = "Este tema no tiene descripción, todavía."
+		tiene_descripcion = False
+	print primera_edicion
+
+	form_editar_tema = FormEditarTema(initial={'descripcion':ultima_edicion})
+	
+
 	context = {'puede_editar':puede_editar, 'primera_edicion':primera_edicion,
 	'ultima_edicion':ultima_edicion, 'numero_de_ediciones':numero_de_ediciones,
 	'tema':tema, 'form_editar_tema':form_editar_tema,
-	'ha_sido_editado':ha_sido_editado, 'imagen':imagen}
+	'ha_sido_editado':ha_sido_editado, 'imagen':imagen,
+	'tiene_descripcion':tiene_descripcion}
 
 	return render(request, template, context)
 

@@ -41,8 +41,7 @@ class Respuestas(models.Model):
 	post_padre = models.ForeignKey(Posts, related_name = "post_original", null=True)
 
 	def __unicode__(self):
-		return "%s... en respuesta a %s..., tema %s" %(self.post_respuesta.texto[:20], 
-			self.post_padre.texto[:20], self.post_padre.tema.nombre )
+		return "Respuesta obj. Post id %s en respuesta a  Post id %s" %(self.post_respuesta.id, self.post_padre.id)
 
 class Votos(models.Model):
 	fecha = models.DateTimeField(auto_now_add=True)

@@ -1,15 +1,47 @@
-{% extends "base.html" %}
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
-
-<div class = "col-md-8 col-md-offset-4">
-
+{% block arriba %}
+<div class = "row titulo_con_barco">
 	<h2> Nuevo Tema </h2>
+	<img class = "barco_logo pull-right" 
+	src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba %}
+
+{% block form %}
+
 	<form action = "{% url 'temas:nuevo_tema' %}" method = "post"> {% csrf_token %}
-		{{form_crear_tema.as_ul}}
-		<input type = "submit" value = "Añadir Tema"/>
+		{{form_crear_tema|crispy}}
+		<input class = "btn" type = "submit" value = "Crear Tema"/>
 	</form>
 	<!-- debe redireccionar a la pagina del nuevo tema -->
-<div>
+{% endblock form %}
 
-{% endblock content %}
+{% block description %}
+<div class="alert alert-dismissable alert-warning">
+	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	 Evita crear temas repetidos. Si no estás seguro, revisa la <a class = "link_alert" href=" {% url 'temas:main' 'todos' %} "> lista</a> de temas o búscalo utilizando la barra de navegación. Pueden existir temas con nombres similares siempre y cuando se refieran a conceptos distintos.
+</div>
+<div>
+	<dt>
+		Descripción
+	</dt>
+	<dd>
+		La descripción del tema debe explicar de qué se trata. Se recomienda ofrecer detalles objetivos que acerquen a los cibernautas, libertarios o no, al concepto sobre el cual se va a compartir contanido. 
+		<br>
+		Cualquier usuario con suficiente reputación podrá editar la descripción del tema, así, con el tiempo se podrá desarrollar una explicación más completa.
+	</dd>
+	<br>
+	<dt>
+		Imagen
+	</dt>
+	<dd>
+		Pega el url de una imagen que pueda representar al tema. <br>
+		Se recomienda imágenes de tamaño mediano: menores a 800x600px. <br>
+		Revisa que el url que elegiste termine en ".jpg" o ".png".<br>
+		Por ahora no hay como subir imágenes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. 
+	</dd>
+</div>
+{% endblock description %}

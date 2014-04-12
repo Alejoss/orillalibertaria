@@ -6,11 +6,11 @@
 		<div class="col-md-8 column">
 			<ul class="breadcrumb">
 				<li>
-					<h4><a href="{% url 'citas:index' 'recientes' %}">Frases</a></h4> 
-					<span class="divider"></span>
-				</li>
-				<li>
-					<small>Favoritas</small> <span class="divider"></span>
+					{% if propio_usuario %}
+	                <p> {{user.username}}, tus frases favoritas. </p>
+	                {% else%}
+	                <p> Imágenes favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></p>
+	                {% endif %}
 				</li>
 			</ul>
 			<hr>
@@ -34,29 +34,6 @@
 				</div>
 				{% endfor %}
 			</div>
-			<ul class="pagination">
-				<li>
-					<a href="#">Prev</a>
-				</li>
-				<li>
-					<a href="#">1</a>
-				</li>
-				<li>
-					<a href="#">2</a>
-				</li>
-				<li>
-					<a href="#">3</a>
-				</li>
-				<li>
-					<a href="#">4</a>
-				</li>
-				<li>
-					<a href="#">5</a>
-				</li>
-				<li>
-					<a href="#">Next</a>
-				</li>
-			</ul>
 		</div>
 		<div class="col-md-4 column">
 			<div class = "div_carrusel">

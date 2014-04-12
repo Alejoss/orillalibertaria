@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
  
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
@@ -6,15 +7,17 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
 
+from endless_pagination.decorators import page_template
+
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
-from temas.models import Posts
+from temas.models import Posts, Respuestas, Votos
 from citas.models import Cita, Cfavoritas
 from imagenes.models import Imagen, Ifavoritas
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
-def login(request):
+def login_page(request):
 	template = 'perfiles/login.html'
 	#Custom login. No es el login normal de Django.
 	return render(request, template)
@@ -28,7 +31,7 @@ def authcheck(request):
 	if user is not None:
 		#Si existe, hace login a ese usuario y lo guarda en "request"
 		auth.login(request, user)
-		return redirect('temas:main')
+		return redirect('temas:main', 'recientes')
 	else:
 		return redirect('perfiles:login')
 	
@@ -63,7 +66,7 @@ def registrar(request):
 		if form.is_valid():
 			form.save() #Guarda los valores en la base de datos auth.User.
 			user = User.objects.get(username=form.cleaned_data['username'])
-			perfil_nuevo = Perfiles(usuario = user)
+			perfil_nuevo, created = Perfiles.objects.get_or_create(usuario = user)
 			perfil_nuevo.save()
 			return HttpResponseRedirect(reverse('perfiles:registro_ok'))
 		else:
@@ -85,8 +88,7 @@ def editar_perfil_des(request):
 	user = request.user
 	#crea una tabla de Perfiles para el user
 	#si no existe una ya y obtiene esa tabla como "obj"
-	obj, created = Perfiles.objects.get_or_create(usuario = user)
-	perfil_usuario = Perfiles.objects.get(usuario=user)
+	perfil_usuario, created = Perfiles.objects.get_or_create(usuario = user)
 	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=perfil_usuario).exists()
 	tiene_frasesfav = Cfavoritas.objects.filter(perfil=perfil_usuario).exists()
 	if request.method == 'POST':
@@ -94,37 +96,20 @@ def editar_perfil_des(request):
 		if form.is_valid():
 			#una vez validado el form. Recoge el user guardado en request (loggeado)
 			#Llena los valores del obj con los valores del form request.Post.
-			def revisar_campo(campo):
-				#revisa si el campo de cleaned data tiene mas de 4 caracteres
-				if len(form.cleaned_data[campo])>4:
-					return True
-				else:
-					return False
-
-			if revisar_campo('descripcion'):
-				obj.descripcion = form.cleaned_data['descripcion']
-			if revisar_campo('link1'):
-				obj.link1 = form.cleaned_data['link1']
-			if revisar_campo('link2'):
-				obj.link2 = form.cleaned_data['link2']
-			if revisar_campo('link3'):
-				obj.link3 = form.cleaned_data['link3']
-			if revisar_campo('link4'):
-				obj.link4 = form.cleaned_data['link4']
-			if revisar_campo('link5'):
-				obj.link5 = form.cleaned_data['link5']
-			if revisar_campo('link6'):
-				obj.link6 = form.cleaned_data['link6']
-			if revisar_campo('link7'):
-				obj.link7 = form.cleaned_data['link7']
-			if revisar_campo('link8'):
-				obj.link8 = form.cleaned_data['link8']
-			if revisar_campo('link9'):
-				obj.link9 = form.cleaned_data['link9']
-			if revisar_campo('link10'):
-				obj.link10 = form.cleaned_data['link10']
-
-			obj.save()
+			descripcion = form.cleaned_data.get('descripcion')
+			link1 = form.cleaned_data.get('link1')
+			link2 = form.cleaned_data.get('link2')
+			link3 = form.cleaned_data.get('link3')
+			link4 = form.cleaned_data.get('link4')
+			link5 = form.cleaned_data.get('link5')
+			perfil_usuario.link1 = link1
+			perfil_usuario.link2 = link2
+			perfil_usuario.link3 = link3
+			perfil_usuario.link4 = link4
+			perfil_usuario.link5 = link5
+			if len(descripcion)>5:
+				perfil_usuario.descripcion = descripcion
+			perfil_usuario.save()
 			#Redirije al perfil del usuario. pasa el username como
 			#kwargs para manejo de urlpattern
 			return redirect('perfiles:perfil', username = request.user.username)
@@ -132,9 +117,15 @@ def editar_perfil_des(request):
 			#Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
 			error = "error en form.is_valid" #!!! Falta enviar errores.
 	
-	editar_perfil_form = PerfilesForm()
-	context = {'editar_perfil_form':editar_perfil_form, 'tiene_imagenesfav':tiene_imagenesfav,
-	'tiene_frasesfav':tiene_frasesfav}
+	editar_perfil_form = PerfilesForm(initial={
+		'link1':perfil_usuario.link1, 'link2':perfil_usuario.link2,
+		'link3':perfil_usuario.link3, 'link4':perfil_usuario.link4,
+		'link5':perfil_usuario.link5})
+
+	context = {'editar_perfil_form':editar_perfil_form, 
+	'tiene_imagenesfav':tiene_imagenesfav,
+	'tiene_frasesfav':tiene_frasesfav,
+	'perfil_usuario':perfil_usuario}
 	return render(request, template, context)
 		
 def editar_perfil_info(request):
@@ -147,7 +138,6 @@ def editar_perfil_info(request):
 			e = form.cleaned_data['email']
 			f = form.cleaned_data['first_name']
 			l = form.cleaned_data['last_name']
-
 			if e != "":
 				obj.email = e
 
@@ -166,28 +156,69 @@ def editar_perfil_info(request):
 	context = {'perfil_info_form': perfil_info_form}
 	return render(request, template, context)
 
-def perfil(request, username):
-	template = 'perfiles/perfil.html'
+@page_template('index_page_perfiles.html')
+def perfil(request, username, queryset, template = "perfiles/perfil.html",
+	extra_context = None):
 	#funciona cuando se visita el perfil de otro usuario
-	#recibe del urlpattern un "username"
+	#recibe del urlpattern un "username y un queryset.
 	#obtiene el User correspondiende a ese username
 	usuario_user = User.objects.get(username=username)
 	#obtiene el Perfiles correspondiente al User
 	usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
 	nombre_completo = usuario_user.get_full_name()
-	posts = Posts.objects.filter(creador=usuario_perfil).order_by('-fecha')
-	posts_populares = Posts.objects.filter(creador=usuario_perfil, votos_positivos__gt=1).order_by('votos_positivos')
-	citas_favoritas = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
-	
+
+	recientes = ""
+	populares = ""
+	q = ""
+	if queryset == "populares":
+		q = "-votos_positivos"
+		populares = "active"
+	else:
+		q = "-fecha"
+		recientes = "active"
+
+	posts_obj = Posts.objects.filter(creador=usuario_perfil).order_by(q)
+	posts = []
+	for p in posts_obj:
+		post = [p]
+		if p.es_respuesta == True:
+			if Respuestas.objects.filter(post_respuesta=p).exists():
+				respuesta = Respuestas.objects.get(post_respuesta=p)
+				usuario_respuesta = respuesta.post_padre.creador.usuario.username
+				post.extend([True, usuario_respuesta])
+			else:
+				post.extend([False, ""]) #!!! Prueba para ver respuestas descuadradas.
+		else:
+			post.extend([False, ""])
+
+		voted_status = "no-vote"
+		if p.creador == request.user:
+			voted_status = "propio_post"
+		else:
+			if Votos.objects.filter(post_votado=p, usuario_votante=request.user).exists():
+				voto = Votos.objects.get(post_votado=p, usuario_votante=request.user)
+				if voto.tipo == 1:
+					voted_status = "voted-up"
+				elif voto.tipo == -1:
+					voted_status = "voted-down"
+				else:
+					voted_status = "no-vote"
+					
+		post.append(voted_status)
+		posts.append(post)
+
+	citas_favoritas_obj = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
+	cita_favorita = (random.choice(citas_favoritas_obj)).cita
+
 	portada = ""
 	imagenes_favoritas = []
 	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil).exists()
 
 	if tiene_imagenesfav:
 		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
-		if numero_imgfavoritas > 10:
-			numero_imgfavoritas = 10		
-		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('fecha')[:numero_imgfavoritas]
+		if numero_imgfavoritas > 3:
+			numero_imgfavoritas = 3		
+		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:numero_imgfavoritas]
 		for i in ifavoritas_objects:
 			imagenes_favoritas.append(i.imagen.url)
 		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
@@ -199,12 +230,14 @@ def perfil(request, username):
 	usuario_fav = usuario_user.username 
 
 	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
-	'nombre_completo': nombre_completo, 'posts':posts, 'posts_populares':posts_populares,
-	'citas_favoritas':citas_favoritas, 'imagenes_favoritas':imagenes_favoritas, 
-	'usuario_fav':usuario_fav, 'tiene_imagenesfav':tiene_imagenesfav}
-	#renderea perfiles.html con el user y el perfil correspondiente
-	return render(request, template, context)
+	'nombre_completo': nombre_completo, 'posts':posts,'cita_favorita':cita_favorita,
+	'imagenes_favoritas':imagenes_favoritas, 'usuario_fav':usuario_fav,
+	'tiene_imagenesfav':tiene_imagenesfav, 'recientes':recientes, 'populares': populares}
 
+	if extra_context is not None:
+		context.update(extra_context)
+
+	return render(request, template, context)
 
 def index(request):
 	template = 'perfiles/index.html'

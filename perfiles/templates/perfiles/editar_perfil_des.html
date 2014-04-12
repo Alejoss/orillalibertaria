@@ -1,9 +1,30 @@
-{% extends "base.html" %}
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<img style = "margin-right:20px" class = "barco_logo" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<h2 class = "pull-right"> Edita tu perfil {{user.username}} </h2>
+	<br/>
+</div>
+{% endblock arriba %}
 
-	{% if user.is_authenticated %}
-	<div class = "col-md-10 col-md-offset-2">
+{% block form %}
+<div class = "row">
+	<p class = "perfil_descripcion pull-right">{{perfil_usuario.descripcion}}</p>	
+		
+</div>
+<div class = "row">
+	<form action = "/perfiles/editar_perfil_des/" method = "post">
+	{% csrf_token %}
+		<ul>
+			{{editar_perfil_form|crispy}}
+		</ul>
+		<input class= "btn pull-right" type = "submit" name = "submit" value = "Guardar">
+	</form>
+</div>
+{% endblock form %}
+<div class = "col-md-10 col-md-offset-2">
 		<p> <a href = "{% url 'perfiles:editar_perfil_info' %}"> 
 			Edita </a>tu información </p> <br/>
 
@@ -44,10 +65,15 @@
 		</form>
 	</div>
 
-	{% else %}
+{% block description %}
+<div class = "thumbnail">
+	<img class = "imagen_perfil" src = "http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg">
+</div>
+<div class = "pull-right">
+	<h4> {{user.first_name}} {{user.last_name}} </h4>
+	<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
+	<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
+	<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' %}">frases favoritas.</a></h5>
+</div>
 
-	<p> Por favor has <a href = " {% url 'perfiles:login' %}">  login </a> para editar tu perfil </p>
-
-	{% endif %}
-
-{% endblock content %}
+{% endblock description %}

@@ -5,47 +5,106 @@
 	<div class="col-md-12 column">
 		<div class="row clearfix">
 			<div class="col-md-8 column">
-				<div class = "post">
+	{% if post_es_respuesta %}
+			<div class = "post"> <!--post padre respuesta -->
 				<div class = "col-md-1">
 					<div class = "control_votos">
 						<div class = "btn-group-vertical">
-							<button type="button" class = "btn btn-default"> 
+							<button type="button" class = "btn btn-default vote-up"> 
 								<span class="glyphicon glyphicon-chevron-up"></span>
 							</button>
 							<button type="button" class = "btn btn-default puntaje"> 
-							<h2 class = "numero_puntaje"> {{post.votos_positivos}} </h2>
+							<h2 class = "numero_puntaje no-vote"> {{post_padre_padre.votos_positivos}} </h2>
 							</button>
-							<button type="button" class = "btn btn-default"> 
+							<button type="button" class = "btn btn-default vote-down"> 
 								<span class="glyphicon glyphicon-chevron-down"></span>
 							</button>
 						</div>
 					</div>
 				</div>
 				<div class = "col-md-11">
-					<div class="panel panel-info">
+					<div class="panel panel-success">
 						<div class="panel-body">
 							<p class = "text">
-							{{post.texto|truncatewords:50}}
+							{{post_padre_padre.texto|truncatewords:50}}
 							</p>
-							<br/>
-
-			 				<a href = "{% url 'temas:post' tema.slug post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
 							<br/>
 						</div>
 						<div class="panel-footer">
-							<div class = "nombre_fecha">
-							<p><a href ="{% url 'perfiles:perfil' post.creador.usuario %}">
-								{{post.creador.usuario.username}}</a> <small> el {{post.fecha}} </small>
-							</p>
-							</div>
-							{% if post.creador.usuario == request.user %}
-							<div class = "eliminar_editar">
+							{% if post_padre_padre.creador.usuario == request.user %}
+							<div class = "eliminar_editar pull-left">
 								<div class = "btn-group dropup">
 								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
 								</button>
 								<ul class="dropdown-menu">
 									<li>
-										<a href="{% url 'temas:eliminar_propio_post' post.id %}">Eliminar Post</a>
+										<a href="{% url 'temas:eliminar_propio_post' post_padre_padre.id %}">Eliminar Post</a>
+									</li>
+									<li class = "divider"></li>
+									<li>
+										<a href="#">Editar</a> <!-- -->
+									</li>
+								</ul>
+								</div>
+							</div>
+							{% endif %}
+							<div class = "nombre_fecha">
+							<p><a href ="{% url 'perfiles:perfil' post_padre_padre.creador.usuario 'recientes' %}">
+								{{post_padre_padre.creador.usuario.username}}</a> <small> el {{post_padre_padre.fecha}} </small>
+							</p>
+							</div>
+							<div class = "footer_respuestas pull-right">
+					 			<a href = "{% url 'temas:post' tema.slug post_padre_padre.id %} "> <span class="glyphicon glyphicon-comment link_post"></span> {{post_pp_respuestas}} </a>
+					 		</div>
+						</div>
+					</div>
+					</div> <!-- class md 11 -->
+			</div> <!--post padre respuesta-->
+	{% endif %}
+
+			<div class = "post">
+				<div class = "col-md-1">
+					<div class = "control_votos">
+						<div class = "btn-group-vertical">
+							<button type="button" class = "btn btn-default vote-up"> 
+								<span class="glyphicon glyphicon-chevron-up"></span>
+							</button>
+							<button type="button" class = "btn btn-default puntaje"> 
+							<h2 class = "numero_puntaje no-vote"> {{post_padre.votos_positivos}} </h2>
+							</button>
+							<button type="button" class = "btn btn-default vote-down"> 
+								<span class="glyphicon glyphicon-chevron-down"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class = "col-md-11">
+					<div class="panel panel-warning">
+						<div class="panel-body">
+							<p class = "text">
+							{{post_padre.texto|truncatewords:50}}
+							</p>
+							<br/>
+						</div>
+						<div class="panel-footer">
+							<div class = "nombre_fecha">
+							<p><a href ="{% url 'perfiles:perfil' post_padre.creador.usuario 'recientes' %}">
+								{{post_padre.creador.usuario.username}}</a>
+								{% if post_es_respuesta %}
+								en respuesta a <a href ="{% url 'perfiles:perfil' post_padre_padre.creador.usuario 'recientes' %}">
+								{{post_padre_padre.creador.usuario.username}}</a> 
+								{% endif %}
+								<small> el {{post_padre.fecha}} </small>
+							</p>
+							</div>
+							{% if post_padre.creador.usuario == request.user %}
+							<div class = "eliminar_editar pull-left">
+								<div class = "btn-group dropup">
+								<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li>
+										<a href="{% url 'temas:eliminar_propio_post' post_padre.id %}">Eliminar Post</a>
 									</li>
 									<li class = "divider"></li>
 									<li>
@@ -57,27 +116,29 @@
 							{% endif %}
 						</div>
 					</div>
-<hr/>
-				</div> <!-- class md 10 -->
+				<hr/>
+				</div> <!-- class md 11 -->
 			</div> <!--post -->
+
 <div>
 <h5 class="text-muted">
 	Respuestas
 </h5>
 <br/>
 </div>
-			{% for respuesta in respuestas %}
+
+{% for respuesta in respuestas %}
 <div class = "post">
 	<div class = "col-md-1">
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
-				<button type="button" class = "btn btn-default"> 
+				<button type="button" class = "btn btn-default vote-up"> 
 					<span class="glyphicon glyphicon-chevron-up"></span>
 				</button>
 				<button type="button" class = "btn btn-default puntaje"> 
-				<h2 class = "numero_puntaje"> {{respuesta.votos_positivos}} </h2>
+				<h2 class = "numero_puntaje no-vote"> {{respuesta.0.votos_positivos}} </h2>
 				</button>
-				<button type="button" class = "btn btn-default"> 
+				<button type="button" class = "btn btn-default vote-down"> 
 					<span class="glyphicon glyphicon-chevron-down"></span>
 				</button>
 			</div>
@@ -87,27 +148,19 @@
 		<div class="panel panel-info">
 			<div class="panel-body">
 				<p class = "text">
-				{{respuesta.texto|truncatewords:50}}
+				{{respuesta.0.texto|truncatewords:50}}
 				</p>
-				<br/>
-
- 				<a href = "{% url 'temas:post' tema.slug post.id %} "> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
 				<br/>
 			</div>
 			<div class="panel-footer">
-				<div class = "nombre_fecha">
-				<p><a href ="{% url 'perfiles:perfil' post.creador.usuario %}">
-					{{respuesta.creador.usuario.username}}</a> <small> el {{respuesta.fecha}} </small>
-				</p>
-				</div>
-				{% if respuesta.creador.usuario == request.user %}
-				<div class = "eliminar_editar">
+				{% if respuesta.0.creador.usuario == request.user %}
+				<div class = "eliminar_editar pull-left">
 					<div class = "btn-group dropup">
 					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="{% url 'temas:eliminar_propio_post' post.id %}">Eliminar Post</a>
+							<a href="{% url 'temas:eliminar_propio_post' post_padre.id %}">Eliminar Post</a>
 						</li>
 						<li class = "divider"></li>
 						<li>
@@ -117,17 +170,25 @@
 					</div>
 				</div>
 				{% endif %}
+				<div class = "nombre_fecha">
+				<p><a href ="{% url 'perfiles:perfil' post_padre.creador.usuario 'recientes' %}">
+					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
+				</p>
+				</div>
+				<div class = "footer_respuestas pull-right">
+		 			<a href = "{% url 'temas:post' tema.slug respuesta.0.id %} "> <span class="glyphicon glyphicon-comment link_post"></span> {{respuesta.1}} </a>
+		 		</div>
 			</div>
 		</div>
 	</div> <!-- class md 10 -->
 	</div> <!--post -->
-	{% endfor %}
+{% endfor %}
 
 	<div class = "row clearfix">
 	<hr/>
 		<div>
 			<br/>
-			<form action = "{% url 'temas:respuesta' tema.slug post.id %}" method = "POST"/>
+			<form action = "{% url 'temas:respuesta' tema.slug post_padre.id %}" method = "POST"/>
 				{% csrf_token %}
 				{{form_respuesta.as_table}}
 				<br/>
@@ -165,3 +226,103 @@
 </div> <!-- md 12 -->
 </div> <!-- row clear fix -->
 {% endblock content %}
+
+
+{% block javascript %}
+<script>
+	$(function(){
+		$('.puntaje').click(function(){
+			var votar_up = $(this).prev();
+			var votar_down = $(this).next();
+
+			votar_up.removeClass("btn-warning");
+			votar_down.removeClass("btn-warning");
+			
+			var puntaje_obj = $(this).find('.numero_puntaje');
+			var puntaje = parseInt(puntaje_obj.text(),10);
+			var nuevo_puntaje = puntaje;
+			
+			if ( puntaje_obj.hasClass("voted-down"))
+			{
+				puntaje_obj.removeClass("voted-down");
+				nuevo_puntaje = puntaje +1;
+				puntaje_obj.addClass("no-vote")
+			}
+			else if ( puntaje_obj.hasClass("voted-up"))
+			{
+				puntaje_obj.removeClass("voted-up");
+				nuevo_puntaje = puntaje -1;
+				puntaje_obj.addClass("no-vote")
+			}
+
+			puntaje_obj.html(nuevo_puntaje);
+		})
+
+		$('.vote-up').click(function(){
+			$(this).toggleClass("btn-warning");
+			var $control = $(this).parent();
+			$control.children(".vote-down").removeClass("btn-warning");
+
+			var puntaje_obj = $control.find('.numero_puntaje')			
+			var puntaje = parseInt($control.find('.numero_puntaje').text(), 10);
+			var nuevo_puntaje = puntaje
+
+			if ( puntaje_obj.hasClass("voted-down"))
+			{
+				var nuevo_puntaje = puntaje + 2;
+				puntaje_obj.removeClass("voted-down");
+				puntaje_obj.addClass("voted-up");
+			}
+			else if ( puntaje_obj.hasClass("no-vote") )
+			{
+				var nuevo_puntaje = puntaje + 1;
+				puntaje_obj.removeClass("no-vote");
+				puntaje_obj.addClass("voted-up");
+			}
+
+			else if (puntaje_obj.hasClass("voted-up"))
+			{
+				var nuevo_puntaje = puntaje - 1;
+				puntaje_obj.removeClass("voted-up");
+				puntaje_obj.addClass("no-vote");
+			}
+
+			puntaje_obj.html(nuevo_puntaje)
+
+			});
+
+		$('.vote-down').click(function(){
+			$(this).toggleClass("btn-warning");
+			var $control = $(this).parent();
+			$control.children(".vote-up").removeClass("btn-warning");
+
+			var puntaje_obj = $control.find('.numero_puntaje')			
+			var puntaje = parseInt($control.find('.numero_puntaje').text(), 10);
+			var nuevo_puntaje = puntaje
+
+			if ( puntaje_obj.hasClass("voted-down"))
+			{
+				var nuevo_puntaje = puntaje + 1;
+				puntaje_obj.removeClass("voted-down");
+				puntaje_obj.addClass("no-vote");
+			}
+			else if ( puntaje_obj.hasClass("no-vote") )
+			{
+				var nuevo_puntaje = puntaje - 1;
+				puntaje_obj.removeClass("no-vote");
+				puntaje_obj.addClass("voted-down");
+			}
+
+			else if (puntaje_obj.hasClass("voted-up"))
+			{
+				var nuevo_puntaje = puntaje - 2;
+				puntaje_obj.removeClass("voted-up");
+				puntaje_obj.addClass("voted-down");
+			}
+
+			puntaje_obj.html(nuevo_puntaje)
+
+		});
+	});
+</script>
+{% endblock javascript %}

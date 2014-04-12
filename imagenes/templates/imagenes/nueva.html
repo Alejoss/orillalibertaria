@@ -1,21 +1,30 @@
-{% extends "base.html" %}
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %}
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Añade una Imagen </h2>
 
-		<ul class="breadcrumb">
-			<li>
-				<h4><a href="{% url 'imagenes:index' 'recientes' %}">Imágenes</a></h4> 
-				<span class="divider"></span>
-			</li>
-			<li>
-				<small>Nueva</small> <span class="divider"></span>
-			</li>
-		</ul>
-<h2> Añade una Imagen </h2>
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba %}
+
+{% block form %}
+<br><br>
+
 <form action = "{% url 'imagenes:nueva' %}" method = "post">
 	{% csrf_token %}
-	{{FormNuevaImagen.as_ul}}
-	<input class = "btn" type = "submit" value ="enviar"/>
+	{{FormNuevaImagen|crispy}}
+	<input class = "btn pull-right" type = "submit" value ="enviar"/>
 </form>
 
-{% endblock %}
+{% endblock form %}
+
+{% block description %}
+<dt>Imagen:</dt>
+Pega el url de una imagen. <br>
+Revisa que el url que elegiste termine en ".jpg", o ".png" ".gif".<br>
+Se recomienda imágenes de tamaño mediano: menores a 800x600px. <br>
+Por ahora no hay como subir imágenes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. <br>
+{% endblock description %}

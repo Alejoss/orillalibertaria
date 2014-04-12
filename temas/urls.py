@@ -22,5 +22,11 @@ urlpatterns = patterns('',
 	#Acciones
 	url(r'^/sumar_post/(?P<slug>[-\w]+)/$', views.sumar_post, name = 'sumar_post'),
 	url(r'^/eliminar_post/(?P<post_id>\d+)/$', views.eliminar_propio_post, name = 'eliminar_propio_post'),
-	url(r'^(?P<slug>[-\w]+)/(?P<post_id>\d+)/voto$', views.voto, name = 'voto'),
+	url(r'^vote_up_ajax/$', views.vote_up_ajax, name = 'vote_up_ajax'),
+	url(r'^vote_down_ajax/$', views.vote_down_ajax, name = 'vote_down_ajax'),
+	url(r'^remover_voto_ajax/$', views.remover_voto_ajax, name = 'remover_voto_ajax'),
+
+	#prueba
+	url(r'^prueba/$', views.prueba, name = 'prueba'),
+	url(r'^prueba_ajax/$', views.prueba_ajax, name = 'prueba_ajax'),
 	)  

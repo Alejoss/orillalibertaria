@@ -18,6 +18,14 @@
 	<link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
 	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
 
+	<link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
+	<link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
+	<link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
+
+	<link href="{% static 'css/pgwslider.min.css' %}" rel="stylesheet">
+	{% block extra_css %}
+	{% endblock extra_css %}
+
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -29,6 +37,7 @@
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
   <link rel="shortcut icon" href="img/favicon.png">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	
 </head>
 
@@ -43,9 +52,9 @@
 					 <a class="navbar-brand" href=" {% url 'temas:main' 'activos' %} "> Orilla Libertaria</a> 
 
 				</div>
-				
+
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					
+
 					<form class="navbar-form navbar-left" method = "get" role="search"
 					action = "{% url 'temas:buscar' %}" >
 						<div class="form-group">
@@ -53,15 +62,19 @@
 						</div> <button type="submit" class="btn btn-default">Buscar Tema</button>
 					</form>
 					<ul class="nav navbar-nav navbar-right">
+						{% block navbar_mobile_xs %}
+						{% endblock navbar_mobile_xs %}
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						{% if user.is_authenticated %}
 						<li>
-							{% if user.is_authenticated %}
-							<a href="{% url 'perfiles:perfil' user.username %} ">{{user.username}}</a>
-							{% else %}
-							<a href="{% url 'perfiles:login' %} ">Login</a>
-							<a href="{% url 'perfiles:registrar' %} ">Registrarse</a>
-							{% endif %}
+							<a href="{% url 'perfiles:perfil' user.username 'recientes' %} "><span class="glyphicon glyphicon-user glyphicon_perfil"></span> <span class = "hidden-sm nombre_perfil">{{user.username}}</span></a>		
 						</li>
-						<li class="dropdown">
+						<li class = "visible-xs">
+							<a href=" {% url 'perfiles:logout' %} ">Logout</a>
+						</li>
+
+						<li class="dropdown visible-sm visible-md visible-lg">
 							 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><strong class="caret"></strong></a>
 							<ul class="dropdown-menu">
 								<li>
@@ -74,6 +87,12 @@
 								</li>
 							</ul>
 						</li>
+
+						{% else %}
+						<li>
+							<a href="{% url 'perfiles:login' %} ">Login</a>
+						</li>
+						{% endif %}
 					</ul>
 				</div>
 				
@@ -85,7 +104,7 @@
 		{% block content %}
 		{% endblock content %}
 	</div>
-
+<br><br><br>
 	<!--autolink-->
 	<script src="{% static 'js/Autolinker.min.js' %} "></script>
 	<script> 
@@ -94,9 +113,11 @@
 		elements[i].innerHTML = Autolinker.link( elements[i].innerHTML ); 
 	}
 	</script>
-	<script src="{% static 'js/jquery.js' %} "></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="{% static 'js/bootstrap.js' %} "></script>
 	<script src="{% static 'js/scripts.js' %} "></script>
+	<script src="{% static 'js/owl.carousel.min.js' %} "></script>
+	<script src="{% static 'js/pgwslider.min.js' %} "></script>
 	{% block javascript %}
 	{% endblock javascript %}
 	

@@ -5,7 +5,7 @@ from citas import views
 urlpatterns = patterns('',
 	url(r'^index/(?P<queryset>\w+)/$', views.index, name = 'index'),
 	url(r'nueva/$', views.nueva, name = 'nueva'),
-	url(r'favoritas/$', views.favoritas, name = 'favoritas'),
+	url(r'^(?P<username>\w+)/favoritas/$', views.favoritas, name = 'favoritas'),
 	url(r'marcar_favorito/(?P<cita_id>\d+)/$', views.marcar_favorito, name = 'marcar_favorito'),
 	url(r'denunciar_cita/(?P<cita_id>\d+)/$', views.denunciar_cita, name = 'denunciar_cita'),
 	#urls de colaborar_organizar

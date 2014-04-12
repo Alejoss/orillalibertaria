@@ -2,5 +2,6 @@
 from django import forms
 
 class FormNuevaImagen(forms.Form):
-	favorita = forms.BooleanField(initial=False, required=False)
-	url = forms.CharField(max_length=200)
+	url = forms.URLField(max_length=200)
+	favorita = forms.BooleanField(initial=False, required=False, 
+		help_text="Sumar esta imagen a mis favoritas")

@@ -7,7 +7,7 @@
             <div class="nav-headers">
                 <h3>Galería de Imágenes de Orilla Libertaria.</h3>
                 <br>
-                <p><a href="{% url 'imagenes:nueva' %}" class="btn">Añadir Imagen &rarr;</a></p>
+                <p><a class="btn" href="{% url 'imagenes:nueva' %}">Añadir Imagen &rarr;</a></p>
             </div>
                <ul class="nav nav-tabs nav-stacked">
                 <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
@@ -21,7 +21,7 @@
                 <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="icon-home"></i> Orilla Libertaria </a></li>
                 
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'perfiles:perfil' user.username %}"><i class="icon-user"></i> Tu Perfil, {{user.username}} </a></li>
+                <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="icon-user"></i> Tu Perfil, {{user.username}} </a></li>
                 <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="icon-zoom-in"></i> Ayúdanos a revisar esta Galería </a></li> 
                 {% else %}
                 <li><a href="url 'perfiles:login'"><i class="icon-user"></i> Login </a></li>

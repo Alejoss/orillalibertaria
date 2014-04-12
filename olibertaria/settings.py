@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'south',
     'endless_pagination',
     'crispy_forms',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
