@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     {% load staticfiles %}
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> <!--font awesome -->
     <link href="{% static 'css/fgallery_css/bootstrap.css'  %}" rel="stylesheet">
     <link href="{% static 'css/fgallery_css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/fgallery_css/icon-style.css' %}" rel="stylesheet">
@@ -33,23 +34,6 @@
 {% block content %}
 {% endblock content %}
    
-    <div class="container">
-        <div class="pagination">
-        <ul>
-          <li class="disabled"><a href="#" title="Go to the first page">&laquo; First</a></li>
-          <li><a href="#" title="Go to the previous page">&larr;</a></li>
-          <li class="active"><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">..</a></li>
-          <li><a href="#">8</a></li>
-          <li><a href="#">9</a></li>
-          <li><a href="#" title="Go to the next page">&rarr;</a></li>
-          <li><a href="#" title="Go to the last page">Last &raquo;</a></li>
-        </ul>
-      </div>
-    </div>
-    
-
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -58,6 +42,7 @@
     <script src="{% static 'js/fgallery_js/image-gallery.js' %}"></script>
     <script src="{% static 'js/fgallery_js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
     <script src="{% static 'js/fgallery_js/jquery.fancybox.js' %}"></script>
-
-  </body>
+    {% block extra_javascript %}
+    {% endblock extra_javascript %}
+</body>
 </html>

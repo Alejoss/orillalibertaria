@@ -6,10 +6,10 @@
 	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
 </li>
 <li class = "visible-xs">
-	<a href="{% url 'citas:index' 'recientes' %}">Ver galería de frases</a>
+	<a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a>
 </li>
 <li class = "visible-xs">
-	<a href="{% url 'imagenes:index' 'recientes' %}">Ver galería de imágenes</a>
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
 </li>
 {% endblock navbar_mobile_xs %}
 
@@ -30,11 +30,11 @@
 		<div class="btn-group btn-group-sm control">
 			<button class="btn btn-default {{recientes}} "
 			type="button" onclick="location.href='{% url 'temas:index_tema' tema.slug 'recientes' %}';">
-			<span class="glyphicon glyphicon-signal"> </span> Recientes
+			<span class="fa fa-signal"> </span> Recientes
 			</button> 
 			<button class="btn btn-default {{populares}} " 
 			type="button" onclick="location.href='{% url 'temas:index_tema' tema.slug 'populares' %}';">
-			<span class="glyphicon glyphicon-star"> </span> Populares
+			<span class="fa fa-star"> </span> Populares
 			</button>
 		</div>
 	</div>
@@ -52,7 +52,7 @@
 			</ul>
 		</div>
 		<div class = "pull-right visible-xs">
-		<button type="button" class="btn btn-default" 
+		<button type="button" class="btn btn-warning" 
 		onclick = "location.href='{% url 'temas:sumar_post' tema.slug %}';">
 		Nuevo Post en {{tema.nombre}}</button>
 		</div>
@@ -74,7 +74,7 @@
 	<br>
 	<div class="row clearfix">
 		<div class="col-md-12 column">
-		<button type="button" class="btn btn-default btn_sidebar" 
+		<button type="button" class="btn btn-warning btn_sidebar" 
 		onclick = "location.href='{% url 'temas:sumar_post' tema.slug %}';">
 		Nuevo Post en {{tema.nombre}}</button>
 		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
@@ -109,9 +109,10 @@
 	<button type="button" class="btn btn-xs btn-info btn_galeria visible-lg visible-md"
 	onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 		Ver galería de imágenes</button>
-
 </div>
+{% endblock sidebar %}
 
+{% block extra_javascript %}
 <script>
 	$(document).ready(function() {
 	 
@@ -128,10 +129,7 @@
 	      // itemsDesktopSmall : false,
 	      // itemsTablet: false,
 	      // itemsMobile : false
-	 
 	  });
-	 
 	});
 </script>
-
-{% endblock sidebar %}
+{% endblock extra_javascript %}

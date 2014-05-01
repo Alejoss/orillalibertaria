@@ -2,36 +2,37 @@
 
 {% paginate citas %}
 <div class = "row">
-	<div class = "endless_page_template">
-		{% for c in citas %}
-		<div class="col-md-11 column">
-			<blockquote>
-				<p>
-					"{{c.texto}}"
-				</p> <small>{{c.autor}}, <cite>{{c.fuente}}</cite></small>
-			</blockquote>
+	<div class = "col-md-12">
+		<div class = "endless_page_template">
+			{% for c in citas %}
+			<div class = "row clearfix">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						<blockquote>
+							<p>
+								"{{c.0.texto}}"
+							</p> <small>{{c.0.autor}}, <cite>{{c.0.fuente}}</cite></small>
+						</blockquote>
+					</div>
+					<div class="panel-footer">
+						<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="reportar_cita fa fa-flag"></i></a>
+						<p class = "hidden"> {{c.0.id}} </p>
+						<i class="estrella marcar_favorito fa fa-star-o fa-lg {{c.1}}"></i>
+						<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
+						<br/>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
 		</div>
-		<div class="col-md-1 column">
-				<a href = "{% url 'citas:marcar_favorito' c.id %}">
-				<span class="glyphicon glyphicon-star"></span></a>
-					<br/>
-					<p>{{c.favoritos_recibidos}}</p>
-					<br/>
-				<a href = "{% url 'citas:denunciar_cita' c.id %}">
-				<span class="glyphicon glyphicon-flag"></span></a>
-			<hr>
-		</div>
-		{% endfor %}
 	</div>
-</div>
-<div class = "row">
-<div class ="col-md-12">
-<hr>
-<div class = "paginacion">
-{% show_pages %}
-</div>
-</br>
-</br>
-</br>
-</div>
+	<div class = "row">
+		<hr>
+		<div class = "paginacion">
+		{% show_pages %}
+		</div>
+		</br>
+		</br>
+		</br>
+	</div> <!--row-->
 </div>

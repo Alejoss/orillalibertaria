@@ -5,34 +5,47 @@
 	<div class = "endless_page_template">
 		{% for post in posts %}
 			<div class = "post">
-			<div class = "col-md-1">
+			<div class = "col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 						<p class = "vote-id hidden">{{post.0.id}}</p>
 						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="glyphicon glyphicon-chevron-up"></span>
+							<span class="fa fa-chevron-up"></span>
 						</button>
 						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje {{post.3}} "> {{post.0.votos_positivos}} </h2>
+						<h2 class = "numero_puntaje {{post.3}} "> {{post.0.votos_total}} </h2>
 						</button>
 						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="glyphicon glyphicon-chevron-down"></span>
+							<span class="fa fa-chevron-down"></span>
 						</button>
 					</div>
 				</div>
 			</div>
-			<div class = "col-md-11">
+			<div class = "col-md-10 col-sm-10 col-xs-10">
 				<div class="panel panel-info">
 					<div class="panel-body">
-						<p class = "text">
-						{{post.0.texto|truncatewords:50}}
+						<p class = "text truncate">
+						{{post.0.texto}}
 						</p>
-						<br/>
-
-		 				<a href = "{% url 'temas:post' post.0.tema.slug post.0.id %}"> <span class="glyphicon glyphicon-chevron-right link_post"></span> </a>
-						<br/>
 					</div>
 					<div class="panel-footer">
+						{% if post.0.creador.usuario == request.user %}
+						<div class = "eliminar_editar pull-left">
+							<div class = "btn-group dropup">
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog">
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Eliminar Post</a>
+								</li>
+								<li class = "divider"></li>
+								<li>
+									<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> <!-- -->
+								</li>
+							</ul>
+							</div>
+						</div>
+						{% endif %}
 						{% if post.1 %}
 						<div class = "nombre_fecha">
 						<p><small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} "> {{post.2}}</a> 
@@ -46,23 +59,9 @@
 						</div>
 						{% endif %}
 
-						{% if post.0.creador.usuario == request.user %}
-						<div class = "eliminar_editar">
-							<div class = "btn-group dropup">
-							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Eliminar Post</a>
-								</li>
-								<li class = "divider"></li>
-								<li>
-									<a href="#">Editar</a> <!-- -->
-								</li>
-							</ul>
-							</div>
-						</div>
-						{% endif %}
+						<div class = "footer_respuestas pull-right">
+		 				<a href = "{% url 'temas:post' post.0.tema.slug post.0.id 'recientes' %} "> {{post.4}} <span class="fa fa-comments link_post"></span> <span class="fa fa-chevron-right link_post"></span></a>
+		 				</div>
 					</div>
 				</div>
 			</div> <!-- class md 10 -->

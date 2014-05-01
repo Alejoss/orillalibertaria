@@ -9,31 +9,51 @@
                 <br>
                 <p><a class="btn" href="{% url 'imagenes:nueva' %}">Añadir Imagen &rarr;</a></p>
             </div>
-               <ul class="nav nav-tabs nav-stacked">
-                <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
-                    <i class="icon-bookmark"></i> Recientes </a></li>
-                <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
-                    <i class="icon-star"></i> Populares</a></li>
-                <li><a href="{% url 'imagenes:favoritas' user.username %}">
-                    <i class="icon-certificate"></i> Favoritas </a></li>
-            </ul>
            <ul class="nav nav-tabs nav-stacked">
-                <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="icon-home"></i> Orilla Libertaria </a></li>
-                
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="icon-user"></i> Tu Perfil, {{user.username}} </a></li>
-                <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="icon-zoom-in"></i> Ayúdanos a revisar esta Galería </a></li> 
-                {% else %}
-                <li><a href="url 'perfiles:login'"><i class="icon-user"></i> Login </a></li>
-                {% endif %}
+            <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
+                <i class="fa fa-bookmark"></i> Recientes </a></li>
+            <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
+                <i class="fa fa-star"></i> Populares</a></li>
+            <li><a href="{% url 'imagenes:favoritas' user.username %}">
+                <i class="fa fa-certificate"></i> Favoritas </a></li>
+            </ul>
+            <ul class="nav nav-tabs nav-stacked">
+            <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="fa fa-home"></i> Orilla Libertaria </a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{user.username}} </a></li>
+            <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-puzzle-piece"></i> Ayúdanos a revisar la Galería </a></li> 
+            {% else %}
+            <li><a href="url 'perfiles:login'"><i class="fa fa-user"></i> Login </a></li>
+            {% endif %}
             </ul>
         </div>
         <div class="row clearfix">
             {% include page_template %}
         </div>
-</div>
     </div>
 </div>
-       
+
+<div class="modal hidden" id="modal_reportar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4> Has denunciado una imagen </h4>
+        </div>
+        <div class="modal-body">
+          <p>Gracias por colaborar con la comunidad de Orilla Libertaria. Las imágenes se remueven de la Galería cuando cuatro usuarios con más de 10 puntos las denuncian.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
 {% endblock content %}
 
+{% block extra_javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/imagen_favorita.js' %} "></script>
+{% endblock extra_javascript %}
+
+<!--
+
+    -->

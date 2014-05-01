@@ -9,8 +9,6 @@ class Imagen(models.Model):
 	denunciada = models.SmallIntegerField(default=0)
 	eliminada = models.BooleanField(default=False)
 	perfil = models.ForeignKey(Perfiles, null=True)
-	vistos_recibidos = models.SmallIntegerField(default=0)
-	xrecibidas = models.SmallIntegerField(default=0)
 	removidatotalmente = models.BooleanField(default=False)
 
 	def __unicode__(self):
@@ -31,6 +29,7 @@ class Idenunciadas(models.Model):
 	imagen = models.ForeignKey(Imagen, null = True)
 	perfil = models.ForeignKey(Perfiles, null= True)
 	fecha = models.DateTimeField(auto_now_add=True, null = True)
+	eliminado = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return "%s denuncio %s" %(self.perfil.usuario.username, self.imagen.id)

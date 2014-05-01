@@ -15,11 +15,11 @@ urlpatterns = patterns('',
 	url(r'^(?P<slug>[-\w]+)/(?P<queryset>\w+)/$', views.index_tema, name = 'index_tema'),
 
 	#Post
-	url(r'^(?P<slug>[-\w]+)/post/(?P<post_id>\d+)/$', views.post, name = 'post'),
-	url(r'^(?P<slug>[-\w]+)/post/(?P<post_id>\d+)/respuesta/$', 
-		views.respuesta, name = 'respuesta'),
+	url(r'^(?P<slug>[-\w]+)/post/(?P<post_id>\d+)/respuesta/$', views.respuesta, name = 'respuesta'),
+	url(r'^(?P<slug>[-\w]+)/post/(?P<post_id>\d+)/(?P<queryset>\w+)/$', views.post, name = 'post'),
 	
 	#Acciones
+	url(r'^/editar_post/(?P<post_id>\d+)/$', views.editar_post, name = 'editar_post'),
 	url(r'^/sumar_post/(?P<slug>[-\w]+)/$', views.sumar_post, name = 'sumar_post'),
 	url(r'^/eliminar_post/(?P<post_id>\d+)/$', views.eliminar_propio_post, name = 'eliminar_propio_post'),
 	url(r'^vote_up_ajax/$', views.vote_up_ajax, name = 'vote_up_ajax'),

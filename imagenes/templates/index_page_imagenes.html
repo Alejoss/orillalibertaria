@@ -5,15 +5,12 @@
 	<div class = "endless_page_template">
 		{% for i in imagenes %}
         <div class="span3 galery"> <!--span cambiado -->
-            <div class="image-galery"><a class="group" rel="group1" href="{{i.url}}"><img src=" {{i.url}} " /></a></div>
+            <div class="image-galery"><a class="group" rel="group1" href="{{i.0.url}}"><img class = "thumbnail" src=" {{i.0.url}} " /></a></div>
               <div>
-        		<span class = "estrella">
-                <a href= "{% url 'imagenes:marcar_favorito' i.id %}"rel="tooltip" title="Marcar Favorito"><i class="icon-star"></i></a>
-            	</span>
-            	<span class = "favoritos"> {{i.favoritos_recibidos}} </span>
-                <span class = "reportar">
-                <a href=" {% url 'imagenes:denunciar' i.id %} " rel="tooltip" title="Reportar"><i class="icon-flag"></i></a>
-            	</span>
+                <p class = "hidden">{{i.0.id}}</p>
+                <span class='estrella fa fa-star fa-lg {{i.1}}'></span>
+            	<p class = "favoritos"> {{i.0.favoritos_recibidos}} </p>
+                <span class="reportar fa fa-flag"></span>
             </div>
         </div>
         {% endfor %}

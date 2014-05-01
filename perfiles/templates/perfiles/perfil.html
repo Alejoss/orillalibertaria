@@ -3,7 +3,103 @@
 {% block arriba %}
 <div class = "row clearfix">
 	<div class = "col-md-12">
-	<div class = "col-md-6 col-md-offset-1">
+	<div class = "row visible-sm visible-xs">
+		<div class = "col-sm-6">
+			<div class = "col-md-offset-1">
+				<div class = "nombre_usuario">
+					<h3>
+						{{usuario_user.username}}
+					</h3>
+					<p class="text-muted">
+						{% if user.is_authenticated %}
+							 {{nombre_completo}}
+						{% endif %}
+					</p>
+				</div>
+			<div class = "div_perfil_datos">
+				<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
+					<ul class="nav nav-pills">
+					<br>
+						<li>
+							Puntos <span class="badge"> {{puntos_recibidos}} </span> 
+						</li>
+					<br>
+						<li>
+							Posts <span class="badge">{{num_posts}}</span> 
+						</li>
+					<br>
+					{% if creo_temas %}
+						<li>
+							<div class="panel-link">
+								<div>
+									 <a class="panel-title collapsed" data-toggle="collapse" href="#panel-element-898967"> Temas <span class="badge">{{num_temas}}</span> </a>
+								</div>
+								<div id="panel-element-898967" class="panel-collapse collapse">
+									<div>
+										<ul class="list-unstyled">
+											{% for tema in temas_usuario %}
+											<li> <a href="{% url 'temas:index_tema' tema.slug 'recientes' %}">{{tema.nombre}}</a></li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</li>
+					{% endif %}	
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class = "col-sm-6">
+			<div class="panel-group perfil_panel_sm" id="panel-131037">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-400081">Favoritos</a>
+					</div>
+					<div id="panel-element-400081" class="panel-collapse collapse in">
+						<a href = "{% url 'imagenes:favoritas' usuario_fav %}">
+							<div class="panel-body">
+								<span class = "badge pull-right"> {{numero_imgfavoritas}} </span>
+								Imágenes favoritas
+							</div>
+						</a>
+						<a href = "{% url 'citas:favoritas' usuario_fav %}">
+							<div class="panel-body">
+								<span class = "badge pull-right"> {{num_frases_favoritas}} </span>
+								Frases favoritas
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-850907">Descripción</a>
+					</div>
+					<div id="panel-element-850907" class="panel-collapse collapse">
+						<div class="panel-body">
+							{{usuario.descripcion}}
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-850600">Links</a>
+					</div>
+					<div id="panel-element-850600" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul class="list-unstyled">
+								<li>{{usuario.link1|urlize}}</li>
+								<li>{{usuario.link2|urlize}}</li>
+								<li>{{usuario.link3|urlize}}</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class = "col-md-6 col-md-offset-1 hidden-sm hidden-xs">
 		<div class = "imagenes_portada">
 		{% if tiene_imagenesfav %}
 			<ul class="pgwSlider">
@@ -16,82 +112,101 @@
 			    </li>
 			    {% endfor %}
 			</ul>
-				<script>
-				$(document).ready(function() {
-				    $('.pgwSlider').pgwSlider();
-				});
-				</script>
 			{% endif %}
 		</div>
 	</div> <!--col 6 -->
-	<div class = "col-md-5">
-		<div style = "float:right; margin-right:40px">
-			<h3 class = "text-center">
-				{{usuario_user.username}}
-			</h3>
-			<p class="text-muted text-center">
-				{% if user.is_authenticated %}
-					 {{nombre_completo}}
-				{% endif %}
-			</p>
-		
-			<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
-			<div>
-				<ul class="nav nav-pills">
-				<br>
-					<li>
-						<span class="badge pull-right">42</span> Puntos
-					</li>
-				<br>
-					<li>
-						<span class="badge pull-right">16</span> Posts
-					</li>
-				<br>
-					<li>
-						<span class="badge pull-right">2</span> Temas
-						<ul style = "margin-left: 10px" class = "list-unstyled">
-							<li> Tema1 </li>
-							<li> Tema2 </li>
-						</ul>
-					</li>
+	<div class = "col-md-5 hidden-xs hidden-sm">
+		<div class = "row">
+			<div class = "col-md-6 col-md-offset-4">
+				<div class = "imagenes_frases_perfil">
+				<ul class = "list-group">
+					<a class = "list-group-item" href = "{% url 'imagenes:favoritas' usuario_fav %}">
+						<span class = "badge">{{numero_imgfavoritas}}</span>
+						Imágenes favoritas
+					</a>
+					<a class = "list-group-item" href = "{% url 'citas:favoritas' usuario_fav %}">
+						<span class = "badge">{{num_frases_favoritas}}</span>
+						Frases favoritas
+					</a>
+				</div>
 				</ul>
 			</div>
-		</div> <!-- float right -->
-	</div> <!--col 6 -->
+		</div>
+	</div> <!--col 5 -->
 	</div> <!-- col 12 -->
 {% endblock arriba %}
 
 {% block botones_control %}
-<div class="btn-group btn-group-sm control ">
-	<button class="btn btn-default {{recientes}} "
-	type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'recientes' %}';">
-	<span class="glyphicon glyphicon-signal"> </span> Recientes
-	</button> 
-	<button class="btn btn-default {{populares}} " 
-	type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'populares' %}';">
-	<span class="glyphicon glyphicon-star"> </span> Populares
-	</button>
+<div class = "col-md-8 div_control">
+	<div class = "row">
+	<hr>
+	<h3 style = "display: inline-block"> Posts </h3>
+	<div class="btn-group btn-group-sm control ">
+		<button class="btn btn-default {{recientes}} "
+		type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'recientes' %}';">
+		<span class="fa fa-signal"> </span> Recientes
+		</button> 
+		<button class="btn btn-default {{populares}} " 
+		type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'populares' %}';">
+		<span class="fa fa-star"> </span> Populares
+		</button>
+	</div>
+	</div>
 </div>
 {% endblock botones_control %}
 
-{% block tab_content %}
-<div class="col-md-8 column ">
-	<hr>
-	<div class="row clearfix">
-		{% include page_template %}
-	</div>
-</div>
-{% endblock tab_content %}
-
 {% block sidebar %}
+	<div class = "hidden-sm">
 	<div class="col-md-4 column">
-		
-		<p class="text-muted">
+		<div class = "col-md-offset-1">
+			<div class = "frase_perfil">
+				<blockquote>
+					<p>
+						{{cita_favorita.texto}}
+					</p> <small>{{cita_favorita.autor}}, <cite>{{cita_favorita.fuente}}</cite></small>
+				</blockquote> 
+			</div>
+			<div class = "nombre_usuario">
+				<h3>
+					{{usuario_user.username}}
+				</h3>
+				<p class="text-muted">
+					{% if user.is_authenticated %}
+						 {{nombre_completo}}
+					{% endif %}
+				</p>
+			</div>
+			
+			<div class = "div_perfil_datos">
+			<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
+				<ul class="nav nav-pills">
+				<br>
+					<li>
+						Puntos <span class="badge"> {{puntos_recibidos}} </span> 
+					</li>
+				<br>
+					<li>
+						Posts <span class="badge">{{num_posts}}</span> 
+					</li>
+				<br>
+				{% if creo_temas %}
+					<li>
+						Temas <span class="badge">{{num_temas}}</span>
+						<ul style = "margin-left: 10px" class = "list-unstyled">
+							{% for tema in temas_usuario %}
+							<li> <a href="{% url 'temas:index_tema' tema.slug 'recientes' %}">{{tema.nombre}}</a></li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endif %}
+				</ul>
+			</div>
+			<br>
 			<p class = "text">
 				{{usuario.descripcion}}
 			</p>
-		</p>
 		<hr>
+			<h4> Links </h4>
 			<ul class="list-unstyled">
 			<li>{{usuario.link1|urlize}}</li>
 			<li>{{usuario.link2|urlize}}</li>
@@ -100,15 +215,21 @@
 		<hr>
 			<br>
 			<br>
-			<div class = "row">
-			<div class = "col-md-12">
-			<blockquote>
-				<p>
-					{{cita_favorita.texto}}
-				</p> <small>{{cita_favorita.autor}} <cite>{{cita_favorita.fuente}}</cite></small>
-			</blockquote> 
-			<p> </small><a href = "{% url 'citas:favoritas' usuario_fav %}"> Ver todas </a> </small> </p>
-			</div>
-			</div>
-		</div> <!--column4 -->
+			
+		</div>
+	</div> <!--column4 -->
+	</div>
 {% endblock sidebar %}
+
+{% block tab_content %}
+<div class="col-md-8 column ">
+	<div class="row clearfix">
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_content %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+
+

@@ -25,8 +25,9 @@ class FormNuevaCita(forms.ModelForm):
 
 
 class FormEditarCita(forms.Form):
-	texto = forms.CharField(max_length=500, widget=forms.Textarea)
+	texto = forms.CharField(max_length=500, widget=forms.Textarea, help_text = 'No pongas comillas, se añaden automáticamente.')
 	autor = forms.CharField(max_length=150, required=False)
 	fuente = forms.CharField(max_length=150, required=False)
 	razon = forms.CharField(
 		widget=forms.TextInput(attrs={'placeholder':"¿Qué es lo que estaba mal?"}))
+	

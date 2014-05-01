@@ -2,35 +2,30 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-<link href="{% static 'css/pgwslider.min.css' %}" rel="stylesheet">
+
 {% endblock extra_css %}
 
 {% block content %}
-<div class = "col-md-8">
-<ul class="pgwSlider">
-    <li>
-    	<img src="http://www.allenskillicorn.com/wp-content/uploads/2013/12/hayek-socialists.jpg"> 
-    </li>
-    <li>
-    	<img src="http://1.bp.blogspot.com/-7ZCoO_imafQ/UFWZXkJnzkI/AAAAAAAAA7M/f807mPYR7J8/s1600/david+friedman+property.jpg">
-    </li>
-    <li>
-        <img src="http://1.bp.blogspot.com/-1BXWUwpjknI/UFWZQeuK4rI/AAAAAAAAA6c/OKbA2lkkER0/s1600/Iron%C3%ADia+amenaza.jpg">
-    </li>
-	<li>
-        <img src="http://2.bp.blogspot.com/-f2Ey6ql2bjM/UFWZPlVR7JI/AAAAAAAAA6U/0x5QNCkBJqQ/s1600/Grupo+Terrorista.jpg">
-    </li>
-</ul>
+
+{% for x in thelist %}
+<div class = "col-md-6">
+	<p class = "truncate">
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, consectetur eum tempora totam similique enim tempore itaque. Libero, fuga, vero provident beatae aspernatur reprehenderit maxime maiores alias quam quas officiis.
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, consectetur eum tempora totam similique enim tempore itaque. Libero, fuga, vero provident beatae aspernatur reprehenderit maxime maiores alias quam quas officiis
+	</p>
 </div>
+{% endfor %}
 
 <script>
-$(document).ready(function() {
-    $('.pgwSlider').pgwSlider();
-});
+$('button').on('click', mostrar)
+
+function mostrar(){
+  $('#p_show').show('fold',500);
+}
+
 </script>
 
 {% endblock content %}
 
 {% block javascript %}
-<script src="{% static 'js/pgwslider.min.js' %} "></script>
 {% endblock javascript %}

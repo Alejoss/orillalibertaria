@@ -66,14 +66,15 @@
 	</div>
 
 {% block description %}
-<div class = "thumbnail">
-	<img class = "imagen_perfil" src = "http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg">
+<div class = "info_editar_perfil_des">
+	<div class = "thumbnail">
+		<img class = "imagen_perfil" src = "http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg">
+	</div>
+	<div class = "pull-right">
+		<h4> {{user.first_name}} {{user.last_name}} </h4>
+		<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
+		<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
+		<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' 'recientes' %}">frases favoritas.</a></h5>
+	</div>
 </div>
-<div class = "pull-right">
-	<h4> {{user.first_name}} {{user.last_name}} </h4>
-	<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
-	<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
-	<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' %}">frases favoritas.</a></h5>
-</div>
-
 {% endblock description %}

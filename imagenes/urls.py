@@ -5,11 +5,11 @@ from imagenes import views
 urlpatterns = patterns('',
 	url(r'^index/(?P<queryset>\w+)/$', views.index, name = 'index'),
 	
-	url(r'^marcar_favorito/(?P<imagen_id>\d+)/$', views.marcar_favorito, name = 'marcar_favorito'),
-	url(r'^denunciar/(?P<imagen_id>\d+)/$', views.denunciar, name = 'denunciar'),
+	url(r'^marcar_favorito/$', views.marcar_favorito, name = 'marcar_favorito'),
+	url(r'^denunciar/$', views.denunciar, name = 'denunciar'),
 	
 	url(r'^(?P<username>\w+)/favoritas/$', views.favoritas, name = 'favoritas'),
-	url(r'^marcar_portada/(?P<imagen_id>\d+)/$', views.marcar_portada, name = 'marcar_portada'),
+	url(r'^marcar_portada_ajax/$', views.marcar_portada_ajax, name = 'marcar_portada_ajax'),
 	
 	url(r'^nueva/$', views.nueva, name = 'nueva'),
 	

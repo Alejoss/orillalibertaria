@@ -1,87 +1,149 @@
 {% extends "base_index.html" %}
+<--index CITAS 	-->
 
-{% block content %}
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' request.user %}">Frases favoritas</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
 
 {% block arriba %}
-<div class="col-md-8 column ">
+<div class="col-md-8 column">
+	<div class = "row">
+		<br>
 	<ul class="breadcrumb">
 		<li>
-			<h4><a href="{% url 'citas:index' 'autor' %}">Frases</a></h4> 
+			<h4>Banco de Frases</h4> 
 			<span class="divider"></span>
 		</li>
 	</ul>
+	</div>
 </div>
 {% endblock arriba %}
 
 {% block botones_control %}
-<div class="btn-group btn-group-sm control">
-	<button class="btn btn-default {{autor}}" 
-	type="button" onclick="location.href='{% url 'citas:index' 'autor' %}';">
-	<span class="glyphicon glyphicon-th-list"> </span> Todos
+<div class = "col-md-8 div_control">
+<div display = "margin-bottom:5px" class="hidden-xs">
+	<div class="btn-group btn-group-sm control">
+		<button class="btn btn-default {{autor}}" 
+		type="button" onclick="location.href='{% url 'citas:index' 'autor' %}';">
+		<span class="fa fa-sort-alpha-asc"> </span> Todos
+		</button> 
+		<button class="btn btn-default {{recientes}} "
+		type="button" onclick="location.href='{% url 'citas:index' 'recientes' %}';">
+		<span class="fa fa-signal"> </span> Recientes
+		</button> 
+		<button class="btn btn-default {{populares}} " 
+		type="button" onclick="location.href='{% url 'citas:index' 'populares' %}';">
+		<span class="fa fa-star"> </span> Populares
+		</button>
+	</div>	
+</div>
+
+<div class = "row visible-xs">
+	<div class= "btn-group control">
+		 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> Frases <span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li class = " {{autor}} ">
+				<a href="{% url 'citas:index' 'autor' %}">Autor</a>
+			</li>
+			<li class = " {{recientes}} ">
+				<a href="{% url 'citas:index' 'recientes' %}">Recientes</a>
+			</li>
+			<li class = " {{populares}}">
+				<a href="{% url 'citas:index' 'populares' %}">Populares</a>
+			</li>
+		</ul>
+	</div>
+	<div class = "pull-right visible-xs">
+	<button type="button" class="btn btn-warning" 
+	onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
 	</button> 
-	<button class="btn btn-default {{recientes}} "
-	type="button" onclick="location.href='{% url 'citas:index' 'recientes' %}';">
-	<span class="glyphicon glyphicon-signal"> </span> Recientes
-	</button> 
-	<button class="btn btn-default {{populares}} " 
-	type="button" onclick="location.href='{% url 'citas:index' 'populares' %}';">
-	<span class="glyphicon glyphicon-star"> </span> Populares
-	</button>
+	</div>
+</div>
 </div>
 {% endblock botones_control %}
 
-{% block tab_control %}
-<div class="col-md-8 column ">
-	<div class="row clearfix">
-		{% include page_template %}
+{% block tab_content %}
+<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
+		<div class="row clearfix">
+			{% include page_template %}
+		</div>
+	<div class="modal fade" id="modal_reportar" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	        <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	        <h4 class="modal-title" id="myModalLabel">Has denunciado una frase</h4>
+	        </div>
+	        <div class="modal-body">
+	            <p>Gracias por colaborar con la comunidad de Orilla Libertaria. Las frases se remueven de Banco de Frases cuando cuatro usuarios con más de 10 puntos las denuncian.</p>
+	        </div>
+	    </div>
+	  </div>
 	</div>
 </div>
-{% endblock tab_control %}
+{% endblock tab_content %}
 
 {% block sidebar %}
-	<div class="col-md-4 column ">
-		<div class = "div_carrusel">
-			<div class = "cuadro_carrusel">
-			<div class="carousel slide" id="carousel-422808">
-				<div class="carousel-inner">
-					<div class="item active">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = "{{primera_imagen}}">
-					</div>
-					{% for i in imagenes_display %}
-					<div class="item">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{i}} ">
-					</div>
-					{% endfor %}
-
-				</div> <a class="left carousel-control" href="#carousel-422808" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-422808" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-			</div>
-			<div>
-			</div>
-			</div> <!--cuadro_carrusel-->
-		</div> <!--div carrousel -->
-
-			<hr>
-			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
-				Ver galería de imágenes</button>
+<div class="hidden-xs col-md-4 col-sm-4 column">
+		<div>
 			<br>
-			
-			<div>
-				<br>
-				<br>
-				<button type="button" class="btn btn-default" onclick="location.href='{% url 'citas:favoritas' %}';"> Tus frases favoritas
-				</button>
-				<br> <br>
-				<button type="button" class="btn btn-default" 
-				onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
-				</button> 
-				<br> <br>
-				<a href="{% url 'citas:colaborar_organizar' %}" class="btn" type="button">Ayúdanos a organizar este banco de frases</a>
-				<hr>
-			</div>
-		</div> <!--column 4-->
+			<button type="button" class="btn btn-warning btn_sidebar" 
+			onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
+			</button> 
+			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'citas:favoritas' request.user %}';"> Tus frases favoritas
+			</button>
+			<button type="button" class="btn btn-default btn_sidebar" 
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+			</button>
+			<br>
+			<button type="button" class="btn btn-link btn_sidebar" 
+			onclick="location.href='{% url 'citas:colaborar_organizar' %}';">Ayúdanos a organizar este Banco de Frases
+			</button>
+			<hr>
+		</div>
+	<div class = "hidden-sm div_carrusel">
+		<div class = " visible-lg visible-md cuadro_carrusel">
+		<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
+			{% for i in imagenes_display %}
+			<div class="item"><img src=" {{i.url}} " alt="404 imagen libertaria"></div>
+			{% endfor %}
+		</div>
+		</div>
+		<hr>
+		<button type="button" class="btn btn-xs btn-info btn_galeria"
+		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
+			Ver galería de imágenes</button>
+	</div> <!--div carrousel -->
+		<br>
+	
+	</div> <!--column 4-->
 {% endblock sidebar %}
 
-</div>
-{% endblock content %}
+{% block extra_javascript %}
 {% load staticfiles %}
+<script src="{% static 'js/cita_favorita.js' %} "></script>
+<script>
+$(document).ready(function() {	 
+	  $("#owl-demo").owlCarousel({
+	      navigation : false, // Show next and prev buttons
+	      slideSpeed : 300,
+	      paginationSpeed : 400,
+	      singleItem:true
+	 
+	      // "singleItem:true" is a shortcut for:
+	      // items : 1, 
+	      // itemsDesktop : false,
+	      // itemsDesktopSmall : false,
+	      // itemsTablet: false,
+	      // itemsMobile : false
+	 
+	  });
+	 
+	});
+</script>
+{% endblock extra_javascript %}

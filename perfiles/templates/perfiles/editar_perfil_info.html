@@ -10,9 +10,9 @@
 <div class = "pull-right">
 	<h4> {{user.first_name}} {{user.last_name}} </h4>
 	<h4 class = "text-muted"> illidan@gmail.com </h4>
-	<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
+	<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_des' %}">descripción.</a> </h5>
 	<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
-	<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' %}">frases favoritas.</a></h5>
+	<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' user.username %}">frases favoritas.</a></h5>
 </div>
 </div>
 {% endblock arriba %}

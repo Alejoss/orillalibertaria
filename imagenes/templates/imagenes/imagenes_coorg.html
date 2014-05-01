@@ -11,42 +11,40 @@
                         <span class="sr-only"></span>
                       </div>
                 </div>
-                <p> Estas imágenes han sido reportadas más de tres veces. Revísalas, si encuentras que no hay razón para que estén acá y no en la Galería, márcalas con un visto. Si te parece que una de una de ellas no pertenece a este sitio, márcala con una X. Recuerda ser objectivo.
+                <p> Estas imágenes han sido reportadas más de tres veces. Revísalas, si no encuentras razón para que estén acá y no en la Galería, márcalas con un <span style = "color:green" class="fa fa-check"></span>. Si te parece que una de una de ellas no pertenece a este sitio, márcala con una <span style="color:red" class="fa fa-times"></span>. Recuerda ser objectivo.
                 <br><br>
-                Cuando una imagen tenga tres vistos será devuelta a la Galería.
+                Cuando una imagen tenga tres <span style = "color:green" class="fa fa-check"></span> será devuelta a la Galería.
                 <br>
-                Si una imagen llega a tres "X" será removida de forma permanente.
-                <br>
-                Marcar con una "X" a una imagen que tiene "vistos" elimina un visto, y viceversa. La barra de progreso se completa cuando no existen imágenes que revisar.
+                Si una imagen llega a tres <span style="color:red" class="fa fa-times"></span> será removida de forma permanente.
                 </p>
             </div>
            <ul class="nav nav-tabs nav-stacked">
-                <li><a href=" {% url 'imagenes:index' 'recientes' %} "><i class="icon-picture"></i> Regreso a la Galería </a></li>
+                <li><a href=" {% url 'imagenes:index' 'recientes' %} "><i class="fa fa-picture-o"></i> Regreso a la Galería </a></li>
             </ul>
         </div>
         {% if hay_imagenes_denunciadas %}
             {% for i in imagenes_denunciadas %}
-            <div style = "background-color: {{i.0.3}}; height: 300px" class="span3 galery">
+            <div style = "background-color: {{i.1}}; height: 300px" class="span3 galery">
                 <div class="menu-galery">
-                    {% for e in i.0.4 %}
+                    {% for e in i.2 %}
                     <ul>
-                        <li><i class="icon-{{e}}"></i></li>
+                        <li><i class="fa fa-{{e}}"></i></li>
                     </ul>
                     {% endfor %}
                 </div>
                 <div class="image-galery">
-                    <a class="group" rel="group1" href="{{i.0.1}}">
-                    <img src=" {{i.0.1}} " /></a>
+                    <a class="group" rel="group1" href="{{i.0.url}}">
+                    <img src=" {{i.0.url}} " /></a>
                 </div>
                   <div>
     				<span style = "margin-left: 30px">
-    				<i class="icon-star"></i>
-            		<span class = "favoritos"> {{i.0.2}} </span>
+    				<i class="fa fa-star"></i>
+            		<span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
             		</span>
-    				<a href = "{% url 'imagenes:marcar_visto' i.0.0 %}">
-    				<span class="icon-ok visto_imagen"> </span></a>
-                    <a href = "{% url 'imagenes:marcar_x' i.0.0 %}">
-                    <span class="icon-remove x_imagen"> </span></a>
+    				<a href = "{% url 'imagenes:marcar_visto' i.0.id %}">
+    				<span style = "color:green" class="fa fa-check{{i.3.0}} fa-lg visto_imagen" title = "Votar a favor"> </span></a>
+                    <a href = "{% url 'imagenes:marcar_x' i.0.id %}">
+                    <span style = "color: red" class="fa fa-times{{i.3.1}} fa-lg x_imagen" title = "Votar en contra"> </span></a>
                 </div>
             </div>
             {% endfor %}

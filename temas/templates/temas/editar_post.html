@@ -1,0 +1,18 @@
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
+
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Editar Post </h2>
+	<img class = "barco_logo pull-right" 
+	src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba %}
+
+{% block form %}
+	<form action = "{% url 'temas:editar_post' post.id %}" method = "post"> {% csrf_token %}
+		{{form_editar_post|crispy}}
+		<input class = "btn" type = "submit" value = "Enviar"/>
+	</form>
+{% endblock form %}

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# PERFILES VIEWS.PY
+
 import random
  
 from django.shortcuts import render, redirect
@@ -11,9 +13,10 @@ from endless_pagination.decorators import page_template
 
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
+from temas.models import Temas
 from temas.models import Posts, Respuestas, Votos
-from citas.models import Cita, Cfavoritas
-from imagenes.models import Imagen, Ifavoritas
+from citas.models import Cfavoritas
+from imagenes.models import Ifavoritas
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
@@ -51,7 +54,6 @@ def loggedin(request):
 def invalid(request):
 	#Invalid login. Esta pagina hay que eliminar. 
 	#Debe ser la misma que login pero con mensajes de error.
-	context = {}
 	return render(request, 'perfiles/invalid.html', {})
 
 def registrar(request):
@@ -112,12 +114,13 @@ def editar_perfil_des(request):
 			perfil_usuario.save()
 			#Redirije al perfil del usuario. pasa el username como
 			#kwargs para manejo de urlpattern
-			return redirect('perfiles:perfil', username = request.user.username)
-		else:
+			return redirect('perfiles:perfil', username = request.user.username, queryset= 'recientes')
+		#else:
 			#Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
-			error = "error en form.is_valid" #!!! Falta enviar errores.
+			#error = "error en form.is_valid" #!!! Falta enviar errores.
 	
 	editar_perfil_form = PerfilesForm(initial={
+		'descripcion':perfil_usuario.descripcion,
 		'link1':perfil_usuario.link1, 'link2':perfil_usuario.link2,
 		'link3':perfil_usuario.link3, 'link4':perfil_usuario.link4,
 		'link5':perfil_usuario.link5})
@@ -159,28 +162,40 @@ def editar_perfil_info(request):
 @page_template('index_page_perfiles.html')
 def perfil(request, username, queryset, template = "perfiles/perfil.html",
 	extra_context = None):
-	#funciona cuando se visita el perfil de otro usuario
-	#recibe del urlpattern un "username y un queryset.
-	#obtiene el User correspondiende a ese username
+	#recibe del urlpattern un username y un queryset.
 	usuario_user = User.objects.get(username=username)
-	#obtiene el Perfiles correspondiente al User
 	usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
-	nombre_completo = usuario_user.get_full_name()
 
+	#Datos del usuario
+	nombre_completo = usuario_user.get_full_name()
+	puntos_recibidos = usuario_perfil.votos_recibidos
+	num_posts = Posts.objects.filter(creador=usuario_perfil).count()
+	num_temas = Temas.objects.filter(creador=usuario_perfil).count()
+	creo_temas = False
+	temas_usuario = []
+	if num_temas > 0:
+		temas_usuario = Temas.objects.filter(creador=usuario_perfil)
+		creo_temas = True
+	num_frases_favoritas = Cfavoritas.objects.filter(perfil=usuario_perfil).count()
+	numero_imgfavoritas = 0
+	usuario_fav = usuario_user.username
+
+	#Posts del usuario, utiliza el queryset de la URL.
 	recientes = ""
 	populares = ""
 	q = ""
 	if queryset == "populares":
-		q = "-votos_positivos"
+		q = "-votos_total"
 		populares = "active"
 	else:
 		q = "-fecha"
 		recientes = "active"
 
-	posts_obj = Posts.objects.filter(creador=usuario_perfil).order_by(q)
+	posts_obj = Posts.objects.filter(creador=usuario_perfil, eliminado = False).order_by(q)
 	posts = []
 	for p in posts_obj:
 		post = [p]
+		num_respuestas = Respuestas.objects.filter(post_padre=p).count()
 		if p.es_respuesta == True:
 			if Respuestas.objects.filter(post_respuesta=p).exists():
 				respuesta = Respuestas.objects.get(post_respuesta=p)
@@ -192,7 +207,7 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 			post.extend([False, ""])
 
 		voted_status = "no-vote"
-		if p.creador == request.user:
+		if p.creador.usuario == request.user:
 			voted_status = "propio_post"
 		else:
 			if Votos.objects.filter(post_votado=p, usuario_votante=request.user).exists():
@@ -205,11 +220,14 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 					voted_status = "no-vote"
 					
 		post.append(voted_status)
+		post.append(num_respuestas)
 		posts.append(post)
 
+	#cita 
 	citas_favoritas_obj = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
 	cita_favorita = (random.choice(citas_favoritas_obj)).cita
 
+	#imagenes
 	portada = ""
 	imagenes_favoritas = []
 	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil).exists()
@@ -217,8 +235,10 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 	if tiene_imagenesfav:
 		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
 		if numero_imgfavoritas > 3:
-			numero_imgfavoritas = 3		
-		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:numero_imgfavoritas]
+			imagenes_display = 3
+		else:
+			imagenes_display = numero_imgfavoritas		
+		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
 		for i in ifavoritas_objects:
 			imagenes_favoritas.append(i.imagen.url)
 		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
@@ -226,13 +246,14 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 		else:
 			portada_obj = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).latest('id')
 		portada = portada_obj.imagen.url
-	#usuario al que se le va a redirigir cuando de click en "Ver todas"
-	usuario_fav = usuario_user.username 
-
+	
 	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
 	'nombre_completo': nombre_completo, 'posts':posts,'cita_favorita':cita_favorita,
 	'imagenes_favoritas':imagenes_favoritas, 'usuario_fav':usuario_fav,
-	'tiene_imagenesfav':tiene_imagenesfav, 'recientes':recientes, 'populares': populares}
+	'tiene_imagenesfav':tiene_imagenesfav, 'recientes':recientes, 'populares': populares,
+	'puntos_recibidos':puntos_recibidos, 'num_posts':num_posts, 'num_temas':num_temas, 
+	'numero_imgfavoritas': numero_imgfavoritas, 'num_frases_favoritas':num_frases_favoritas,
+	'temas_usuario':temas_usuario, 'creo_temas':creo_temas}
 
 	if extra_context is not None:
 		context.update(extra_context)

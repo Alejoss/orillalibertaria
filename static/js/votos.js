@@ -25,7 +25,6 @@ $('.vote-up').on('click', vote_up);
 $('.vote-down').on('click', vote_down);
 
 function vote_up(){
-	
 	var $control = $(this).parent();
 	var puntaje_obj = $control.find('.numero_puntaje');		
 

@@ -21,13 +21,14 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="thumbnail">
-					<div class = "thumbnail_main_div">
+					<div class = "thumbnail_main_div hidden-sm hidden-xs">
 						<img alt="300x200" src="{{imagenes_posts_populares.0}}"/>
 					</div>
-					<div class="caption">
+					<div class="caption thumbnail_main_post">
+					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.0}}">
 						<p class = "text">
 						{{posts_populares.0.texto|truncatewords:30}}
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id %}"> <h4><small>ver post</h4></small></a>
+						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.usuario.username}} </a> en
@@ -39,13 +40,14 @@
 			</div>
 			<div class="col-md-4">
 				<div class="thumbnail">
-					<div class = "thumbnail_main_div">
+					<div class = "thumbnail_main_div hidden-sm hidden-xs">
 						<img alt="300x200" src="{{imagenes_posts_populares.1}}"/>
 					</div>
-					<div class="caption">
+					<div class="caption thumbnail_main_post">
+					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.1}}">
 						<p class = "text">
 						{{posts_populares.1.texto|truncatewords:30}} 
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id %}"> <h4><small>ver post</h4></small></a>
+						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.usuario.username}} </a> en
@@ -57,13 +59,14 @@
 			</div>
 			<div class="col-md-4">
 				<div class="thumbnail">
-					<div class = "thumbnail_main_div">
+					<div class = "thumbnail_main_div hidden-sm hidden-xs">
 						<img alt="300x200" src="{{imagenes_posts_populares.2}}"/>
 					</div>
-					<div class="caption">
+					<div class="caption thumbnail_main_post">
+						<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.2}}">
 						<p class = "text">
 						{{posts_populares.2.texto|truncatewords:30}} 
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id %}"> <h4><small>ver post</h4></small></a>
+						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<h4>
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.usuario.username}} </a> en
@@ -86,15 +89,15 @@
 	<div class="btn-group btn-group-sm control">
 		<button class="btn btn-default {{todos}}" 
 		type="button" onclick="location.href='{% url 'temas:main' 'todos' %}';">
-		<span class="glyphicon glyphicon-th-list"> </span> Todos
+		<span class="fa fa-sort-alpha-asc"> </span> Todos
 		</button> 
 		<button class="btn btn-default {{activos}} "
 		type="button" onclick="location.href='{% url 'temas:main' 'activos' %}';">
-		<span class="glyphicon glyphicon-signal"> </span> Activos
+		<span class="fa fa-signal"> </span> Activos
 		</button> 
 		<button class="btn btn-default {{populares}} " 
 		type="button" onclick="location.href='{% url 'temas:main' 'populares' %}';">
-		<span class="glyphicon glyphicon-star"> </span> Populares
+		<span class="fa fa-star"> </span> Populares
 		</button>
 	</div>
 </div>
@@ -127,7 +130,7 @@
 
 {% block sidebar %}
 <div class="col-md-4 col-sm-3 column ">
-	<div class = "main_cita">
+	<div class = "sidebar_cita">
 		<blockquote>
 			<p>
 				{{cita.texto}}
@@ -158,3 +161,6 @@
 	</div>
 </div>
 {% endblock sidebar %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}

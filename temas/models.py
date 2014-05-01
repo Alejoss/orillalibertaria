@@ -3,7 +3,6 @@ from django.db import models
 from django.template import defaultfilters
 from perfiles.models import Perfiles
 # Create your models here.
- 
 
 class Temas(models.Model):
 	nombre = models.CharField(max_length=100, null=True)
@@ -32,6 +31,13 @@ class Posts(models.Model):
 	creador = models.ForeignKey(Perfiles, null = True)
 	tema = models.ForeignKey(Temas, null = True)
 	eliminado = models.BooleanField(default=False)
+	votos_total = models.SmallIntegerField(blank=True, null=True)
+	editado = models.BooleanField(default=False)
+	fecha_edicion = models.DateTimeField(null=True)
+
+	def save(self, *args, **kwargs):
+		self.votos_total = int(self.votos_positivos)-int(self.votos_negativos)
+		super(Posts, self).save(*args, **kwargs)
 
 	def __unicode__(self):
 		return "%s... en %s" %(self.texto[:20], self.tema.nombre)

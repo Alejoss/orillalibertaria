@@ -1,6 +1,8 @@
 {% extends "base_galeria.html" %}
 
 {% block content %}
+{% load staticfiles %}
+
 <div class="container">
     <div class="row">
         <div class="span3">
@@ -14,42 +16,138 @@
                 <p><a href=" {% url 'imagenes:nueva' %} " class="btn">Añadir Imagen &rarr;</a></p>
             </div>
             <ul class="nav nav-tabs nav-stacked">
-                <li><a href="{% url 'imagenes:index' 'recientes' %}"><i class="icon-bookmark"></i> Recientes </a></li>
-                <li><a href="{% url 'imagenes:index' 'populares' %}"><i class="icon-star"></i> Populares</a></li>
-                <li class="active"><a href="{% url 'imagenes:favoritas' user.username %}"><i class="icon-certificate"></i> Favoritas </a></li>
+            <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
+                <i class="fa fa-bookmark"></i> Recientes </a></li>
+            <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
+                <i class="fa fa-star"></i> Populares</a></li>
+            <li><a href="{% url 'imagenes:favoritas' user.username %}">
+                <i class="fa fa-certificate"></i> Favoritas </a></li>
             </ul>
-           <ul class="nav nav-tabs nav-stacked">
-                <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="icon-home"></i> Orilla Libertaria </a></li>
-                
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="icon-user"></i> Tu Perfil, {{user.username}} </a></li>
-                {% else %}
-                <li><a href="url 'perfiles:login'"><i class="icon-user"></i> Login </a></li>
-                {% endif %}
+            <ul class="nav nav-tabs nav-stacked">
+            <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="fa fa-home"></i> Orilla Libertaria </a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{user.username}} </a></li>
+            <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-puzzle-piece"></i> Ayúdanos a revisar la Galería </a></li> 
+            {% else %}
+            <li><a href="url 'perfiles:login'"><i class="fa fa-user"></i> Login </a></li>
+            {% endif %}
             </ul>
         </div>
+        <div id = "imagenes">
         {% for i in imagenes_favoritas %}
         <div class="span3 galery"> <!--span cambiado -->
             <div class="image-galery"><a class="group" rel="group1" href="{{i.0.url}}"><img src=" {{i.0.url}} " /></a>
             </div>
-              <div>
-				<span style = "margin-left: 30px">
-				<i class="icon-star"></i>
-        		<span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
-        		</span>
-               	{% if propio_usuario %}
-						{% if i.1 == True %}
-						{% load staticfiles %}
-					<img class = "icono_portada reportar" title="Portada" src = "{% static '/static/img/ol_icon_portada.jpg'%}">
-						{% else %}
-					<a href = "{% url 'imagenes:marcar_portada' i.0.id %}">
-					<span class="icon-certificate reportar" title="Elegir como portada"> </span></a>
-						{% endif %}
+            <div>
+            
+            <div class = "div_marcar_portada">
+            {% if propio_usuario %}
+                <p class = "hidden">{{i.0.id}}</p>
+                <span class="estrella remover_favorito fa fa-star fa-lg es_favorita"></span>
+                <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
+                {% if i.1 == True %}
+        		  <i class = "icono_portada fa fa-picture-o fa-lg"> </i>
+				{% else %}
+        		  <span class='icon-certificate marcar_portada' title='Elegir como portada'></span>
 				{% endif %}
+            {% else %}
+                <p class = "hidden">{{i.0.id}}</p>
+                <span class='estrella sumar_favorito fa fa-star fa-lg {{i.1}}'></span>
+                <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
+            {% endif %}
+            </div>
             </div>
         </div>
         {% endfor %}
+        </div>
     </div>
 </div>
 
 {% endblock content %}
+
+{% block extra_javascript %}
+<script src="{% static 'js/imagen_favorita.js' %} "></script>
+{% endblock extra_javascript %}
+
+<!--
+$('.remover_favorito').on('click', remover_favorito);
+$('.sumar_favorito').on('click', sumar_favorito);
+$('.div_marcar_portada').on('click', '.marcar_portada' , marcar_portada);
+
+function sumar_favorito(){
+    var p_hidden = $(this).prev('.hidden');
+    var imagen_id = p_hidden.text();
+
+    var favoritos_recibidos_obj = $(this).next('.favoritos');
+    var favoritos_recibidos = parseInt(favoritos_recibidos_obj.text());
+
+    if ($(this).hasClass('no_es_favorita')){
+        $(this).fadeOut(function(){
+            $(this).removeClass('no_es_favorita');
+            $(this).addClass('es_favorita');
+            $(this).fadeIn();
+        });
+        favoritos_recibidos_obj.fadeOut(function(){
+        favoritos_recibidos_obj.text(favoritos_recibidos+1);
+        favoritos_recibidos_obj.fadeIn();
+        });
+    }
+    else if ($(this).hasClass('es_favorita')){
+         $(this).removeClass('es_favorita');
+        $(this).addClass('no_es_favorita');
+        favoritos_recibidos_obj.text(favoritos_recibidos-1);
+    }
+    $.ajax({
+        data: {'imagen_id':imagen_id},
+        url: '/imagenes/marcar_favorito/',
+        type: 'get'
+    });
+}
+
+function marcar_portada(){
+    var p_hidden = $(this).prev(".hidden");
+    var imagen_id = p_hidden.text();
+    console.log(imagen_id)
+    $.ajax({
+        data:{'imagen_id':imagen_id},
+        url: '/imagenes/marcar_portada_ajax/',
+        type: 'get'
+    });
+
+    var portada_actual = $('#imagenes').find('.icono_portada');
+    portada_actual.fadeOut("slow", function(){
+        portada_actual.replaceWith("<span class='icon-certificate marcar_portada'></span>")
+    });
+    $(this).fadeOut("slow", function(){
+        $(this).replaceWith("<img class = 'icono_portada'  title='Portada' src = \"{% static '/static/img/ol_icon_portada.jpg'%}\">");
+    });
+   
+}
+
+function remover_favorito(){
+    var parent_uno = $(this).parent();
+    var p_hidden = parent_uno.find('.hidden');
+    var imagen_id = p_hidden.text();
+
+    $.ajax({
+        data:{'imagen_id':imagen_id},
+        url: '/imagenes/marcar_favorito/',
+        type: 'get'
+    });
+
+    var parent_dos = $(parent_uno).parent();
+    parent_dos.parent().fadeOut("slow", function(){
+        parent_dos.parent().remove();
+    });
+}
+
+$('.remover_favorito').hover(function(){
+    $(this).removeClass("fa-star");
+    $(this).addClass("fa-star-o");
+    }, function(){
+    $(this).removeClass("fa-star-o");
+    $(this).addClass("fa-star");
+    });
+
+
+ -->

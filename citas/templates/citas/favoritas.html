@@ -1,82 +1,113 @@
 {% extends "base.html" %}
 
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'citas:nueva' %}">Añade una frase</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
 {% block content %}
-<div class="container">
-	<div class="row clearfix">
-		<div class="col-md-8 column">
-			<ul class="breadcrumb">
-				<li>
-					{% if propio_usuario %}
-	                <p> {{user.username}}, tus frases favoritas. </p>
-	                {% else%}
-	                <p> Imágenes favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></p>
-	                {% endif %}
-				</li>
-			</ul>
-			<hr>
-			<div class="row clearfix">
-				{% for c in citas_favoritas %}
-				<div class="col-md-11 column">
-					<blockquote>
-						<p>
-							"{{c.texto}}"
-						</p> <small>{{c.autor}}, <cite>{{c.fuente}}</cite></small>
-					</blockquote>
+<div class="row clearfix">
+	<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
+		<ul class="breadcrumb">
+			<li>
+				{% if propio_usuario %}
+                <p> {{user.username}}, tus frases favoritas. </p>
+                {% else%}
+                <p> Imágenes favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></p>
+                {% endif %}
+			</li>
+		</ul>
+		<hr>
+		<div class="row clearfix">
+			<div class = "col-md-12">
+			{% for c in citas_favoritas %}
+			<div class = "row div_cita">
+				<div class="panel panel-info">
+					<div class="panel-body">
+						<blockquote>
+							<p>
+								"{{c.0.texto}}"
+							</p> <small>{{c.0.autor}}, <cite>{{c.0.fuente}}</cite></small>
+						</blockquote>
+					</div>
+					<div class="panel-footer">
+						<div class = "pull-right">
+						<p class = "hidden"> {{c.0.id}} </p>
+						<i class="marcar_favorito fa fa-star-o fa-lg {{c.1}} "></i>
+						<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
+						</div>
+						<p><small> favorito desde {{c.2|date:"F/d"}} </small></p>
+					</div>
 				</div>
-				<div class="col-md-1 column">
-					<a href = "{% url 'citas:marcar_favorito' c.id %}">
-					<span class="glyphicon glyphicon-star"></span></a>
-						<br/>
-						<p>{{c.favoritos_recibidos}}</p>
-						<br/>
-					<span class="glyphicon glyphicon-flag"></span>
-				<hr>
-				</div>
-				{% endfor %}
+			</div>
+			{% endfor %}
 			</div>
 		</div>
-		<div class="col-md-4 column">
-			<div class = "div_carrusel">
-			<div class = "cuadro_carrusel">
-			<div class="carousel slide" id="carousel-422808">
-				<div class="carousel-inner">
-					<div class="item active">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = "{{primera_imagen}}">
-					</div>
+	</div>
+	<div class="hidden-xs col-md-4 col-sm-4 column">
+		<div>
+			<br>
+			<button type="button" class="btn btn-warning btn_sidebar" 
+			onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
+			</button> 
+			<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
+			<button type="button" class="btn btn-default btn_sidebar visible-sm" 
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+			</button>
+			<div class = "link_coorg_citas">
+				<a href="{% url 'citas:colaborar_organizar' %}">Ayúdanos a organizar <br> este Banco de Frases</a>
+			</div>
+			<hr>
+		</div>
+		<div class = "hidden-sm div_carrusel">
+			<div class = " visible-lg visible-md cuadro_carrusel">
+				<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
 					{% for i in imagenes_display %}
-					<div class="item">
-						<img alt="problema cargando imágenes libertarias"class = "logo" src = " {{i}} ">
-					</div>
+					<div class="item"><img src=" {{i.url}} " alt="404 imagen libertaria"></div>
 					{% endfor %}
-
-				</div> <a class="left carousel-control" href="#carousel-422808" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-422808" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				</div>
 			</div>
-			<div>
-			</div>
-			</div> <!--cuadro_carrusel-->
-		</div> <!--div carrousel -->
-
 			<hr>
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
 			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 				Ver galería de imágenes</button>
-			<br>
-
-			<div>
-				<br>
-				<br>
-				<button type="button" class="btn btn-default" onclick="location.href='{% url 'citas:index' 'recientes' %}';"> Ver banco de frases
-				</button>
-				<br> <br>
-				<button type="button" class="btn btn-default" 
-				onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
-				</button> 
-				<br> <br>
-				<a href="{% url 'citas:colaborar_organizar' %}" class="btn" type="button">Ayúdanos a organizar este banco de frases</a>
-				<hr>
-			</div>
-
-		</div> <!--column 4-->
-	</div>
+		</div> <!--div carrousel -->
+		<br>
+	</div> <!--column 4-->
 </div>
 {% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script>
+	$(document).ready(function() {
+	 
+	  $("#owl-demo").owlCarousel({
+	 
+	      navigation : false, // Show next and prev buttons
+	      slideSpeed : 300,
+	      paginationSpeed : 400,
+	      singleItem:true
+	 
+	      // "singleItem:true" is a shortcut for:
+	      // items : 1, 
+	      // itemsDesktop : false,
+	      // itemsDesktopSmall : false,
+	      // itemsTablet: false,
+	      // itemsMobile : false
+	 
+	  });
+	 
+	});
+</script>
+<script src="{% static 'js/cita_favorita.js' %} "></script>
+<script src="{% static 'js/owl.carousel.min.js' %} "></script>
+{% endblock javascript %}
+

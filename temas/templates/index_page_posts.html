@@ -5,19 +5,19 @@
 <div class = "row">
 	<div class = "endless_page_template">
 		{% for post in posts %}
-			<div class = "post">
+			<div>
 			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 						<p class = "vote-id hidden">{{post.0.id}}</p>
 						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="glyphicon glyphicon-chevron-up"></span>
+							<span class="fa fa-chevron-up"></span>
 						</button>
 						<button class = "btn puntaje"> 
-						<h2 class = "numero_puntaje {{post.2}}"> {{post.3}} </h2>
+						<h2 class = "numero_puntaje {{post.2}}"> {{post.0.votos_total}} </h2>
 						</button>
 						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="glyphicon glyphicon-chevron-down"></span>
+							<span class="fa fa-chevron-down"></span>
 						</button>
 					</div>
 				</div>
@@ -25,8 +25,8 @@
 			<div class = "col-md-10 col-sm-10 col-xs-10">
 				<div class="panel panel-info">
 					<div class="panel-body">
-						<p class = "text">
-						{{post.0.texto|truncatewords:50}}
+						<p class = "text truncate">
+						{{post.0.texto}}
 						</p>
 						<br/>
 					</div>
@@ -34,7 +34,7 @@
 						{% if post.0.creador.usuario == request.user %}
 						<div class = "eliminar_editar pull-left">
 							<div class = "btn-group dropup">
-							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="glyphicon glyphicon-cog"></span>
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li>
@@ -42,7 +42,7 @@
 								</li>
 								<li class = "divider"></li>
 								<li>
-									<a href="#">Editar</a> <!-- -->
+									<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> 
 								</li>
 							</ul>
 							</div>
@@ -54,7 +54,7 @@
 							</p>
 						</div>
 						<div class = "footer_respuestas pull-right">
-		 				<a href = "{% url 'temas:post' tema.slug post.0.id %} "> <span class="glyphicon glyphicon-comment link_post"></span> {{post.1}} </a>
+		 				<a href = "{% url 'temas:post' tema.slug post.0.id 'recientes' %} ">{{post.1}} <span class="fa fa-comments link_post"></span> <span class="fa fa-chevron-right link_post"></span></a>
 		 				</div>
 					</div>
 				</div>

@@ -21,11 +21,11 @@
 					    <span class="sr-only">{{progress_bar}}% Complete</span>
 					  </div>
 					</div>
-					<table class="table table-striped">
+					<table class="table">
 						<thead>
 							<tr>
 								<th>
-									Frase
+									Frase Actual
 								</th>
 								<th>
 									Correcciones
@@ -41,27 +41,31 @@
 						<tbody>
 							
 							{% for x in tabla_citas %}
-							<tr class="{{x.3}}">
+							<tr style = "background-color: {{x.3}} ">
 								<td> <!--frase-->
-									{{x.0.0}}, {{x.0.1}}, {{x.0.2}}
+									<blockquote><p>"{{x.0.0}}"</p>
+										<small>{{x.0.1}}, {{x.0.2}}</small>
+									</blockquote>
 								</td>
 								<td> <!--correcciones-->
-									{% for c in x.1 %}
-									{{c.0}}, {{c.1}}, {{c.2}}
-									<br>
-									{% endfor %}
+									<ul>
+										{% for c in x.1 %}
+										<li> <a href=" {% url 'perfiles:perfil' c.2 'recientes' %} ">
+											{{c.2}}</a>: {{c.1}} <br> El {{c.0}}. </li>
+										{% endfor %}
+									</ul>
 								</td>
 								<td> <!--estado-->
 									{% for e in x.2.0 %}
-									<span class="glyphicon glyphicon-{{e}}"></span>
+									<span class="fa fa-{{e}}"></span>
 									{% endfor %}
 								</td>
 								<td>
-									<a href=" {% url 'citas:coorg_editar' x.0.3 %} "><span class="glyphicon glyphicon-pencil"></span></a>
+									<a href=" {% url 'citas:coorg_editar' x.0.3 %} "><span style = "color:black" class="fa fa-edit fa-lg" title = "Editar"></span></a> | 
 									<a href = "{% url 'citas:marcar_visto' x.0.3 %}">
-									<span class="glyphicon glyphicon-ok"></span></span></a>
+									<span style = "color:green" class="fa fa-check{{x.4.0}} fa-lg" title = "Votar a favor"></span></span></a>
 									<a href = "{% url 'citas:marcar_x' x.0.3 %}">
-									<span class="glyphicon glyphicon-remove"></span></a>
+									<span style="color:red" class="fa fa-times{{x.4.1}} fa-lg" title = "Votar en contra"></span></a>
 								</td>
 							</tr>
 							{% endfor %}
@@ -70,20 +74,15 @@
 					</table>
 				</div>
 				<div class="col-md-4 column">
-					<blockquote>
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-						</p> <small>Someone famous <cite>Source Title</cite></small>
-					</blockquote>
 					<dl>
 						<dt>
 							Instrucciones:
 						</dt>
 						<br>
 						<dd>
-							En la tabla de la izquierda puedes encontrar las frases que han sido "denunciadas" más de tres veces. Revísalas, si encuentras algún error, edítalo. Cuando una frase ya esté correcta, márcala con un visto. Las frases que reciban tres vistos serán enviadas nuevamente al banco de frases.<br/><br>
-							Si ves una frase que no tiene solución, una frase totalmente errónea ya sea porque el autor jamás dijo algo parecido o porque consideras que no debe estar en esta página, márcala con una X y será eliminada después de recibir tres X. (por ejemplo: "El internet es intrínsicamente libre"-Carl Marx, o "Eso es todo amigos" -Bugs Bunny)<br/><br>
-							Si marcas con una "X" a una frase que tenga "vistos", se eliminará un visto, y viceversa. La barra de progreso se completa cuando ya no queden frases que revisar.
+							En la tabla de la izquierda puedes encontrar las frases que han sido "denunciadas" más de tres veces. Revísalas, si encuentras algún error, corrígelo <span style = "color:black" class="fa fa-edit"></span>. <br>
+							Cuando una frase ya esté correcta, márcala con un <span style = "color:green" class="fa fa-check"></span>. Las frases que reciban tres vistos serán enviadas nuevamente al Banco de Frases.<br/><br>
+							Si ves una frase que no tiene solución, una frase totalmente errónea ya sea porque el autor jamás dijo algo parecido o porque consideras que no debe estar en esta página, márcala con una X y será eliminada después de recibir tres <span style="color:red" class="fa fa-times"></span>. (por ejemplo: "El internet es intrínsicamente libre"-Carl Menger, o "Eso es todo amigos" -Bugs Bunny)<br/><br>
 						</dd>
 					</dl>
 				</div>

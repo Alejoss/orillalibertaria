@@ -1,18 +1,32 @@
 .dorado {
 	color: #ffd700;
 }
+.red{
+  color: red;
+}
 .imagen {
 	max-height: 120px;
 	width: auto;
 	display: inline-block;
 }
 .reportar {
+  cursor: pointer;
 	margin-left: 170px
 }
-
+.div_marcar_portada{
+  display: inline-block;
+}
+.es_favorita{
+  color:#ffd700;
+}
+.marcar_portada {
+  margin-left: 170px;
+  cursor: pointer;
+}
 .estrella {
 	display: inline-block;
 	margin-left: 25px;
+  cursor: pointer;
 }
 .favoritos {
 	display: inline-block;
@@ -21,6 +35,7 @@
 .icono_portada {
 	height: 30px;
 	width:auto;
+  margin-left: 170px;
 }
 
 .visto_imagen{
@@ -33,7 +48,8 @@
 /* colaborar organizar - imagenes  - progress bar */
 
 .instrucciones_coorg{
-	height: 325px
+  overflow: scroll;
+	height: 300px
 }
 
 .progress {

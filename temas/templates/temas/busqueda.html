@@ -8,28 +8,25 @@
 </div>
 <div class="row clearfix">
 		<div class="col-md-8 column col-md-offset-1">
-			{% for x in found_entries %}
-			<div class="row clearfix cuadro_panel">
-				<div class="col-md-11 column">
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<h4>
-								{{ x.nombre }}<small> {{x.descripcion|truncatewords:50}}
-								</small>
-							</h4>
-						</div>
-						<div class="panel-footer">
-							<small> Creado el {{x.fecha_creacion|date:"d M Y"}}
-							</small>
-						</div>
-					</div>
-				</div>
-					<a href = "{% url 'temas:index_tema' x.slug 'recientes' %} ">
-				<div class="col-md-1 column col_flecha">
-					<span class="glyphicon glyphicon-chevron-right flecha"></span> 
-				</div>
-					</a>
+			{% for x in temas_encontrados %}
+			<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<a href = "{% url 'temas:index_tema' x.0.slug 'ultimos' %}">  {{x.0.nombre}} </a>
+				</h3>
 			</div>
+			<div class="panel-body">
+				<div class = "div_imagen_tema">
+					<img class = "imagen_tema" src = "{{x.0.imagen}}">
+				</div>
+			<p class = "text">
+				{{x.2|truncatewords:70}} <br/>
+			</p>
+			</div>
+			<div class = "panel-footer">
+				<p> <small> {{x.3}} posts y 15 videos desde el {{x.0.fecha_creacion|date:"SHORT_DATE_FORMAT"}} </small> </p>
+			</div>
+		</div>
 			{% endfor %}
 		</div>
 

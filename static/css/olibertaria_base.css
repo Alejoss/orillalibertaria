@@ -1,9 +1,45 @@
 /* prueba */
-
+#p_show{
+	display: none;
+	border: 1px solid red;
+}
+.red{
+  color: red;
+}
 .borde {
 	border: 1px solid red;
 }
+.dorado {
+	color: #ffd700;
+}
+.subrayar{
+	text-decoration: underline;
+}
+
 /*css para el perfil*/
+.div_perfil_datos{
+	margin-left: 40px;
+}
+.perfil_panel_sm{
+	margin-top: 20px;
+	margin-right: 20px;
+}
+.nombre_usuario{
+	margin-top: 0px;
+	margin-left: 80px;
+}
+.frase_perfil{
+	display: inline-block;
+	height: 100px;
+	width: 200px;
+}
+
+.imagenes_frases_perfil{
+	display: inline-block;
+	margin-top: 5px;
+	width: 200px;
+}
+
 .imagen_perfil{
 	max-height: 150px;
 	width: auto;
@@ -29,7 +65,7 @@
 /*css para el carrusel de imágenes */
 .cuadro_carrusel{
 	margin-top: 30px;
-	max-height: 400px;
+	max-height: 500px;
 	overflow: hidden;
 	margin-left: auto;
 	margin-right: auto;
@@ -42,7 +78,7 @@
 }
 
 .div_carrusel{
-	height: 400px;
+	height: 500px;
 	overflow: hidden;
 	margin-left: 15px;
 }
@@ -60,6 +96,17 @@
 }
 
 /* css para el panel con el post y los votos */
+.post_resaltado{
+	border: 2px solid transparent;
+	border-radius: 4px;
+	border-color: #faebcc;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+	      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+#mostrar_post_padre{
+	margin-left: 10px;
+	cursor: pointer;
+}
 .control_votos{
 	vertical-align: center;
 	max-width: 40px;
@@ -151,6 +198,9 @@ padding: 5px
 }
 
 /*css para el post y las respuestas */
+.form_respuesta{
+	display: block;
+}
 
 .post_datos_tema{
 	display:block;
@@ -173,6 +223,14 @@ padding: 5px
   -webkit-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
 }
+.thumbnail_main_post{
+	min-height: 115px;
+}
+
+.thumbnail_main_post img{
+	margin-right: 10px;
+	height: 100px;
+}
 
 .thumbnail_main_div{
 	overflow: hidden;
@@ -188,15 +246,16 @@ padding: 5px
 }
 
 /* css para temas/main general */
-.main_cita{
-	margin-left: 30px
-}
 
 .main_sidebar_btns{
 	margin-left: 30px
 }
 
 /* css para los forms */
+.info_editar_perfil_des{
+	margin-top: 20px;
+	margin-left: 10px;
+}
 
 .form_margins{
 	margin-right: 20px;
@@ -246,7 +305,7 @@ padding: 5px
 .btn_sidebar{
 	display: block;
 	margin-top: 5px;
-	margin-left: 10px;
+	margin-left: 40px;
 }
 
 #owl-demo .item img{
@@ -255,3 +314,29 @@ padding: 5px
     height: auto;
 }
 
+.sidebar_cita{
+	margin-left: 30px
+}
+
+/* css para la pagina de citas */
+.cita_favoritos{
+	display: inline-block;
+}
+.marcar_favorito{
+	display: inline-block;
+	cursor: pointer;
+}
+.reportar_cita{
+	float: right;
+	margin-top: 10px;
+	cursor:pointer;
+}
+.link_coorg_citas{
+	text-align: left;
+	margin-left: 40px;
+	margin-top: 10px
+}
+
+.div_cita{
+	padding-left: 0px;
+}

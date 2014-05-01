@@ -12,8 +12,6 @@ class Cita(models.Model):
 	denunciada = models.SmallIntegerField(default=0)
 	correcta = models.BooleanField(default=False)
 	eliminada = models.BooleanField(default=False)
-	vistos_recibidos = models.SmallIntegerField(default=0)
-	xrecibidas = models.SmallIntegerField(default=0)
 	removidatotalmente = models.BooleanField(default=False)
 
 	#!!!cuando se elimine una cita, eliminar en el modelo CFavoritas
@@ -40,9 +38,9 @@ class Ceditadas(models.Model):
 		return "%s editada el %s" %(self.cita.autor, self.fecha)
 
 
-
-
-
-
-
+class Cdenunciadas(models.Model):
+	cita = models.ForeignKey(Cita, null= True)
+	perfil = models.ForeignKey(Perfiles, null=True)
+	fecha = models.DateTimeField(auto_now_add=True, null=True)
+	eliminado = models.BooleanField(default=False)
 

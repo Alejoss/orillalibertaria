@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from math import sqrt
+from datetime import datetime
+
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.db.models import Sum
 
 from endless_pagination.decorators import page_template
-from models import Cita, Cfavoritas, Ceditadas
+from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
 from imagenes.models import Imagen
@@ -14,6 +16,7 @@ from imagenes.models import Imagen
 # Create your views here.
 @page_template('index_page_citas.html')
 def index(request, queryset, template = 'citas/index.html', extra_context = None):
+	perfil_usuario = Perfiles.objects.get(usuario=request.user)
 	autor = ""
 	recientes = ""
 	populares = ""
@@ -28,22 +31,24 @@ def index(request, queryset, template = 'citas/index.html', extra_context = None
 		q = "-fecha"
 		recientes = "active"
 
-	citas = Cita.objects.filter(eliminada=False).order_by(q)
+	citas = []
+	cfavoritas_objects = Cfavoritas.objects.filter(eliminado=False, perfil = perfil_usuario)
+	citas_favoritas = []
+	for x in cfavoritas_objects:
+		citas_favoritas.append(x.cita)
 
-	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
-	imagenes_display = []
-	primera_imagen = ""
-	
-	primero = True
-	for i in imagenes_objects:
-		if primero == True:
-			primera_imagen = i.url
-			primero = False
+	citas_obj = Cita.objects.filter(eliminada=False).order_by(q)
+	for c in citas_obj:
+		if c in citas_favoritas:
+			citas.append([c, "dorado"])
 		else:
-			imagenes_display.append(i.url)
+			citas.append([c, ""])
 
-	context = {'citas': citas, 'imagenes_display': imagenes_display, 'primera_imagen':primera_imagen,
-	'autor':autor, 'recientes':recientes, 'populares':populares}
+
+	imagenes_display = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
+	
+	context = {'citas': citas, 'imagenes_display': imagenes_display, 'autor':autor, 
+	'recientes':recientes, 'populares':populares}
 
 	if extra_context is not None:
 		context.update(extra_context)
@@ -74,76 +79,87 @@ def nueva(request):
 	'lista_de_autores':lista_de_autores}
 	return render(request,template, context)
 
-def marcar_favorito(request, cita_id):
-	cita = Cita.objects.get(pk=cita_id)
-	perfil_usuario = Perfiles.objects.get(usuario=request.user)
-	#revisa si ya marco como favorito a esa cita
-	fue_eliminado = False
-	registro_existe = Cfavoritas.objects.filter(cita=cita, perfil = perfil_usuario).exists()
-	if registro_existe:
-		print 1
-		registro_favorito = Cfavoritas.objects.get(cita=cita, perfil = perfil_usuario)
-		fue_eliminado = registro_favorito.eliminado
-		if fue_eliminado == True:
-			print 2
-			cita.favoritos_recibidos += 1
-			registro_favorito.eliminado = False
-			cita.save()
-			registro_favorito.save()
-			return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
+def marcar_favorito(request):
+	if request.is_ajax():
+		cita_id = request.GET.get('frase_id','')
+		cita = Cita.objects.get(pk=cita_id)
+		perfil_usuario = Perfiles.objects.get(usuario=request.user)
+		#revisa si ya marco como favorito a esa cita
+		fue_eliminado = False
+		registro_existe = Cfavoritas.objects.filter(cita=cita, perfil = perfil_usuario).exists()
+		if registro_existe:
+			registro_favorito = Cfavoritas.objects.get(cita=cita, perfil = perfil_usuario)
+			fue_eliminado = registro_favorito.eliminado
+			if fue_eliminado == True:
+				cita.favoritos_recibidos += 1
+				registro_favorito.eliminado = False
+				registro_favorito.fecha = datetime.today()
+				cita.save()
+				registro_favorito.save()
+				return HttpResponse('nueva frase favorita')
+			else:
+				cita.favoritos_recibidos -= 1
+				registro_favorito.eliminado = True
+				cita.save()
+				registro_favorito.save()
+				return HttpResponse('frase favorita removida')
 		else:
-			print 3
-			cita.favoritos_recibidos -= 1
-			registro_favorito.eliminado = True
-			cita.save()
+			cita.favoritos_recibidos += 1
+			registro_favorito = Cfavoritas(cita=cita, perfil = perfil_usuario)
 			registro_favorito.save()
-			return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
+			cita.save()
+			return HttpResponse('nueva frase favorita')
 	else:
-		print 4
-		cita.favoritos_recibidos += 1
-		registro_favorito = Cfavoritas(cita=cita, perfil = perfil_usuario)
-		registro_favorito.save()
-		cita.save()
-		return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset':u'recientes'}))
+		return HttpResponse("error_fav_cita") #!!!raise 404
 
 def favoritas(request, username):
 	template = 'citas/favoritas.html'
 	user_object = User.objects.get(username=username)
 	perfil_usuario = Perfiles.objects.get(usuario=user_object)
-
-	Cfavoritas_objects = Cfavoritas.objects.filter(perfil = perfil_usuario).order_by('-fecha')
-	citas_favoritas = []
-	for c in Cfavoritas_objects:
-		citas_favoritas.append(c.cita)
-
-	imagenes_objects = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
-	imagenes_display = []
-	primera_imagen = ""
-	
-	primero = True
-	for i in imagenes_objects:
-		if primero == True:
-			primera_imagen = i.url
-			primero = False
-		else:
-			imagenes_display.append(i.url)
-
 	propio_usuario = False
 	if request.user == user_object:
 		propio_usuario = True
 
+	Cfavoritas_objects = Cfavoritas.objects.filter(perfil = perfil_usuario, eliminado = False).order_by('-fecha')
+	citas_favoritas = []
+	if propio_usuario == True:
+		for c in Cfavoritas_objects:
+			citas_favoritas.append([c.cita, "dorado", c.fecha])
+	elif propio_usuario == False:
+		perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+		cfavoritas_usuario_visitante = Cfavoritas.objects.filter(perfil=perfil_usuario_visitante, eliminado=False)
+		citas_favoritas_visitante = []
+		for x in cfavoritas_usuario_visitante:
+			citas_favoritas_visitante.append(x.cita)
+		for c in Cfavoritas_objects:
+			if c.cita in citas_favoritas_visitante:
+				citas_favoritas.append([c.cita, "dorado", c.fecha])
+			else:
+				citas_favoritas.append([c.cita, "", c.fecha])
+
+	imagenes_display = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
+
 	context = {'citas_favoritas':citas_favoritas, 'imagenes_display': imagenes_display,
-	'primera_imagen':primera_imagen, 'user_object':user_object, 'propio_usuario':propio_usuario}
+	'user_object':user_object, 'propio_usuario':propio_usuario}
 	
 	return render(request, template , context)
 
 def colaborar_organizar(request):
 	template = 'citas/citas_coorg.html'
 	citas_eliminadas = Cita.objects.filter(eliminada=True, removidatotalmente = False)
+	perfil_usuario = Perfiles.objects.get(usuario=request.user)
+	success_uno = "#dff0d8"
+	success_dos = "#d0e9c6"
+	danger_uno = "#f2dede"
+	danger_dos = "#ebcccc"
+	default = "#ebebeb"
+
+	#para llenar la tabla de citas eliminadas.
 	tabla_citas = []
 	for cita in citas_eliminadas:
 		frase = [cita.texto, cita.autor, cita.fuente, cita.id]
 		correcciones = []
+		#ediciones
 		if Ceditadas.objects.filter(cita=cita).exists():
 			correcciones_objects = Ceditadas.objects.filter(cita=cita)
 			for c in correcciones_objects:
@@ -152,74 +168,116 @@ def colaborar_organizar(request):
 				perfil = c.perfil.usuario.username
 				correccion = [fecha, razon, perfil]
 				correcciones.append(correccion)
+		#color & iconos
 		color = ""
 		estado = []
-		vistos = cita.vistos_recibidos
-		x = cita.xrecibidas
-		estado_num = vistos - x
-		if estado_num > 0:
-			color = "success"
-			if estado_num == 1:
-				estado.append(["ok"])
+		if cita.denunciada < 4:
+			color = success_uno
+			if cita.denunciada == 3:
+				estado.append(["check-circle"])
 			else:
-				estado.append(["ok", "ok"])
-		elif estado_num < 0:
-			color = "danger"
-			if estado_num == -1:
-				estado.append(["remove"])
+				color = success_dos
+				estado.append(["check-circle", "check-circle"])
+		elif cita.denunciada > 4:
+			color = danger_uno
+			if cita.denunciada == 5:
+				estado.append(["times-circle"])
 			else:
-				estado.append(["remove", "remove"])
+				color = danger_dos
+				estado.append(["times-circle", "times-circle"])
 		else:
-			color = "warning"
+			color = default
 			estado.append(["flag"])
-		tabla_citas.append([frase, correcciones, estado, color])
+		#accion del usuario.
+		accion_usr = ["",""]
+		if Cdenunciadas.objects.filter(cita=cita, perfil = perfil_usuario).exists():
+			cdenunciada_obj = Cdenunciadas.objects.get(cita=cita, perfil = perfil_usuario)
+			if cdenunciada_obj.eliminado == False:
+				accion_usr = ["", "-circle"]
+			else:
+				accion_usr = ["-circle", ""]
+		print color
+		tabla_citas.append([frase, correcciones, estado, color, accion_usr])
 
 	#variables y calculo del progress bar
-	vistos_totales = citas_eliminadas.aggregate(Sum('vistos_recibidos'))
-	x_totales = citas_eliminadas.aggregate(Sum('xrecibidas'))
-	suma_x_vistos = vistos_totales['vistos_recibidos__sum'] + x_totales['xrecibidas__sum']
-	max_posible = citas_eliminadas.count()*3
-	porcentaje_avanzado = (float(suma_x_vistos)/float(max_posible))*100
-	progress_bar = str(porcentaje_avanzado)
+	if citas_eliminadas.count() > 0:
+		num_citas_eliminadas = citas_eliminadas.count()
+		max_y = num_citas_eliminadas*3
+		y = 0
+		for x in citas_eliminadas:
+			z = 4 - x.denunciada
+			y += sqrt(z*z)
+		porcentaje_avanzado = float(y)/float(max_y)
+		progress_bar = str(porcentaje_avanzado*100)
+	else:
+		progress_bar = 100
 
 	context = {'tabla_citas':tabla_citas, 'progress_bar':progress_bar}
 	return render(request, template , context)
 
-def denunciar_cita(request, cita_id):
-	cita_denunciada = Cita.objects.get(id=cita_id)
-	cita_denunciada.denunciada += 1
-	if cita_denunciada.denunciada >= 3:
-		cita_denunciada.eliminada = True
-	cita_denunciada.save()
-	return redirect('citas:index')
+def denunciar_cita(request):
+	if request.is_ajax:
+		cita_id = request.GET.get('frase_id', '')
+		cita_denunciada = Cita.objects.get(id=cita_id)
+		perfil_usuario = Perfiles.objects.get(usuario=request.user)
+		ya_denuncio = False
+		ya_denuncio = Cdenunciadas.objects.filter(cita=cita_denunciada, perfil=perfil_usuario).exists()
+		if ya_denuncio:
+			return HttpResponse("cita ya denunciada")
+		else:
+			if perfil_usuario.votos_recibidos > 10:
+				cdenunciada_obj = Cdenunciadas(cita=cita_denunciada, perfil = perfil_usuario)
+				cita_denunciada.denunciada += 1
+				if cita_denunciada.denunciada > 3:
+					cita_denunciada.eliminada = True
+				cita_denunciada.save()
+				cdenunciada_obj.save()
+		return HttpResponse("cita denunciada")
 
 def marcar_visto(request, cita_id):
-	#!!! falta limitar a un visto por usuario con una nueva tabla
 	cita = Cita.objects.get(id=cita_id)
-	if cita.xrecibidas > 0:
-		cita.xrecibidas -= 1
+	print cita.denunciada
+	perfil_usuario = Perfiles.objects.get(usuario = request.user)
+	if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
+		cdenunciada_obj = Cdenunciadas.objects.get(cita=cita, perfil=perfil_usuario)
+		if cdenunciada_obj.eliminado == False:
+			cita.denunciada -= 2
+			cdenunciada_obj.eliminado = True
+			cdenunciada_obj.save()
+		elif cdenunciada_obj.eliminado == True:
+			pass
 	else:
-		cita.vistos_recibidos += 1
-		if cita.vistos_recibidos >= 3:
-			cita.eliminada = False
-			cita.vistos_recibidos = 0
-			cita.denunciada = 0
+		cita.denunciada -= 1
+		cdenunciada_obj = Cdenunciadas(cita=cita, perfil=perfil_usuario, eliminado = True)
+		cdenunciada_obj.save()
+
+	if cita.denunciada <= 1:
+		cita.eliminada = False
 	cita.save()
+
 	return redirect('citas:colaborar_organizar')
 
 def marcar_x(request, cita_id):
-	#!!! falta limitar a una x por usuario con una nueva tabla
 	cita = Cita.objects.get(id=cita_id)
-	if cita.vistos_recibidos > 0:
-		print "aca"
-		cita.vistos_recibidos -= 1
+	print cita.denunciada
+	perfil_usuario = Perfiles.objects.get(usuario = request.user)
+	if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
+		cdenunciada_obj = Cdenunciadas.objects.get(cita=cita, perfil=perfil_usuario)
+		if cdenunciada_obj.eliminado == False:
+			pass
+		elif cdenunciada_obj.eliminado == True:
+			cita.denunciada +=2
+			cdenunciada_obj.eliminado = False
+			cdenunciada_obj.save()
 	else:
-		cita.xrecibidas += 1
-		if cita.xrecibidas >= 3:
-			cita.removidatotalmente = True
-			cita.xrecibidas = 0
-			cita.denunciada = 0
+		cita.denunciada += 1
+		cdenunciada_obj = Cdenunciadas(cita=cita, perfil = perfil_usuario)
+		cdenunciada_obj.save()
+
+	if cita.denunciada >= 7:
+		cita.removidatotalmente = True
 	cita.save()
+
 	return redirect('citas:colaborar_organizar')
 
 def coorg_editar(request, cita_id):
