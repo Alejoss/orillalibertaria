@@ -11,11 +11,13 @@ class Migration(SchemaMigration):
         # Adding model 'Imagen'
         db.create_table(u'imagenes_imagen', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
+            ('url', self.gf('django.db.models.fields.CharField')(max_length=250, null=True)),
             ('favoritos_recibidos', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
             ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('denunciada', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
             ('eliminada', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('perfil', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('removidatotalmente', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal(u'imagenes', ['Imagen'])
 
@@ -26,8 +28,19 @@ class Migration(SchemaMigration):
             ('perfil', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
             ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
             ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('portada', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal(u'imagenes', ['Ifavoritas'])
+
+        # Adding model 'Idenunciadas'
+        db.create_table(u'imagenes_idenunciadas', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('imagen', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['imagenes.Imagen'], null=True)),
+            ('perfil', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
+            ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'imagenes', ['Idenunciadas'])
 
 
     def backwards(self, orm):
@@ -36,6 +49,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Ifavoritas'
         db.delete_table(u'imagenes_ifavoritas')
+
+        # Deleting model 'Idenunciadas'
+        db.delete_table(u'imagenes_idenunciadas')
 
 
     models = {
@@ -75,13 +91,22 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'imagenes.idenunciadas': {
+            'Meta': {'object_name': 'Idenunciadas'},
+            'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'imagen': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['imagenes.Imagen']", 'null': 'True'}),
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'})
+        },
         u'imagenes.ifavoritas': {
             'Meta': {'object_name': 'Ifavoritas'},
             'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'imagen': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['imagenes.Imagen']", 'null': 'True'}),
-            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'})
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'portada': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         u'imagenes.imagen': {
             'Meta': {'object_name': 'Imagen'},
@@ -90,22 +115,19 @@ class Migration(SchemaMigration):
             'favoritos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'removidatotalmente': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'url': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True'})
         },
         u'perfiles.perfiles': {
             'Meta': {'object_name': 'Perfiles'},
             'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link10': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link4': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link5': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link6': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link7': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link8': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link9': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'usuario': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True'}),
             'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'})

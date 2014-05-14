@@ -89,9 +89,9 @@
 					<div id="panel-element-850600" class="panel-collapse collapse">
 						<div class="panel-body">
 							<ul class="list-unstyled">
-								<li>{{usuario.link1|urlize}}</li>
-								<li>{{usuario.link2|urlize}}</li>
-								<li>{{usuario.link3|urlize}}</li>
+								{% for link in links %}
+								<li> {{link|urlize}}</li>
+								{% endfor %}
 							</ul>
 						</div>
 					</div>
@@ -208,9 +208,9 @@
 		<hr>
 			<h4> Links </h4>
 			<ul class="list-unstyled">
-			<li>{{usuario.link1|urlize}}</li>
-			<li>{{usuario.link2|urlize}}</li>
-			<li>{{usuario.link3|urlize}}</li>
+				{% for link in links %}
+				<li> {{link|urlize}} </li>
+				{% endfor %}
 			</ul>
 		<hr>
 			<br>
@@ -229,7 +229,14 @@
 </div>
 {% endblock tab_content %}
 
-{% block extra_javascript %}
-{% endblock extra_javascript %}
-
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/votos.js' %} "></script>
+<script src="{% static 'js/pgwslider.min.js' %} "></script>
+<script>
+$(document).ready(function() {
+    $('.pgwSlider').pgwSlider();
+});
+</script>
+{% endblock javascript %}
 

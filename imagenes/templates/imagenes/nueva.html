@@ -15,7 +15,7 @@
 
 <form action = "{% url 'imagenes:nueva' %}" method = "post">
 	{% csrf_token %}
-	{{FormNuevaImagen|crispy}}
+	{{form_nueva_imagen|crispy}}
 	<input class = "btn pull-right" type = "submit" value ="enviar"/>
 </form>
 

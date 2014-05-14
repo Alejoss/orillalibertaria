@@ -63,8 +63,8 @@ def nueva(request):
 		else:
 			pass #!!! enviar errores
 	else:
-		form = FormNuevaImagen()
-		context = {'FormNuevaImagen':FormNuevaImagen}
+		form_nueva_imagen = FormNuevaImagen()
+		context = {'form_nueva_imagen':form_nueva_imagen}
 		return render(request, template , context)
 
 def marcar_favorito(request):

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row clearfix">
+<div class="col-md-8 column">
+
+<div class = "row clearfix">
+{% if video.es_youtube %}
+<div class = "col-md-7">
+	<div class = "div_video thumbnail">
+		<div class="js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
+		</div>
+		<div class = "favoritos_video ">
+			<p class = "hidden">{{video.id}}</p>
+			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span> 
+			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>  
+			<p> <small> farseer el 14 de Marzo </small> </p>
+		</div>
+	</div>
+</div>
+<div class = "col-md-5">
+<div class = "div_descripcion_video">
+	<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
+	</p>
+</div>
+</div>
+{% endif %}
+</div>
+
+
+<hr/>
+<div class = "row clearfix">
+	<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta">
+		<form action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
+			{% csrf_token %}
+			{{form_respuesta|crispy}}
+		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
+		</form>
+	</div>
+</div>
+
+<div class = "col-md-12">
+	<h5 class="text-muted">
+		<p style = "display: inline-block" id = "num_respuestas"> {{num_respuestas_video}} </p> Respuestas a este video: 
+		<a class = "{{recientes}}" href= "{% url 'videos:video' video.id tema.0.slug 'recientes' %}">Recientes</a> - <a class = "{{populares}}" href="{% url 'videos:video' video.id tema.0.slug 'populares' %}">Populares</a>
+	</h5>
+</div>
+{% for post in posts %}
+<div>
+<div class = "col-md-2 col-sm-2 col-xs-2">
+	<div class = "control_votos">
+		<div class = "btn-group-vertical">
+			<p class = "vote-id hidden">{{post.0.id}}</p>
+			<button type="button" class = "btn btn-default vote-up"> 
+				<span class="fa fa-chevron-up"></span>
+			</button>
+			<button class = "btn puntaje"> 
+			<h2 class = "numero_puntaje {{post.2}}"> {{post.0.votos_total}} </h2>
+			</button>
+			<button type="button" class = "btn btn-default vote-down"> 
+				<span class="fa fa-chevron-down"></span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class = "col-md-10 col-sm-10 col-xs-10">
+	<div class="panel panel-info">
+		<div class="panel-body">
+			<p class = "text truncate">
+			{{post.0.texto}}
+			</p>
+			<br/>
+		</div>
+		<div class="panel-footer">
+			{% if post.0.creador.usuario == request.user %}
+			<div class = "eliminar_editar pull-left">
+				<div class = "btn-group dropup">
+				<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Eliminar Post</a>
+					</li>
+					<li class = "divider"></li>
+					<li>
+						<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> 
+					</li>
+				</ul>
+				</div>
+			</div>
+			{% endif %}
+			<div class = "nombre_fecha">
+				<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
+					{{post.0.creador.usuario.username}}</a> <small> el {{post.0.fecha}} </small>
+				</p>
+			</div>
+			<div class = "footer_respuestas pull-right">
+				<a href = "{% url 'videos:post_video' video.id tema.0.slug post.0.id 'recientes' %} ">{{post.1}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right"></span></a>
+				</div>
+		</div>
+	</div>
+</div> <!-- class md 10 -->
+</div> <!--post -->
+{% endfor %}
+</div><!--col 8 -->
+
+<div class="col-md-4 column visible-md visible-lg">
+	<div class = "row clearfix">
+		<div class = "div_imagen_tema_post">
+		<strong> {{tema.0.nombre}} </strong>
+			<img src="{{tema.1}}" class="imagen_tema"/>
+		</div>
+		<div class = "post_datos_tema">
+			<p>
+			<a class = "btn btn-link" href="{% url 'temas:index_tema' tema.0.slug 'recientes' %}">
+				<i class = "fa fa-pencil-square-o">
+			</i> {{tema.3}} Posts</a>
+			<a class = "btn btn-link" href=" {% url 'videos:videos_tema' tema.0.slug 'recientes' %}">
+				<i class = "fa fa-play-circle">
+			</i> {{tema.4}} Videos</a>
+			</p>
+			<p>
+	
+			</p>
+			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} "> 
+				<i class = "fa fa-puzzle-piece"></i><small> Compartir un video en {{tema.0.nombre}} </small> </a>
+		<div class="panel-link">
+			<div>
+				<br>
+				 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>Descripción </small> <i class = "fa fa-caret-down"></i> </a>
+			</div>
+			<div id="panel-element-898967" class="panel-collapse collapse">
+				<div>
+					{{tema.2}}
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div> <!--col md 4 -->
+</div><!-- row clearfix -->
+
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/lazyYT.js' %}"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="{% static 'js/video_fav.js' %}"></script>
+<script src="{% static 'js/votos.js' %} "></script>
+{% endblock javascript %}

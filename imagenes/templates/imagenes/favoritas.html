@@ -18,9 +18,9 @@
             <ul class="nav nav-tabs nav-stacked">
             <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
                 <i class="fa fa-bookmark"></i> Recientes </a></li>
-            <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
+            <li class = "{{populares}}"><a href="{% url 'imagenes:index' 'populares' %}">
                 <i class="fa fa-star"></i> Populares</a></li>
-            <li><a href="{% url 'imagenes:favoritas' user.username %}">
+            <li class = "active"><a href="{% url 'imagenes:favoritas' user.username %}">
                 <i class="fa fa-certificate"></i> Favoritas </a></li>
             </ul>
             <ul class="nav nav-tabs nav-stacked">
@@ -46,7 +46,7 @@
                 <span class="estrella remover_favorito fa fa-star fa-lg es_favorita"></span>
                 <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
                 {% if i.1 == True %}
-        		  <i class = "icono_portada fa fa-picture-o fa-lg"> </i>
+        		  <span rel = "tooltip" title = "Portada" class = "icono_portada fa fa-picture-o fa-lg"> </span>
 				{% else %}
         		  <span class='icon-certificate marcar_portada' title='Elegir como portada'></span>
 				{% endif %}

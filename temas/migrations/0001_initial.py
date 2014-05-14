@@ -12,10 +12,13 @@ class Migration(SchemaMigration):
         db.create_table(u'temas_temas', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('nombre', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
+            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=100, null=True)),
             ('fecha_creacion', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
-            ('descripcion', self.gf('django.db.models.fields.CharField')(max_length=250, null=True, blank=True)),
             ('activo', self.gf('django.db.models.fields.BooleanField')(default=True)),
             ('creador', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('nivel_actividad', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('nivel_popularidad', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('imagen', self.gf('django.db.models.fields.CharField')(max_length=250, null=True)),
         ))
         db.send_create_signal(u'temas', ['Temas'])
 
@@ -27,8 +30,22 @@ class Migration(SchemaMigration):
             ('es_respuesta', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('votos_positivos', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
             ('votos_negativos', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
+            ('creador', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('tema', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['temas.Temas'], null=True)),
+            ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('votos_total', self.gf('django.db.models.fields.SmallIntegerField')(null=True, blank=True)),
+            ('editado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('fecha_edicion', self.gf('django.db.models.fields.DateTimeField')(null=True)),
         ))
         db.send_create_signal(u'temas', ['Posts'])
+
+        # Adding model 'Respuestas'
+        db.create_table(u'temas_respuestas', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('post_respuesta', self.gf('django.db.models.fields.related.ForeignKey')(related_name='respuesta', null=True, to=orm['temas.Posts'])),
+            ('post_padre', self.gf('django.db.models.fields.related.ForeignKey')(related_name='post_original', null=True, to=orm['temas.Posts'])),
+        ))
+        db.send_create_signal(u'temas', ['Respuestas'])
 
         # Adding model 'Votos'
         db.create_table(u'temas_votos', (
@@ -67,6 +84,16 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'temas', ['Mensajes'])
 
+        # Adding model 'Tema_descripcion'
+        db.create_table(u'temas_tema_descripcion', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('tema', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['temas.Temas'])),
+            ('usuario', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'])),
+            ('texto', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+        ))
+        db.send_create_signal(u'temas', ['Tema_descripcion'])
+
 
     def backwards(self, orm):
         # Deleting model 'Temas'
@@ -74,6 +101,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Posts'
         db.delete_table(u'temas_posts')
+
+        # Deleting model 'Respuestas'
+        db.delete_table(u'temas_respuestas')
 
         # Deleting model 'Votos'
         db.delete_table(u'temas_votos')
@@ -83,6 +113,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Mensajes'
         db.delete_table(u'temas_mensajes')
+
+        # Deleting model 'Tema_descripcion'
+        db.delete_table(u'temas_tema_descripcion')
 
 
     models = {
@@ -127,18 +160,13 @@ class Migration(SchemaMigration):
             'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link10': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link4': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link5': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link6': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link7': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link8': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link9': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
+            'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'usuario': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True'}),
-            'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'})
+            'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'})
         },
         u'temas.mensajes': {
             'Meta': {'object_name': 'Mensajes'},
@@ -163,21 +191,44 @@ class Migration(SchemaMigration):
         },
         u'temas.posts': {
             'Meta': {'object_name': 'Posts'},
+            'creador': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'editado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'es_respuesta': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'fecha_edicion': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'tema': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['temas.Temas']", 'null': 'True'}),
             'texto': ('django.db.models.fields.TextField', [], {'max_length': '10000', 'null': 'True'}),
             'votos_negativos': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'votos_positivos': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'})
+            'votos_positivos': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
+            'votos_total': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'temas.respuestas': {
+            'Meta': {'object_name': 'Respuestas'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'post_padre': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'post_original'", 'null': 'True', 'to': u"orm['temas.Posts']"}),
+            'post_respuesta': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'respuesta'", 'null': 'True', 'to': u"orm['temas.Posts']"})
+        },
+        u'temas.tema_descripcion': {
+            'Meta': {'object_name': 'Tema_descripcion'},
+            'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'tema': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['temas.Temas']"}),
+            'texto': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
+            'usuario': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']"})
         },
         u'temas.temas': {
             'Meta': {'object_name': 'Temas'},
             'activo': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'creador': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
-            'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             'fecha_creacion': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'nombre': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
+            'imagen': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True'}),
+            'nivel_actividad': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'nivel_popularidad': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'nombre': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '100', 'null': 'True'})
         },
         u'temas.votos': {
             'Meta': {'object_name': 'Votos'},

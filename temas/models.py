@@ -2,7 +2,7 @@
 from django.db import models
 from django.template import defaultfilters
 from perfiles.models import Perfiles
-# Create your models here.
+from videos.models import Videos
 
 class Temas(models.Model):
 	nombre = models.CharField(max_length=100, null=True)
@@ -30,6 +30,7 @@ class Posts(models.Model):
 	votos_negativos = models.PositiveSmallIntegerField(default=0)
 	creador = models.ForeignKey(Perfiles, null = True)
 	tema = models.ForeignKey(Temas, null = True)
+	video = models.ForeignKey(Videos, null = True)
 	eliminado = models.BooleanField(default=False)
 	votos_total = models.SmallIntegerField(blank=True, null=True)
 	editado = models.BooleanField(default=False)

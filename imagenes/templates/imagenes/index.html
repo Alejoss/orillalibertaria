@@ -12,7 +12,7 @@
            <ul class="nav nav-tabs nav-stacked">
             <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
                 <i class="fa fa-bookmark"></i> Recientes </a></li>
-            <li><a class = "{{populares}}" href="{% url 'imagenes:index' 'populares' %}">
+            <li class = "{{populares}}"><a href="{% url 'imagenes:index' 'populares' %}">
                 <i class="fa fa-star"></i> Populares</a></li>
             <li><a href="{% url 'imagenes:favoritas' user.username %}">
                 <i class="fa fa-certificate"></i> Favoritas </a></li>

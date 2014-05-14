@@ -82,6 +82,3 @@ function marcar_portada(){
     console.log(this)
    
 }
-/*
-("<img class = 'icono_portada'  title='Portada' src = \"{% static '/static/img/ol_icon_portada.jpg'%}\">");
-*/

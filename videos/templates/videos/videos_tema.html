@@ -1,0 +1,111 @@
+{% extends "base_index.html" %}
+{% load staticfiles %}
+
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
+{% block arriba %}
+<div class="col-md-8 column">
+	<div class="page-header">
+		<h1 >
+			{{ tema.0.nombre }}
+		</h1>
+	</div>
+</div>
+{% endblock arriba %}
+
+{% block botones_control %}
+<div class = "col-md-8 div_control">
+	<div style = "margin-bottom:5px" class = "hidden-xs">
+		<h3 style = "display: inline-block"> Videos </h3>
+		<div class="btn-group btn-group-sm control">
+			<button class="btn btn-default {{recientes}} "
+			type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'recientes' %}';">
+			<span class="fa fa-signal"> </span> Recientes
+			</button> 
+			<button class="btn btn-default {{populares}} " 
+			type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'populares' %}';">
+			<span class="fa fa-star"> </span> Populares
+			</button>
+		</div>
+	</div>
+
+	<div class = "row visible-xs">
+		<div class= "btn-group control">
+			 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Posts <span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li class = " {{recientes}} ">
+					<a href="{% url 'videos:videos_tema' tema.0.slug 'recientes' %}">Recientes</a>
+				</li>
+				<li class = " {{populares}}">
+					<a href="{% url 'videos:videos_tema' tema.0.slug 'populares' %}">Populares</a>
+				</li>
+			</ul>
+		</div>
+		<div class = "pull-right visible-xs">
+		<button type="button" class="btn btn-warning" 
+		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
+		Nuevo Video en {{tema.nombre}}</button>
+		</div>
+	</div>
+
+</div>
+{% endblock botones_control %}
+
+{% block tab_content %}
+<div class="col-md-8 col-sm-9">
+	<div class="row clearfix">
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class="col-md-4 col-sm-3 column">
+	<br>
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+		<button type="button" class="btn btn-warning btn_sidebar" 
+		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
+		Nuevo Video en {{tema.0.nombre}}</button>
+		<button type="button" class="btn btn_sidebar btn-default " 
+		onclick = "location.href='{% url 'temas:index_tema' tema.0.slug 'recientes' %}';">
+		<i class= "fa fa-pencil-square-o fa-lg"> </i>
+		Posts en {{tema.0.nombre}}</button>
+		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
+		<button type="button" class="btn btn-default btn_sidebar" 
+		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+		</button>
+		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
+		</div>
+	</div>
+	<hr>
+	<div>
+		<h2>
+			<div style = "margin-left: 30px">
+				<img class = "thumbnail imagen_tema" src = "{{tema.1}}">
+			</div>
+			<br/>
+			{{ tema.0.nombre }} 
+			<br/>
+			<small><h4> {{tema.2}} </h4>
+			<h6><a href="{% url 'temas:editar_tema' tema.0.slug %}"><i>editar tema</i></a></h6></small>
+		</h2>
+	<hr>
+	</div>
+	
+</div>
+{% endblock sidebar %}
+
+{% block javascript %}
+<script src="{% static 'js/videos_favorito.js' %}"></script>
+{% endblock javascript %}

@@ -55,11 +55,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'temas',
     'perfiles',
     'citas',
     'imagenes',
+    'videos',
+    'django_extensions',
     'south',
     'endless_pagination',
     'crispy_forms',
@@ -85,9 +86,9 @@ WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dbolibertaria',
-        'USER': 'root',
+        'USER': 'alejandro',
         'PASSWORD': 'farseer99'
     }
 }

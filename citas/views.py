@@ -8,10 +8,12 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from endless_pagination.decorators import page_template
+from olibertaria.utils import obtener_imagenes_display
 from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
 from imagenes.models import Imagen
+
 
 # Create your views here.
 @page_template('index_page_citas.html')
@@ -44,8 +46,7 @@ def index(request, queryset, template = 'citas/index.html', extra_context = None
 		else:
 			citas.append([c, ""])
 
-
-	imagenes_display = Imagen.objects.all().order_by('-favoritos_recibidos')[:5]
+	imagenes_display = obtener_imagenes_display(7)
 	
 	context = {'citas': citas, 'imagenes_display': imagenes_display, 'autor':autor, 
 	'recientes':recientes, 'populares':populares}

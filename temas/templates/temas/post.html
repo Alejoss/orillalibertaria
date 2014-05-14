@@ -4,7 +4,8 @@
 {% block content %}
 
 <div class="row clearfix">
-			<div class="col-md-8 column ">
+<div class="col-md-8 column ">
+<!-- post_padre -si el post respuesta-->
 {% if post.0.es_respuesta %}
 		<h5 id = mostrar_post_padre class="text-muted">
 			Mostrar el post de {{post_padre.0.creador.usuario.username}}
@@ -54,7 +55,7 @@
 					<div class = "footer_respuestas pull-right">
 			 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
-			 			<span class="fa fa-comments link_post"></span>
+			 			<span class="fa fa-comments"></span>
 			 			<span class="fa fa-chevron-right"></a>
 			 		</div>
 				</div>
@@ -114,7 +115,7 @@
 						<div class = "footer_respuestas pull-right">
 				 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
-			 				<span class="fa fa-comments link_post"></span>
+			 				<span class="fa fa-comments"></span>
 			 				<span class="fa fa-chevron-right"> </a>
 				 		</div>
 					</div>
@@ -122,10 +123,11 @@
 			</div> <!-- class md 11 -->
 			
 		{% endif %}
-
 		</div> <!--post padre respuesta-->
+		
 {% endif %}
 
+<!-- Si el post ha sido eliminado muestra un post eliminado -->
 {% if post.0.eliminado %}
 	<div class = "col-md-11 col-md-offset-1">
 			<div class="panel panel-danger">
@@ -133,7 +135,7 @@
 					<p class = "text">
 						<i class = "fa fa-exclamation-triangle"></i>
 						{% if post.0.creador.usuario == request.user %}
-						Eliminaste este post. Si deseas restaurarlo has click aquí: <a href="{% url 'temas:eliminar_propio_post' post_padre.0.id %}">Restaurar Post</a>
+						Eliminaste este post. Si deseas restaurarlo has click aquí: <a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
 						{% else %}
 						 Post eliminado por usuario. 
 						{% endif %}
@@ -166,13 +168,14 @@
 					<div class = "footer_respuestas pull-right">
 			 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
 			 				{{post.2}}
-			 			<span class="fa fa-comments link_post"></span>
+			 			<span class="fa fa-comments"></span>
 			 			<span class="fa fa-chevron-right"> </a>
 			 		</div>
 				</div>
 			</div>
-		</div>
+		</div><!-- post eliminado -->
 {% else %}
+<!-- Post. -->
 	<div>
 		<br>
 		<div class = "col-md-1">
@@ -249,7 +252,6 @@
 	<h5 class="text-muted">
 		<p style = "display: inline-block" id = "num_respuestas"> {{post.2}}</p> Respuestas a {{post.0.creador.usuario}}: <a class = "{{recientes}}" href= "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %}">Recientes</a> - <a class = "{{primeras}}" href="{% url 'temas:post' tema.0.slug post.0.id 'primeras' %}">Primeras</a>
 	</h5>
-	
 </div>
 
 <div class = "row">
@@ -306,7 +308,7 @@
 				<div class = "footer_respuestas pull-right">
 		 			<a href = "{% url 'temas:post' tema.0.slug respuesta.0.id 'recientes' %} ">
 		 				{{respuesta.1}}
-		 			<span class="fa fa-comments link_post"></span>
+		 			<span class="fa fa-comments"></span>
 		 			<span class="fa fa-chevron-right">  </a>
 		 		</div>
 			</div>
@@ -326,7 +328,7 @@
 		<div class = "post_datos_tema">
 			<a href=" {% url 'temas:index_tema' tema.0.slug 'recientes' %} "> 
 				<strong> {{tema.0.nombre}} </strong> </a>
-			<p> {{tema.0.3}} Posts </p>
+			<p> {{tema.3}} Posts </p>
 			<a href=" {% url 'temas:sumar_post' tema.0.slug %} "> 
 				<small> Nuevo Post en {{tema.0.nombre}} </small> </a>
 		<div class="panel-link">
@@ -335,7 +337,7 @@
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
 				<div>
-					{{tema.2.texto}}
+					{{tema.2}}
 				</div>
 			</div>
 		</div>
@@ -350,20 +352,4 @@
 {% load staticfiles %}
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{% static 'js/votos.js' %} "></script>
-
-<script>
-	$('#enviar_respuesta').on('click', sumar_respuesta)
-	$('#mostrar_post_padre').on('click', mostrar_post_padre)
-	function sumar_respuesta(){
-		num_respuestas = parseInt($('#num_respuestas').text());
-		console.log(num_respuestas)
-		$('#num_respuestas').parent().effect("shake", {distance:5});
-		$('#num_respuestas').text(num_respuestas+1);
-	}
-
-	function mostrar_post_padre(){
-		$('#post_hidden').removeClass("hidden")
-		$(this).addClass("hidden")
-	}
-</script>
 {% endblock javascript %}

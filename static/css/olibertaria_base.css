@@ -151,6 +151,7 @@
 	height: 60%;
 	margin:-25% 0 0 -10%;
 }
+
 .col_flecha{
 	height: 110px;
 }
@@ -176,6 +177,7 @@
 
 /* thumbnail imagen tema */
 .imagen_tema{
+display: block;
 max-height: 150px;
 width:auto;
 border-top-left-radius: 10px 5px;
@@ -298,7 +300,7 @@ padding: 5px
 	margin-left: 50px;
 	margin-top: 20px;
 	max-height: 600px;
-	overflow: scroll;
+	overflow: auto;
 	}
 
 /*css para el sidebar*/
@@ -339,4 +341,36 @@ padding: 5px
 
 .div_cita{
 	padding-left: 0px;
+}
+
+/* css para el video.html */
+.div_video{
+	margin-left: 15px;
+	width: 415px;
+}
+.div_descripcion_video{
+	margin-top: 20px;
+	height: 300px;
+	max-height: 315px;
+	overflow: auto;
+}
+.favoritos_video{
+	margin-right: 15px;
+	margin-top: 10px;
+	text-align: right;
+}
+.favoritos_video > span{
+	margin-left: 10px;
+}
+.favoritos_video > h4{
+	display: inline-block;
+	text-align: left;
+}
+.favoritos_video > p{
+	display: inline-block;
+	margin-top: 10px;
+}
+.estrella {
+	display: inline-block;
+  	cursor: pointer;
 }

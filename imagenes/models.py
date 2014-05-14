@@ -23,7 +23,7 @@ class Ifavoritas(models.Model):
 	portada = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		return "%s - %s"(self.perfil.usuario.username, self.imagen.id)
+		return "Ifavoritas obj. %s - %s" %(self.perfil.usuario.username, self.imagen.id)
 
 class Idenunciadas(models.Model):
 	imagen = models.ForeignKey(Imagen, null = True)

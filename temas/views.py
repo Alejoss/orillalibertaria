@@ -2,9 +2,9 @@
 # VIEWS.PY TEMAS
 
 from datetime import datetime
-import random
 import re
 import json
+import urlparse
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
@@ -13,21 +13,29 @@ from django.db.models import Q
 
 from endless_pagination.decorators import page_template
 from django.views.decorators.csrf import ensure_csrf_cookie
+
 from forms import FormCrearTema, FormNuevoPost, FormEditarTema, FormEditarPost
 from models import Temas, Posts, Respuestas, Votos, Tema_descripcion 
 from perfiles.models import Perfiles
 from citas.models import Cita
-from imagenes.models import Imagen
-from utils import obtener_posts_populares, obtener_imagen, obtener_voted_status
+from olibertaria.utils import obtener_imagenes_display, obtener_voted_status, obtener_imagen_tema
+from utils import obtener_posts_populares
 
 #print "variable %s" %(variable) <--- para debug
 @ensure_csrf_cookie
 def prueba(request):
 	template = "temas/prueba.html"
-	print "llego def prueba"
-	thelist = range(5)
-
-	context = {'thelist':thelist}
+	url = "https://www.youtube.com/watch?v=OLHh9E5ilZ4"
+	url_data = urlparse.urlparse(url)
+	print "netloc: %s" %(url_data.netloc)
+	if url_data.netloc in ("www.youtube.com", "youtube.com"):
+		print "es de youtube!"
+	print url_data
+	query = urlparse.parse_qs(url_data.query)
+	print query
+	id_video = query["v"][0]
+	print id_video
+	context = {'id_video':id_video}
 	return render(request, template, context)
 
 def prueba_ajax(request):
@@ -92,7 +100,8 @@ def buscar(request):
 				descripcion = descripcion_obj.texto
 			else:
 				descripcion = ""
-			imagen_tema = obtener_imagen(tema.id)
+				
+			imagen_tema = obtener_imagen_tema(tema)
 			num_posts = Posts.objects.filter(tema=tema).count()
 			temas_encontrados.append([tema, imagen_tema, descripcion, num_posts])
 
@@ -126,7 +135,7 @@ def main(request, queryset, template = 'temas/main.html', extra_context = None):
 			descripcion = descripcion_obj.texto
 		else:
 			descripcion = ""
-		imagen = obtener_imagen(tema.id)
+		imagen = obtener_imagen_tema(tema)
 		num_posts = Posts.objects.filter(tema=tema).count()
 		temas.append([tema, descripcion, imagen, num_posts])
 
@@ -134,7 +143,7 @@ def main(request, queryset, template = 'temas/main.html', extra_context = None):
 
 	imagenes_posts_populares = []
 	for post in posts_populares:
-		imagen = obtener_imagen(post.tema.id)
+		imagen = obtener_imagen_tema(post.tema)
 		imagenes_posts_populares.append(imagen)
 
 	context = {'temas': temas, 'posts_populares': posts_populares,
@@ -182,7 +191,7 @@ def index_tema(request, slug , queryset, template = 'temas/tema.html', extra_con
 	if Tema_descripcion.objects.filter(tema=tema).exists():
 		descripcion_obj = Tema_descripcion.objects.filter(tema=tema).latest('id')
 		descripcion = descripcion_obj.texto
-	imagen = obtener_imagen(tema.id)
+	imagen = obtener_imagen_tema(tema)
 
 	#Posts
 	populares = ""
@@ -198,30 +207,13 @@ def index_tema(request, slug , queryset, template = 'temas/tema.html', extra_con
 	for post in posts_obj:
 		#lista de posts con respuestas y con voted status incluido
 		num_respuestas = Respuestas.objects.filter(post_padre=post, post_respuesta__eliminado=False).count()
-		voted_status = "no-vote"
-		if post.creador.usuario == request.user:
-			voted_status = "propio_post"
-		else:
-			if Votos.objects.filter(post_votado=post, usuario_votante=request.user).exists():
-				voto = Votos.objects.get(post_votado=post, usuario_votante=request.user)
-				if voto.tipo == 1:
-					voted_status = "voted-up"
-				elif voto.tipo == -1:
-					voted_status = "voted-down"
-				else:
-					voted_status = "no-vote"
+		perfil = Perfiles.objects.get(usuario=request.user)
+		voted_status = obtener_voted_status(post,perfil)
 
 		posts.append([post,num_respuestas, voted_status])
 
 	# thumbnail de imágenes.
-	imagenes_ids = [44,47,38,41,35,42]
-	random.shuffle(imagenes_ids)
-	imagenes_display = []
-
-	for x in imagenes_ids:
-		img = Imagen.objects.get(id=x)
-		imagenes_display.append(img.url)
-
+	imagenes_display = obtener_imagenes_display(7)
 
 	context = {'tema':tema, 'imagen': imagen, 'posts':posts,'descripcion':descripcion,
 	'imagenes_display': imagenes_display, 'recientes':recientes, 'populares':populares,
@@ -274,19 +266,24 @@ def sumar_post(request, slug):
 
 def post(request, slug, post_id, queryset):
 	template = 'temas/post.html'
-
+	perfil_usuario = Perfiles.objects.get(usuario=request.user)
+	
 	#tema
 	tema_obj = Temas.objects.get(slug=slug)
-	imagen_tema = obtener_imagen(tema_obj.id)
-	descripcion_tema = Tema_descripcion.objects.filter(tema=tema_obj).latest('id')
+	imagen_tema = obtener_imagen_tema(tema_obj)
+	if Tema_descripcion.objects.filter(tema=tema_obj).exists():
+		descripcion_tema = (Tema_descripcion.objects.filter(tema=tema_obj).latest('id')).texto
+	else:
+		descripcion_tema = "No tiene descripción por el momento"
 	posts_count = Posts.objects.filter(tema=tema_obj, eliminado=False, es_respuesta=False).count()
+	print posts_count
 	tema = [tema_obj, imagen_tema, descripcion_tema, posts_count]
 	
 	#post
 	post_obj = Posts.objects.get(id=post_id)
-	post_estado = obtener_voted_status(post_obj, request.user)
+	post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
 	post_numrespuestas = Respuestas.objects.filter(post_padre=post_obj, post_respuesta__eliminado=False).count()
-	post=[post_obj, post_estado, post_numrespuestas]
+	post=[post_obj, post_voted_status, post_numrespuestas]
 
 	#post_padre
 	post_padre = []
@@ -294,7 +291,7 @@ def post(request, slug, post_id, queryset):
 		#respuestas post_padre_object. El post padre del post si el post es respuesta.
 		respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
 		post_padre_obj = respuesta_obj.post_padre
-		post_padre_estado = obtener_voted_status(post_padre_obj, request.user)
+		post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
 		post_padre_numrespuestas = Respuestas.objects.filter(post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
 		post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas]
 
@@ -315,7 +312,7 @@ def post(request, slug, post_id, queryset):
 		post_respuesta = r.post_respuesta
 		if post_respuesta.eliminado == False:
 			respuesta_numrespuestas = Respuestas.objects.filter(post_padre=post_respuesta, post_respuesta__eliminado=False).count()
-			respuesta_estado = obtener_voted_status(post_respuesta, request.user)
+			respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
 			respuestas.append([post_respuesta, respuesta_numrespuestas, respuesta_estado])
 
 	#otros
@@ -356,34 +353,27 @@ def editar_post(request, post_id):
 			return render (request,template, context)
 
 def respuesta(request, slug, post_id):
-	print "llego respuesta"
+	tema = Temas.objects.get(slug = slug)
 	if request.method == "POST":
-		print "llego respuesta con post"
 		form = FormNuevoPost(request.POST)
 		if form.is_valid():
-			print "form is valid respuesta"
 			texto = form.cleaned_data.get('texto')
 			perfil_usuario = Perfiles.objects.get(usuario=request.user)
-			tema_contenedor = Temas.objects.get(slug=slug)
 			post_padre = Posts.objects.get(id=post_id)
 			post_respuesta = Posts(texto=texto, es_respuesta = True,
 				creador = perfil_usuario,
-				tema = tema_contenedor)
+				tema = tema)
 			post_respuesta.save()
 
 			respuesta_db = Respuestas(post_respuesta=post_respuesta,
 				post_padre = post_padre)
 			respuesta_db.save()
-			print "respuesta guardada"
 			
 			return HttpResponseRedirect(reverse('temas:post', 
-				args =(tema_contenedor.nombre, post_padre.id, u'recientes')))
+				kwargs = {'slug': tema.slug, 'post_id': post_id, 'queryset': u'recientes'}))
 		else:
-			print "form invalid"
 			pass #!!! enviar errores
 	else:
-		tema = Temas.objects.get(slug = slug)
-		print "llego respuesta sin post"
 		return HttpResponseRedirect(reverse('temas:post', 
 			kwargs = {'slug': tema.slug, 'post_id': post_id, 'queryset': u'recientes'}))
 
@@ -582,7 +572,7 @@ def editar_tema(request, slug):
 		else:
 			ultima_edicion = primera_edicion
 
-	imagen = obtener_imagen(tema.id)
+	imagen = obtener_imagen_tema(tema)
 
 	if primera_edicion == "":
 		primera_edicion = "Este tema no tiene descripción, todavía."

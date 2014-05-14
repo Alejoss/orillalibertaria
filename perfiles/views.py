@@ -13,10 +13,12 @@ from endless_pagination.decorators import page_template
 
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
+from olibertaria.utils import obtener_voted_status
 from temas.models import Temas
-from temas.models import Posts, Respuestas, Votos
+from temas.models import Posts, Respuestas
 from citas.models import Cfavoritas
 from imagenes.models import Ifavoritas
+from utils import obtener_links_perfil
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
@@ -165,6 +167,7 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 	#recibe del urlpattern un username y un queryset.
 	usuario_user = User.objects.get(username=username)
 	usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
+	perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
 	#Datos del usuario
 	nombre_completo = usuario_user.get_full_name()
@@ -206,49 +209,50 @@ def perfil(request, username, queryset, template = "perfiles/perfil.html",
 		else:
 			post.extend([False, ""])
 
-		voted_status = "no-vote"
-		if p.creador.usuario == request.user:
-			voted_status = "propio_post"
-		else:
-			if Votos.objects.filter(post_votado=p, usuario_votante=request.user).exists():
-				voto = Votos.objects.get(post_votado=p, usuario_votante=request.user)
-				if voto.tipo == 1:
-					voted_status = "voted-up"
-				elif voto.tipo == -1:
-					voted_status = "voted-down"
-				else:
-					voted_status = "no-vote"
+		voted_status = obtener_voted_status(p, perfil_usuario_visitante)
+		print voted_status
 					
 		post.append(voted_status)
 		post.append(num_respuestas)
 		posts.append(post)
 
-	#cita 
-	citas_favoritas_obj = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
-	cita_favorita = (random.choice(citas_favoritas_obj)).cita
+	#cita
+	if Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count()==0:
+		cita_favorita = ""
+	else:
+		citas_favoritas_obj = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
+		cita_favorita = (random.choice(citas_favoritas_obj)).cita
 
 	#imagenes
 	portada = ""
 	imagenes_favoritas = []
-	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil).exists()
+	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).exists()
 
 	if tiene_imagenesfav:
-		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil).count()
+		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count()
 		if numero_imgfavoritas > 3:
 			imagenes_display = 3
 		else:
-			imagenes_display = numero_imgfavoritas		
+			imagenes_display = numero_imgfavoritas
+		print numero_imgfavoritas
 		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
 		for i in ifavoritas_objects:
+			print i.imagen.url
 			imagenes_favoritas.append(i.imagen.url)
+
 		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
 			portada_obj = Ifavoritas.objects.get(perfil=usuario_perfil, eliminado = False, portada=True)
 		else:
 			portada_obj = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).latest('id')
 		portada = portada_obj.imagen.url
+
+	print "portada %s" %(portada)
+
+	#links
+	links = obtener_links_perfil(usuario_perfil)
 	
 	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
-	'nombre_completo': nombre_completo, 'posts':posts,'cita_favorita':cita_favorita,
+	'nombre_completo': nombre_completo, 'links':links, 'posts':posts,'cita_favorita':cita_favorita,
 	'imagenes_favoritas':imagenes_favoritas, 'usuario_fav':usuario_fav,
 	'tiene_imagenesfav':tiene_imagenesfav, 'recientes':recientes, 'populares': populares,
 	'puntos_recibidos':puntos_recibidos, 'num_posts':num_posts, 'num_temas':num_temas, 

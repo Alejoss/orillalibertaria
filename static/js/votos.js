@@ -23,7 +23,20 @@ $(document).ready(function(){
 
 $('.vote-up').on('click', vote_up);
 $('.vote-down').on('click', vote_down);
+$('#enviar_respuesta').on('click', sumar_respuesta);
+$('#mostrar_post_padre').on('click', mostrar_post_padre);
 
+function sumar_respuesta(){
+	num_respuestas = parseInt($('#num_respuestas').text());
+	console.log(num_respuestas)
+	$('#num_respuestas').parent().effect("shake", {distance:5});
+	$('#num_respuestas').text(num_respuestas+1);
+}
+
+function mostrar_post_padre(){
+	$('#post_hidden').removeClass("hidden")
+	$(this).addClass("hidden")
+}
 function vote_up(){
 	var $control = $(this).parent();
 	var puntaje_obj = $control.find('.numero_puntaje');		

@@ -7,25 +7,20 @@
 
 {% block content %}
 
-{% for x in thelist %}
-<div class = "col-md-6">
-	<p class = "truncate">
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, consectetur eum tempora totam similique enim tempore itaque. Libero, fuga, vero provident beatae aspernatur reprehenderit maxime maiores alias quam quas officiis.
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit, consectetur eum tempora totam similique enim tempore itaque. Libero, fuga, vero provident beatae aspernatur reprehenderit maxime maiores alias quam quas officiis
-	</p>
-</div>
-{% endfor %}
+<div class="js-lazyYT" data-youtube-id="{{id_video}}" data-width="300" data-height="200"></div>
 
-<script>
-$('button').on('click', mostrar)
+<!--
+<iframe width="560" height="315" src="//www.youtube.com/embed/{{id_video}}" frameborder="0" allowfullscreen></iframe>
+<iframe src="//player.vimeo.com/video/94253228" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<iframe src="//player.vimeo.com/video/94253228" width="560" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>-->
 
-function mostrar(){
-  $('#p_show').show('fold',500);
-}
 
-</script>
 
 {% endblock content %}
 
 {% block javascript %}
+<script src="{% static 'js/lazyYT.js' %} "></script>
+<script>
+$('.js-lazyYT').lazyYT();
+</script>
 {% endblock javascript %}

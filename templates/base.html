@@ -90,6 +90,9 @@
 					<li>
 						<a href="{% url 'perfiles:login' %} ">Login</a>
 					</li>
+					<li>
+						<a href="{% url 'perfiles:registrar' %} ">Sign up</a>
+					</li>
 					{% endif %}
 				</ul>
 			</div>
@@ -116,7 +119,6 @@
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="{% static 'js/bootstrap.js' %} "></script>
 	<script src="{% static 'js/scripts.js' %} "></script>
-	<script src="{% static 'js/pgwslider.min.js' %} "></script>
 	<script src="{% static 'js/truncate.js' %} "></script>
 	<script src="{% static 'js/truncar.js' %} "></script>
 	{% block javascript %}

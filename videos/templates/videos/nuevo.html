@@ -1,0 +1,23 @@
+{% extends "base_forms.html" %}
+{% load crispy_forms_tags %}
+
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Nuevo video en <a href="">{{tema.nombre}}</a></h2>
+
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba %}
+
+{% block form %}
+
+<br><br>
+
+<form action = "{% url 'videos:nuevo_video' tema.slug %}" method = "post">
+	{% csrf_token %}
+	{{form_nuevo_video|crispy}}
+	<input class = "btn pull-right" type = "submit" value ="enviar"/>
+</form>
+
+{% endblock form %}

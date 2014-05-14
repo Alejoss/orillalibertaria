@@ -11,20 +11,15 @@ class Migration(SchemaMigration):
         # Adding model 'Perfiles'
         db.create_table(u'perfiles_perfiles', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('usuario', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('usuario', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, null=True)),
             ('descripcion', self.gf('django.db.models.fields.CharField')(max_length=250, null=True, blank=True)),
-            ('votos_recibidos', self.gf('django.db.models.fields.SmallIntegerField')(null=True)),
-            ('numero_de_posts', self.gf('django.db.models.fields.SmallIntegerField')(null=True)),
+            ('votos_recibidos', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('numero_de_posts', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
             ('link1', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
             ('link2', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
             ('link3', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
             ('link4', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
             ('link5', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('link6', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('link7', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('link8', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('link9', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('link10', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
         ))
         db.send_create_signal(u'perfiles', ['Perfiles'])
 
@@ -76,18 +71,13 @@ class Migration(SchemaMigration):
             'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link10': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link4': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link5': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link6': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link7': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link8': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link9': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
-            'usuario': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'}),
-            'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'})
+            'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'usuario': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True'}),
+            'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'})
         }
     }
 

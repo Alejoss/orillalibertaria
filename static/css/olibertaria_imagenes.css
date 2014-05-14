@@ -33,6 +33,7 @@
 	margin-left: 5px;
 }
 .icono_portada {
+  cursor: default;
 	height: 30px;
 	width:auto;
   margin-left: 170px;
@@ -48,7 +49,7 @@
 /* colaborar organizar - imagenes  - progress bar */
 
 .instrucciones_coorg{
-  overflow: scroll;
+  overflow: auto;
 	height: 300px
 }
 

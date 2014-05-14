@@ -77,6 +77,10 @@
 		<button type="button" class="btn btn-warning btn_sidebar" 
 		onclick = "location.href='{% url 'temas:sumar_post' tema.slug %}';">
 		Nuevo Post en {{tema.nombre}}</button>
+		<button type="button" class="btn btn_sidebar btn-default " 
+		onclick = "location.href='{% url 'videos:videos_tema' tema.slug 'recientes' %}';">
+		<i class= "fa fa-play-circle fa-lg"> </i>
+		Videos de {{tema.nombre}}</button>
 		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
 		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
 		<button type="button" class="btn btn-default btn_sidebar visible-sm" 
@@ -93,7 +97,7 @@
 			<br/>
 			{{ tema.nombre }} 
 			<br/>
-			<small><h3> {{descripcion}} </h3>
+			<small><h4> {{descripcion}} </h4>
 			<h6><a href="{% url 'temas:editar_tema' tema.slug %}"><i>editar tema</i></a></h6></small>
 		</h2>
 	<hr>
@@ -112,7 +116,10 @@
 </div>
 {% endblock sidebar %}
 
-{% block extra_javascript %}
+{% block javascript %}
+<script src="{% static 'js/pgwslider.min.js' %} "></script>
+<script src="{% static 'js/votos.js' %} "></script>
+<script src="{% static 'js/owl.carousel.min.js' %} "></script>
 <script>
 	$(document).ready(function() {
 	 
@@ -132,4 +139,4 @@
 	  });
 	});
 </script>
-{% endblock extra_javascript %}
+{% endblock javascript %}
