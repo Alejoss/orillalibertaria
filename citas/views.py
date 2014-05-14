@@ -47,6 +47,7 @@ def index(request, queryset, template = 'citas/index.html', extra_context = None
 			citas.append([c, ""])
 
 	imagenes_display = obtener_imagenes_display(7)
+	print imagenes_display
 	
 	context = {'citas': citas, 'imagenes_display': imagenes_display, 'autor':autor, 
 	'recientes':recientes, 'populares':populares}

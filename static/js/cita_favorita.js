@@ -35,9 +35,7 @@ function close_modal_reportar(){
     var flag = $('.container').find(".red");
     flag.removeClass("red");
 }
-/* 
 
-*/
 
 $('.marcar_favorito').on('click', marcar_favorito);
 function marcar_favorito(){

@@ -1,5 +1,5 @@
 {% extends "base_index.html" %}
-<--index CITAS 	-->
+<!--index CITAS -->
 
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">
@@ -110,7 +110,7 @@
 		<div class = " visible-lg visible-md cuadro_carrusel">
 		<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
 			{% for i in imagenes_display %}
-			<div class="item"><img src=" {{i.url}} " alt="404 imagen libertaria"></div>
+			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
 			{% endfor %}
 		</div>
 		</div>
@@ -124,9 +124,10 @@
 	</div> <!--column 4-->
 {% endblock sidebar %}
 
-{% block extra_javascript %}
+{% block javascript %}
 {% load staticfiles %}
 <script src="{% static 'js/cita_favorita.js' %} "></script>
+<script src="{% static 'js/owl.carousel.min.js' %} "></script>
 <script>
 $(document).ready(function() {	 
 	  $("#owl-demo").owlCarousel({
@@ -146,4 +147,4 @@ $(document).ready(function() {
 	 
 	});
 </script>
-{% endblock extra_javascript %}
+{% endblock javascript %}
