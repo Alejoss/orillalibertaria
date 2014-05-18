@@ -29,4 +29,4 @@ urlpatterns = patterns('',
 	#prueba
 	url(r'^prueba/$', views.prueba, name = 'prueba'),
 	url(r'^prueba_ajax/$', views.prueba_ajax, name = 'prueba_ajax'),
-	)  
+	)

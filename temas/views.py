@@ -360,16 +360,25 @@ def respuesta(request, slug, post_id):
 			texto = form.cleaned_data.get('texto')
 			perfil_usuario = Perfiles.objects.get(usuario=request.user)
 			post_padre = Posts.objects.get(id=post_id)
-			post_respuesta = Posts(texto=texto, es_respuesta = True,
-				creador = perfil_usuario,
-				tema = tema)
+			if post_padre.video != None:
+				post_respuesta = Posts(texto=texto, es_respuesta = True,
+				creador = perfil_usuario,tema = tema, video = post_padre.video)
+			else:
+				post_respuesta = Posts(texto=texto, es_respuesta = True,
+				creador = perfil_usuario,tema = tema)
+			
 			post_respuesta.save()
 
 			respuesta_db = Respuestas(post_respuesta=post_respuesta,
 				post_padre = post_padre)
 			respuesta_db.save()
 			
-			return HttpResponseRedirect(reverse('temas:post', 
+			if post_padre.video != None:
+				return HttpResponseRedirect(reverse('videos:post_video', 
+				kwargs = {'video_id':post_padre.video.id, 'slug': tema.slug, 'post_id': post_id,
+				'queryset': u'recientes'}))
+			else:
+				return HttpResponseRedirect(reverse('temas:post', 
 				kwargs = {'slug': tema.slug, 'post_id': post_id, 'queryset': u'recientes'}))
 		else:
 			pass #!!! enviar errores
