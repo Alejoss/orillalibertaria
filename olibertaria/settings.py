@@ -68,7 +68,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     'crispy_forms',
     'notificaciones',
-    'debug_toolbar',
+    #'debug_toolbar',
     'gunicorn',
 )
 
