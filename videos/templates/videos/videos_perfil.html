@@ -1,0 +1,56 @@
+{% extends "base_index.html" %}
+{% load staticfiles %}
+
+
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
+{% block arriba %}
+<div class="col-md-8 column">
+	<div class="page-header">
+		<h3>
+		{% if propio_usuario %}
+			Tus videos favoritos
+		{% else %}
+			Videos favoritos de <a href="{% url 'perfiles:perfil' perfil_usuario.usuario.username 'recientes' %}">{{perfil_usuario.usuario.username}}</a>
+		{% endif %}
+		</h3>
+	</div>
+</div>
+{% endblock arriba %}
+
+{% block tab_content %}
+<div class="col-md-8 col-sm-9">
+	<div class="row clearfix">
+		{% include page_template %}
+	</div>
+</div>
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class="col-md-4 col-sm-3 column">
+	<blockquote>
+		<p>
+			{{cita.texto}}
+		</p> <small>{{cita.autor}}, <cite>{{cita.fuente}}</cite></small>
+	</blockquote>
+	<div>
+		<button type="button" class="btn btn-xs btn-info btn_galeria"
+		onclick="location.href='{% url 'citas:index' 'recientes' %}';">
+		Ver galería de frases</button>
+	</div>
+</div>
+{% endblock sidebar %}
+
+{% block javascript %}
+<script src="{% static 'js/videos_favorito.js' %}"></script>
+{% endblock javascript %}

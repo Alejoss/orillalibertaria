@@ -70,6 +70,12 @@
 								Frases favoritas
 							</div>
 						</a>
+						<a href = "{% url 'videos:videos_perfil' usuario_fav %}">
+							<div class="panel-body">
+								<span class = "badge pull-right"> 15 </span>
+								Videos favoritas
+							</div>
+						</a>
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -78,7 +84,7 @@
 					</div>
 					<div id="panel-element-850907" class="panel-collapse collapse">
 						<div class="panel-body">
-							{{usuario.descripcion}}
+							{{descripcion}}
 						</div>
 					</div>
 				</div>
@@ -128,6 +134,10 @@
 						<span class = "badge">{{num_frases_favoritas}}</span>
 						Frases favoritas
 					</a>
+					<a class = "list-group-item" href = "{% url 'videos:videos_perfil' usuario_fav %}">
+						<span class = "badge"> {{num_videos_favoritos}} </span>
+						Videos favoritos
+					</a>
 				</div>
 				</ul>
 			</div>
@@ -160,11 +170,13 @@
 	<div class="col-md-4 column">
 		<div class = "col-md-offset-1">
 			<div class = "frase_perfil">
+			{% if num_frases_favoritas > 0 %}
 				<blockquote>
 					<p>
 						{{cita_favorita.texto}}
 					</p> <small>{{cita_favorita.autor}}, <cite>{{cita_favorita.fuente}}</cite></small>
 				</blockquote> 
+			{% endif %}
 			</div>
 			<div class = "nombre_usuario">
 				<h3>
@@ -203,7 +215,7 @@
 			</div>
 			<br>
 			<p class = "text">
-				{{usuario.descripcion}}
+				{{descripcion}}
 			</p>
 		<hr>
 			<h4> Links </h4>

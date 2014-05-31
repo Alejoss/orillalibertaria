@@ -5,7 +5,7 @@
 	<div class = "endless_page_template">
 		{% for post in posts %}
 			<div class = "post">
-			<div class = "col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-2">
+			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 						<p class = "vote-id hidden">{{post.0.id}}</p>
@@ -25,6 +25,12 @@
 				<div class="panel panel-info">
 					<div class="panel-body">
 						<p class = "text truncate">
+						{% if post.5 %}
+						<small>
+						<span class = "fa fa-play-circle"></span>
+						<a href=" {{post.0.video.url}} "> {{post.0.video.titulo}}:</a> <br><br>
+						</small> 
+						{% endif %}
 						{{post.0.texto}}
 						</p>
 					</div>

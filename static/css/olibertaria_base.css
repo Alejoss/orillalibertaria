@@ -15,6 +15,57 @@
 .subrayar{
 	text-decoration: underline;
 }
+/* css para el cuadro de notificaciones */
+.no_leida{
+	background-color: #fcf8e3
+}
+
+.imagen_notificacion{
+	max-height: 48px;
+	max-width: 48px;
+	margin-bottom: 5px;
+	margin-left: 2px;
+	border-top-left-radius: 10px 5px;
+	border-bottom-right-radius: 10% 5%;
+	border-top-right-radius: 10px;
+	border-color: #FFBD32;
+	border-style: ridge;
+	border-width: 2px;
+	padding: 2px
+}
+
+.lista_notificaciones{
+	margin-bottom: 5px;
+}
+
+.no-close .ui-dialog-titlebar-close {
+	display: none;
+}
+
+.ui-dialog-buttonset{
+	position: relative;
+	float:right;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+	background-clip: padding-box;
+}
+
+.cuadro_notificaciones{
+
+	margin-top: 50px;
+	padding: 10px;
+	background-color: #ffffff;
+	border: 1px solid #999999;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+	outline: none;
+	-webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+	      box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+	background-clip: padding-box;
+
+}
+
 
 /*css para el perfil*/
 .div_perfil_datos{
@@ -109,7 +160,7 @@
 }
 .control_votos{
 	vertical-align: center;
-	max-width: 40px;
+	max-width: 80px;
 }
 .puntaje{
 	height: 50px;
@@ -373,4 +424,20 @@ padding: 5px
 .estrella {
 	display: inline-block;
   	cursor: pointer;
+}
+.video_no_youtube{
+	height: 300px;
+	width: 400px;
+}
+.video_no_youtube > img{
+	height: 200px;
+	width: 200px;
+	margin-left: 50px;
+	margin-bottom: 10px;
+}
+.video_no_youtube > p{
+	margin-left: 15px;
+}
+.video_no_youtube > a{
+	margin-left: 45px;
 }

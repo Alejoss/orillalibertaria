@@ -17,7 +17,7 @@
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 	<link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
 	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> <!--font awesome -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> <!--font awesome -->
 
 	<link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
 	<link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
@@ -69,9 +69,23 @@
 				<ul class="nav navbar-nav navbar-right">
 					{% if user.is_authenticated %}
 					<li>
-						<a href="{% url 'perfiles:perfil' user.username 'recientes' %} "><span class="fa fa-user"></span> <span class = "hidden-sm nombre_perfil">{{user.username}}</span></a>		
+						<a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><span class="fa fa-user"></span> <span class = "hidden-sm nombre_perfil">{{user.username}}</span></a>
 					</li>
-
+					<li class = "visible-xs">
+						 <a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">
+						 Notificaciones
+						 {% if num_notificaciones > 0 %}
+						 <span id = "num_notificaciones" class = "badge">{{num_notificaciones}} </span>
+						 {% endif %}
+						 <span class = "fa fa-puzzle-piece fa-lg"></span></a>
+					</li>
+					<li class = "hidden-xs">
+						 <a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">
+						 {% if num_notificaciones > 0 %}
+						 <span id = "num_notificaciones" class = "badge">{{num_notificaciones}} </span>
+						 {% endif %}
+						 <span class = "fa fa-puzzle-piece fa-lg"></span></a>
+					</li>
 					<li class="dropdown visible-sm visible-md visible-lg">
 						 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-gear"></span><strong class="caret"></strong></a>
 						<ul class="dropdown-menu">
@@ -101,26 +115,61 @@
 	</div>
 </div>
 
+<div id = "notificaciones" class = "cuadro_notificaciones hidden"> 
+	 {% include "notificaciones.html" %}
+</div>
 
 	{% block content %}
 	{% endblock content %}
 
 
 <br><br><br>
-	<!--autolink-->
+	<!--autolink--> <!--notificaciones-->
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="{% static 'js/Autolinker.min.js' %} "></script>
+	<script src="{% static 'js/bootstrap.min.js' %} "></script>
+	<script src="{% static 'js/truncate.js' %} "></script>
+	<script src="{% static 'js/scripts.js' %} "></script>
+	<script src="{% static 'js/truncar.js' %} "></script>
 	<script> 
 	var elements = document.getElementsByClassName( 'text' );
 	for (var i=0;i<elements.length;i++){
 		elements[i].innerHTML = Autolinker.link( elements[i].innerHTML ); 
 	}
+	$(function(){
+		$("#notificaciones").dialog({
+			autoOpen: false,
+			show:{
+				effect:"blind",
+				duration: 500,
+			},
+			hide:{
+				effect: "blind",
+				duration: 750
+			},
+			dialogClass: "no-close",
+			buttons: [
+			{
+			text: "",
+			class: "btn btn-default",
+			html: "<span class = 'fa fa-check-square-o fa-lg'></span>",
+			click: function() {
+			$( this ).dialog( "close" );
+			$("#num_notificaciones").addClass("hidden")
+			$.ajax({
+			url: '/notificaciones/marcar_leidas/',
+			type: 'get',
+			});
+			}
+			}
+]
+		});
+	$(".mostrar_notificaciones").click(function(){
+			$("#notificaciones").removeClass("hidden");
+			$("#notificaciones").dialog("open");
+		});
+	});
 	</script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<script src="{% static 'js/bootstrap.js' %} "></script>
-	<script src="{% static 'js/scripts.js' %} "></script>
-	<script src="{% static 'js/truncate.js' %} "></script>
-	<script src="{% static 'js/truncar.js' %} "></script>
 	{% block javascript %}
 	{% endblock javascript %}
 

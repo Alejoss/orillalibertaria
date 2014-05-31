@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'css/wChar.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block content %}
 <div class="container">
@@ -20,3 +25,16 @@
 	</div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+
+<script src="{% static 'js/wChar.js' %} "></script>
+
+<script>
+$(document).ready(function(){
+	$('.textarea').wChar();
+});
+
+</script>
+{% endblock javascript %}

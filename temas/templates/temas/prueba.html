@@ -7,7 +7,10 @@
 
 {% block content %}
 
-<div class="js-lazyYT" data-youtube-id="{{id_video}}" data-width="300" data-height="200"></div>
+<ul>
+<li> {{num_notificaciones}} </li>
+</ul>
+
 
 <!--
 <iframe width="560" height="315" src="//www.youtube.com/embed/{{id_video}}" frameborder="0" allowfullscreen></iframe>
@@ -19,8 +22,5 @@
 {% endblock content %}
 
 {% block javascript %}
-<script src="{% static 'js/lazyYT.js' %} "></script>
-<script>
-$('.js-lazyYT').lazyYT();
-</script>
+
 {% endblock javascript %}

@@ -2,7 +2,7 @@
 # PERFILES VIEWS.PY
 
 import random
- 
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -17,256 +17,295 @@ from olibertaria.utils import obtener_voted_status
 from temas.models import Temas
 from temas.models import Posts, Respuestas
 from citas.models import Cfavoritas
+from videos.models import VFavoritos
 from imagenes.models import Ifavoritas
 from utils import obtener_links_perfil
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
+
+
 def login_page(request):
-	template = 'perfiles/login.html'
-	#Custom login. No es el login normal de Django.
-	return render(request, template)
+
+    template = 'perfiles/login.html'
+    # Custom login. No es el login normal de Django.
+    return render(request, template)
+
 
 def authcheck(request):
-	#standard auth de Django.
-	username = request.POST.get('username', '')
-	password = request.POST.get('password', '')
-	user = auth.authenticate(username=username, password = password)
-	#busca en la bd User uno que existe con ese usuario y password
-	if user is not None:
-		#Si existe, hace login a ese usuario y lo guarda en "request"
-		auth.login(request, user)
-		return redirect('temas:main', 'recientes')
-	else:
-		return redirect('perfiles:login')
-	
-def logout(request):
-	template = 'perfiles/logout.html'
+    # standard auth de Django.
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    # busca en la bd User uno que existe con ese usuario y password
+    if user is not None:
+        # Si existe, hace login a ese usuario y lo guarda en "request"
+        auth.login(request, user)
+        return redirect('temas:main', 'recientes')
+    else:
+        return redirect('perfiles:login')
 
-	auth.logout(request) # Logout el user guardado en Request
-	return render(request, template , {})
+
+def logout(request):
+    template = 'perfiles/logout.html'
+
+    auth.logout(request)  # Logout el user guardado en Request
+    return render(request, template, {})
+
 
 def loggedin(request):
-	template = 'perfiles/loggedin.html'
-	#Mensaje de Bienvenida. 
-	#!!! En el futuro redireccionar (despues de 3 seg) a dnd estaba antes (next)
-	#o a la página de Temas
-	return render(request, template, {})
+    template = 'perfiles/loggedin.html'
+    # Mensaje de Bienvenida.
+    #!!! En el futuro redireccionar (despues de 3 seg) a dnd estaba antes (next)
+    # o a la página de Temas
+    return render(request, template, {})
+
 
 def invalid(request):
-	#Invalid login. Esta pagina hay que eliminar. 
-	#Debe ser la misma que login pero con mensajes de error.
-	return render(request, 'perfiles/invalid.html', {})
+    # Invalid login. Esta pagina hay que eliminar.
+    # Debe ser la misma que login pero con mensajes de error.
+    return render(request, 'perfiles/invalid.html', {})
+
 
 def registrar(request):
-	template = 'perfiles/registrar.html'
-	#Registra nuevos usuarios.
-	error = ""#Hay que eliminar esta variable y cambiar por los errors del form.
-	if request.method == 'POST':
-		#Recoge el form de forms.py y le asigna las variables del 
-		#diccionario de request.POST
-		form = FormRegistroUsuario(request.POST) 
-		#valida el form conforme a las reglas preestablecidas en form.py
-		if form.is_valid():
-			form.save() #Guarda los valores en la base de datos auth.User.
-			user = User.objects.get(username=form.cleaned_data['username'])
-			perfil_nuevo, created = Perfiles.objects.get_or_create(usuario = user)
-			perfil_nuevo.save()
-			return HttpResponseRedirect(reverse('perfiles:registro_ok'))
-		else:
-			error = "error en form.is_valid" #!!!
-	#Crea un nuevo form vacio. (unbound)
-	user_creation_form = FormRegistroUsuario()
-	context = {'user_creation_form': user_creation_form, 'error':error}
-	return render(request, template, context)
+    template = 'perfiles/registrar.html'
+    # Registra nuevos usuarios.
+    # Hay que eliminar esta variable y cambiar por los errors del form.
+    error = ""
+    if request.method == 'POST':
+        # Recoge el form de forms.py y le asigna las variables del
+        # diccionario de request.POST
+        form = FormRegistroUsuario(request.POST)
+        # valida el form conforme a las reglas preestablecidas en form.py
+        if form.is_valid():
+            form.save()  # Guarda los valores en la base de datos auth.User.
+            user = User.objects.get(username=form.cleaned_data['username'])
+            perfil_nuevo, created = Perfiles.objects.get_or_create(
+                usuario=user)
+            perfil_nuevo.save()
+            return HttpResponseRedirect(reverse('perfiles:registro_ok'))
+        else:
+            error = "error en form.is_valid"  # !!!
+    # Crea un nuevo form vacio. (unbound)
+    user_creation_form = FormRegistroUsuario()
+    context = {'user_creation_form': user_creation_form, 'error': error}
+    return render(request, template, context)
+
 
 def registro_ok(request):
 
-	#Lleva a una página de Bienvenida.
-	context = {}
-	return render(request, 'perfiles/registro_ok.html', context)
+    # Lleva a una página de Bienvenida.
+    context = {}
+    return render(request, 'perfiles/registro_ok.html', context)
+
 
 def editar_perfil_des(request):
-	template = 'perfiles/editar_perfil_des.html'
+    template = 'perfiles/editar_perfil_des.html'
 
-	user = request.user
-	#crea una tabla de Perfiles para el user
-	#si no existe una ya y obtiene esa tabla como "obj"
-	perfil_usuario, created = Perfiles.objects.get_or_create(usuario = user)
-	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=perfil_usuario).exists()
-	tiene_frasesfav = Cfavoritas.objects.filter(perfil=perfil_usuario).exists()
-	if request.method == 'POST':
-		form = PerfilesForm(request.POST)
-		if form.is_valid():
-			#una vez validado el form. Recoge el user guardado en request (loggeado)
-			#Llena los valores del obj con los valores del form request.Post.
-			descripcion = form.cleaned_data.get('descripcion')
-			link1 = form.cleaned_data.get('link1')
-			link2 = form.cleaned_data.get('link2')
-			link3 = form.cleaned_data.get('link3')
-			link4 = form.cleaned_data.get('link4')
-			link5 = form.cleaned_data.get('link5')
-			perfil_usuario.link1 = link1
-			perfil_usuario.link2 = link2
-			perfil_usuario.link3 = link3
-			perfil_usuario.link4 = link4
-			perfil_usuario.link5 = link5
-			if len(descripcion)>5:
-				perfil_usuario.descripcion = descripcion
-			perfil_usuario.save()
-			#Redirije al perfil del usuario. pasa el username como
-			#kwargs para manejo de urlpattern
-			return redirect('perfiles:perfil', username = request.user.username, queryset= 'recientes')
-		#else:
-			#Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
-			#error = "error en form.is_valid" #!!! Falta enviar errores.
-	
-	editar_perfil_form = PerfilesForm(initial={
-		'descripcion':perfil_usuario.descripcion,
-		'link1':perfil_usuario.link1, 'link2':perfil_usuario.link2,
-		'link3':perfil_usuario.link3, 'link4':perfil_usuario.link4,
-		'link5':perfil_usuario.link5})
+    user = request.user
+    # crea una tabla de Perfiles para el user
+    # si no existe una ya y obtiene esa tabla como "obj"
+    perfil_usuario, created = Perfiles.objects.get_or_create(usuario=user)
+    tiene_imagenesfav = Ifavoritas.objects.filter(
+        perfil=perfil_usuario).exists()
+    tiene_frasesfav = Cfavoritas.objects.filter(perfil=perfil_usuario).exists()
+    descripcion = perfil_usuario.obtener_descripcion()
 
-	context = {'editar_perfil_form':editar_perfil_form, 
-	'tiene_imagenesfav':tiene_imagenesfav,
-	'tiene_frasesfav':tiene_frasesfav,
-	'perfil_usuario':perfil_usuario}
-	return render(request, template, context)
-		
+    if request.method == 'POST':
+        form = PerfilesForm(request.POST)
+        if form.is_valid():
+            # una vez validado el form. Recoge el user guardado en request (loggeado)
+            # Llena los valores del obj con los valores del form request.Post.
+            descripcion = form.cleaned_data.get('descripcion')
+            link1 = form.cleaned_data.get('link1')
+            link2 = form.cleaned_data.get('link2')
+            link3 = form.cleaned_data.get('link3')
+            link4 = form.cleaned_data.get('link4')
+            link5 = form.cleaned_data.get('link5')
+            perfil_usuario.link1 = link1
+            perfil_usuario.link2 = link2
+            perfil_usuario.link3 = link3
+            perfil_usuario.link4 = link4
+            perfil_usuario.link5 = link5
+            if len(descripcion) > 5:
+                perfil_usuario.descripcion = descripcion
+            perfil_usuario.save()
+            # Redirije al perfil del usuario. pasa el username como
+            # kwargs para manejo de urlpattern
+            return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
+        # else:
+            # Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
+            # error = "error en form.is_valid" #!!! Falta enviar errores.
+
+    editar_perfil_form = PerfilesForm(initial={
+        'descripcion': perfil_usuario.descripcion,
+        'link1': perfil_usuario.link1, 'link2': perfil_usuario.link2,
+        'link3': perfil_usuario.link3, 'link4': perfil_usuario.link4,
+        'link5': perfil_usuario.link5})
+
+    context = {'editar_perfil_form': editar_perfil_form,
+               'tiene_imagenesfav': tiene_imagenesfav,
+               'tiene_frasesfav': tiene_frasesfav,
+               'descripcion': descripcion,
+               'perfil_usuario': perfil_usuario}
+    return render(request, template, context)
+
+
 def editar_perfil_info(request):
-	template = 'perfiles/editar_perfil_info.html'
+    template = 'perfiles/editar_perfil_info.html'
 
-	if request.method == "POST":
-		form = UserForm(request.POST)
-		if form.is_valid():
-			obj = User.objects.get(username=request.user.username)
-			e = form.cleaned_data['email']
-			f = form.cleaned_data['first_name']
-			l = form.cleaned_data['last_name']
-			if e != "":
-				obj.email = e
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            obj = User.objects.get(username=request.user.username)
+            e = form.cleaned_data['email']
+            f = form.cleaned_data['first_name']
+            l = form.cleaned_data['last_name']
+            if e != "":
+                obj.email = e
 
-			if f != "":
-				obj.first_name = f
+            if f != "":
+                obj.first_name = f
 
-			if l != "":
-				obj.last_name = l
-			
-			obj.save()
-			return redirect('perfiles:perfil', username = request.user.username)
-		else:
-			pass #!!! enviar errores	
-	
-	perfil_info_form = UserForm()
-	context = {'perfil_info_form': perfil_info_form}
-	return render(request, template, context)
+            if l != "":
+                obj.last_name = l
+
+            obj.save()
+            return redirect('perfiles:perfil', username=request.user.username)
+        else:
+            pass  # !!! enviar errores
+
+    perfil_info_form = UserForm()
+    context = {'perfil_info_form': perfil_info_form}
+    return render(request, template, context)
+
 
 @page_template('index_page_perfiles.html')
-def perfil(request, username, queryset, template = "perfiles/perfil.html",
-	extra_context = None):
-	#recibe del urlpattern un username y un queryset.
-	usuario_user = User.objects.get(username=username)
-	usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
-	perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+def perfil(request, username, queryset, template="perfiles/perfil.html",
+           extra_context=None):
+    # recibe del urlpattern un username y un queryset.
+    usuario_user = User.objects.get(username=username)
+    usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
+    perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
-	#Datos del usuario
-	nombre_completo = usuario_user.get_full_name()
-	puntos_recibidos = usuario_perfil.votos_recibidos
-	num_posts = Posts.objects.filter(creador=usuario_perfil).count()
-	num_temas = Temas.objects.filter(creador=usuario_perfil).count()
-	creo_temas = False
-	temas_usuario = []
-	if num_temas > 0:
-		temas_usuario = Temas.objects.filter(creador=usuario_perfil)
-		creo_temas = True
-	num_frases_favoritas = Cfavoritas.objects.filter(perfil=usuario_perfil).count()
-	numero_imgfavoritas = 0
-	usuario_fav = usuario_user.username
+    # Datos del usuario
+    nombre_completo = usuario_user.get_full_name()
+    puntos_recibidos = usuario_perfil.votos_recibidos
+    num_posts = Posts.objects.filter(creador=usuario_perfil).count()
+    num_temas = Temas.objects.filter(creador=usuario_perfil).count()
+    creo_temas = False
+    temas_usuario = []
+    if num_temas > 0:
+        temas_usuario = Temas.objects.filter(creador=usuario_perfil)
+        creo_temas = True
+    num_frases_favoritas = Cfavoritas.objects.filter(
+        perfil=usuario_perfil).count()
+    numero_imgfavoritas = 0
+    usuario_fav = usuario_user.username
+    descripcion = usuario_perfil.obtener_descripcion()
 
-	#Posts del usuario, utiliza el queryset de la URL.
-	recientes = ""
-	populares = ""
-	q = ""
-	if queryset == "populares":
-		q = "-votos_total"
-		populares = "active"
-	else:
-		q = "-fecha"
-		recientes = "active"
+    # Posts del usuario, utiliza el queryset de la URL.
+    recientes = ""
+    populares = ""
+    q = ""
+    if queryset == "populares":
+        q = "-votos_total"
+        populares = "active"
+    else:
+        q = "-fecha"
+        recientes = "active"
 
-	posts_obj = Posts.objects.filter(creador=usuario_perfil, eliminado = False).order_by(q)
-	posts = []
-	for p in posts_obj:
-		post = [p]
-		num_respuestas = Respuestas.objects.filter(post_padre=p).count()
-		if p.es_respuesta == True:
-			if Respuestas.objects.filter(post_respuesta=p).exists():
-				respuesta = Respuestas.objects.get(post_respuesta=p)
-				usuario_respuesta = respuesta.post_padre.creador.usuario.username
-				post.extend([True, usuario_respuesta])
-			else:
-				post.extend([False, ""]) #!!! Prueba para ver respuestas descuadradas.
-		else:
-			post.extend([False, ""])
+    posts_obj = Posts.objects.filter(
+        creador=usuario_perfil, eliminado=False).order_by(q)
+    posts = []
+    for p in posts_obj:
+        post = [p]
+        num_respuestas = Respuestas.objects.filter(post_padre=p).count()
+        if p.es_respuesta is True:
+            if Respuestas.objects.filter(post_respuesta=p).exists():
+                respuesta = Respuestas.objects.get(post_respuesta=p)
+                usuario_respuesta = respuesta.post_padre.creador.usuario.username
+                post.extend([True, usuario_respuesta])
+            else:
+                # !!! Prueba para ver respuestas descuadradas.
+                post.extend([False, ""])
+        else:
+            post.extend([False, ""])
 
-		voted_status = obtener_voted_status(p, perfil_usuario_visitante)
-		print voted_status
-					
-		post.append(voted_status)
-		post.append(num_respuestas)
-		posts.append(post)
+        voted_status = obtener_voted_status(p, perfil_usuario_visitante)
+        post_en_video = False
+        if p.video is not None:
+            post_en_video = True
 
-	#cita
-	if Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count()==0:
-		cita_favorita = ""
-	else:
-		citas_favoritas_obj = Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado = False)
-		cita_favorita = (random.choice(citas_favoritas_obj)).cita
+        post.append(voted_status)
+        post.append(num_respuestas)
+        post.append(post_en_video)
+        posts.append(post)
 
-	#imagenes
-	portada = ""
-	imagenes_favoritas = []
-	tiene_imagenesfav = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).exists()
+    # cita
+    if Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count() == 0:
+        cita_favorita = False
+    else:
+        citas_favoritas_obj = Cfavoritas.objects.filter(
+            perfil=usuario_perfil, eliminado=False)
+        cita_favorita = (random.choice(citas_favoritas_obj)).cita
 
-	if tiene_imagenesfav:
-		numero_imgfavoritas = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count()
-		if numero_imgfavoritas > 3:
-			imagenes_display = 3
-		else:
-			imagenes_display = numero_imgfavoritas
-		print numero_imgfavoritas
-		ifavoritas_objects = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
-		for i in ifavoritas_objects:
-			print i.imagen.url
-			imagenes_favoritas.append(i.imagen.url)
+    # videos
+    num_videos_favoritos = VFavoritos.objects.filter(
+        perfil=usuario_perfil, eliminado=False).count()
 
-		if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
-			portada_obj = Ifavoritas.objects.get(perfil=usuario_perfil, eliminado = False, portada=True)
-		else:
-			portada_obj = Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).latest('id')
-		portada = portada_obj.imagen.url
+    # imagenes
+    portada = ""
+    imagenes_favoritas = []
+    tiene_imagenesfav = Ifavoritas.objects.filter(
+        perfil=usuario_perfil, eliminado=False).exists()
 
-	print "portada %s" %(portada)
+    if tiene_imagenesfav:
+        numero_imgfavoritas = Ifavoritas.objects.filter(
+            perfil=usuario_perfil, eliminado=False).count()
+        if numero_imgfavoritas > 3:
+            imagenes_display = 3
+        else:
+            imagenes_display = numero_imgfavoritas
+        print numero_imgfavoritas
+        ifavoritas_objects = Ifavoritas.objects.filter(
+            perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
+        for i in ifavoritas_objects:
+            print i.imagen.url
+            imagenes_favoritas.append(i.imagen.url)
 
-	#links
-	links = obtener_links_perfil(usuario_perfil)
-	
-	context = {'portada':portada,'usuario_user': usuario_user, 'usuario': usuario_perfil, 
-	'nombre_completo': nombre_completo, 'links':links, 'posts':posts,'cita_favorita':cita_favorita,
-	'imagenes_favoritas':imagenes_favoritas, 'usuario_fav':usuario_fav,
-	'tiene_imagenesfav':tiene_imagenesfav, 'recientes':recientes, 'populares': populares,
-	'puntos_recibidos':puntos_recibidos, 'num_posts':num_posts, 'num_temas':num_temas, 
-	'numero_imgfavoritas': numero_imgfavoritas, 'num_frases_favoritas':num_frases_favoritas,
-	'temas_usuario':temas_usuario, 'creo_temas':creo_temas}
+        if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
+            portada_obj = Ifavoritas.objects.get(
+                perfil=usuario_perfil, eliminado=False, portada=True)
+        else:
+            portada_obj = Ifavoritas.objects.filter(
+                perfil=usuario_perfil, eliminado=False).latest('id')
+        portada = portada_obj.imagen.url
 
-	if extra_context is not None:
-		context.update(extra_context)
+    print "portada %s" % (portada)
 
-	return render(request, template, context)
+    # links
+    links = obtener_links_perfil(usuario_perfil)
+
+    context = {
+        'portada': portada, 'usuario_user': usuario_user, 'usuario': usuario_perfil,
+        'nombre_completo': nombre_completo, 'links': links, 'descripcion': descripcion,
+        'posts': posts, 'cita_favorita': cita_favorita, 'imagenes_favoritas': imagenes_favoritas,
+        'usuario_fav': usuario_fav, 'tiene_imagenesfav': tiene_imagenesfav, 'recientes': recientes,
+        'populares': populares, 'puntos_recibidos': puntos_recibidos, 'num_posts': num_posts,
+        'num_temas': num_temas, 'numero_imgfavoritas': numero_imgfavoritas,
+        'num_frases_favoritas': num_frases_favoritas, 'temas_usuario': temas_usuario,
+        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render(request, template, context)
+
 
 def index(request):
-	template = 'perfiles/index.html'
-	#pagina principal de usuarios. Muestra los usuarios.
-	#En el futuro mostrar actividad 
-	usuarios = Perfiles.objects.all()
-	return render(request,template , {'usuarios': usuarios})
+    template = 'perfiles/index.html'
+    # pagina principal de usuarios. Muestra los usuarios.
+    # En el futuro mostrar actividad
+    usuarios = Perfiles.objects.all()
+    return render(request, template, {'usuarios': usuarios})

@@ -9,13 +9,15 @@
 {% endblock arriba %}
 {% block form %}
 	<div class = "row">
-		<form action = "{% url 'temas:sumar_post' tema.slug %}" method = "post"> {% csrf_token %}
-			{{form_nuevo_post|crispy}}
-			<br/>
-			<input class = "btn pull-right" type = "submit" value = "Enviar"/>
-		</form>
-		<br>
-		<br>
+		<div class = "col-md-8 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+			<form action = "{% url 'temas:sumar_post' tema.slug %}" method = "post"> {% csrf_token %}
+				{{form_nuevo_post|crispy}}
+				<br/>
+				<input class = "btn pull-right" type = "submit" value = "Enviar"/>
+			</form>
+			<br>
+			<br>
+		</div>
 	</div>
 	<h5 class = "text-muted pull-right">
  		<span class="fa fa-check-circle"></span> Gracias por aportar a la comunidad

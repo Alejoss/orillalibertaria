@@ -28,6 +28,38 @@
 	</p>
 </div>
 </div>
+{% else %}
+<div class = "col-md-7">
+	<div class = "div_video thumbnail">
+	<div class = "video_no_youtube">
+	<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Photo-Video-Start-icon.png">
+
+	{% if origen_no_youtube == "vimeo" %}
+		<p> Video disponible en Vimeo: </p>
+		<a href="{{video.url}}"> <i class = "fa fa-vimeo-square"></i><small> {{video.url}} </small></a>
+	{% elif origen_no_youtube == "ted" %}
+		<p> Video disponible en TED </p>
+		<a href="{{video.url}}"> <i class = "fa fa-university"></i><small> {{video.url}} </small></a>
+	{% else %}
+		<p> Video disponible en: </p>
+		<a href="{{video.url}}"> <i class = "fa fa-play-circle"></i><small> {{video.url}} </small></a>
+	{% endif %}
+	<hr>
+	</div>
+		<div class = "favoritos_video ">
+			<p class = "hidden">{{video.id}}</p>
+			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span> 
+			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>  
+			<p> <small> farseer el 14 de Marzo </small> </p>
+		</div>
+	</div>
+</div>
+<div class = "col-md-5">
+	<div class = "div_descripcion_video">
+		<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+		</p>
+	</div>
+</div>
 {% endif %}
 </div>
 

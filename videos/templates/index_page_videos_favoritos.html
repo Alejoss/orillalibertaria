@@ -1,0 +1,73 @@
+{% load endless %}
+{% paginate videos %}
+
+<div class = "row">
+	<div class = "endless_page_template">
+	{% for video in videos %}
+	<div class = "col-md-2 col-sm-2 col-xs-2">
+		<div class = "control_votos">
+			<div class = "btn-group-vertical">
+				<p class = "vote-id hidden">{{video.0.id}}</p>
+				<button type="button" class = "btn btn-default estrella {{video.2}}"> 
+					<span class = "fa fa-star fa-lg"></span>
+				</button>
+				<button class = "btn puntaje"> 
+					<h2 class = "numero_puntaje"> {{video.0.favoritos_recibidos}} </h2>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class = "col-md-10 col-sm-10 col-xs-10">
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<div class = "div_imagen_tema">
+					<img class = "imagen_tema" src = "{{video.1}}">
+				</div>
+				<p class = "text truncate">
+				<strong>{{video.0.titulo}}:</strong> {{video.0.descripcion}}
+				</p>
+				<small> <a href="{{video.0.url}}">{{video.0.url}}</a></small>
+				<br/>
+			</div>
+			<div class="panel-footer">
+				{% if video.0.perfil.usuario == request.user %}
+				<div class = "eliminar_editar pull-left">
+					<div class = "btn-group dropup">
+					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="">Eliminar Video</a>
+						</li>
+						<li class = "divider"></li>
+						<li>
+							<a href="">Editar Video</a> 
+						</li>
+					</ul>
+					</div>
+				</div>
+				{% endif %}
+				<div class = "nombre_fecha">
+					<p><a href ="{% url 'perfiles:perfil' video.0.perfil.usuario.username 'recientes' %}">
+						{{video.0.perfil.usuario.username}}</a> <small> el {{video.0.fecha}} </small> en <a href=" {% url 'temas:index_tema' video.0.tema.slug 'recientes' %} "> {{video.0.tema.nombre}} </a>
+					</p>
+				</div>
+				<div class = "footer_respuestas pull-right">
+ 				<a href = " {% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %} "> {{video.3}} <span class="fa fa-comments"></span> <span class="fa fa-play"></span></a>
+ 				</div>
+			</div>
+		</div>
+	</div> <!-- class md 10 -->
+	{% endfor %}
+	</div>
+</div>
+<div class = "row">
+	<div class = "col-md-12">
+	<hr>
+	<div class = "paginacion">
+	{% show_pages %}
+	</div>
+	<br>
+	<br>
+</div>
+</div>

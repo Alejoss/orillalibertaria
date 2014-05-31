@@ -3,7 +3,7 @@
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
-	<h2> Nuevo video en <a href="">{{tema.nombre}}</a></h2>
+	<h2> Nuevo video en <a href=" {% url 'temas:index_tema' tema.slug 'recientes' %} ">{{tema.nombre}}</a></h2>
 
 	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
 	<br/>

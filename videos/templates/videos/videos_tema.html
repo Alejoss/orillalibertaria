@@ -16,7 +16,7 @@
 {% block arriba %}
 <div class="col-md-8 column">
 	<div class="page-header">
-		<h1 >
+		<h1>
 			{{ tema.0.nombre }}
 		</h1>
 	</div>
@@ -41,7 +41,7 @@
 
 	<div class = "row visible-xs">
 		<div class= "btn-group control">
-			 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Posts <span class="caret"></span></button>
+			 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> Videos <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li class = " {{recientes}} ">
 					<a href="{% url 'videos:videos_tema' tema.0.slug 'recientes' %}">Recientes</a>
@@ -54,7 +54,7 @@
 		<div class = "pull-right visible-xs">
 		<button type="button" class="btn btn-warning" 
 		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
-		Nuevo Video en {{tema.nombre}}</button>
+		Nuevo Video en {{tema.0.nombre}}</button>
 		</div>
 	</div>
 
