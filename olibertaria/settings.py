@@ -83,7 +83,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'olibertaria.urls'
 
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
 
 # Database

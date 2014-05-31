@@ -1,2 +1,1 @@
- 
-web: gunicorn orillalibertaria.wsgi
+web: gunicorn olibertaria.wsgi
