@@ -7,6 +7,9 @@ urlpatterns = patterns('',
                        url(r'^index/(?P<queryset>\w+)/$',
                            views.index, name='index'),
 
+                       url(r'^frase/(?P<cita_id>\d+)/$',
+                           views.cita, name='cita'),
+
                        url(r'nueva/$', views.nueva, name='nueva'),
 
                        url(r'^(?P<username>\w+)/favoritas/$',

@@ -1,0 +1,81 @@
+{% extends "base_index.html" %}
+
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' request.user %}">Frases favoritas</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
+{% block arriba %}
+<div class="col-md-8 column">
+	<div class = "row">
+		<br>
+	<ul class="breadcrumb">
+		<li>
+			<h4>Banco de Frases - frase de {{cita.autor}} </h4> 
+			<span class="divider"></span>
+		</li>
+	</ul>
+	</div>
+</div>
+{% endblock arriba %}
+
+{% block tab_content %}
+<div class = "row clearfix">
+	<div class="panel panel-info">
+		<div class="panel-body">
+			<blockquote>
+				<p>
+					"{{cita.texto}}"
+				</p> <small>{{cita.autor}}, <cite>{{cita.fuente}}</cite></small>
+			</blockquote>
+		</div>
+		<div class="panel-footer">
+			<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="reportar_cita fa fa-flag"></i></a>
+			<p class = "hidden"> {{cita.id}} </p>
+			<i class="estrella marcar_favorito fa fa-star-o fa-lg {{es_favorita}}"></i>
+			<p class = "cita_favoritos" > {{cita.favoritos_recibidos}}</p>
+			<br/>
+		</div>
+	</div>
+</div>
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class="hidden-xs col-md-4 col-sm-4 column">
+		<div>
+			<br>
+			<button type="button" class="btn btn-warning btn_sidebar" 
+			onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
+			</button> 
+			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'citas:favoritas' request.user %}';"> Tus frases favoritas
+			</button>
+			<button type="button" class="btn btn-default btn_sidebar" 
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+			</button>
+			<br>
+			<button type="button" class="btn btn-link btn_sidebar" 
+			onclick="location.href='{% url 'citas:colaborar_organizar' %}';">Ayúdanos a organizar este Banco de Frases
+			</button>
+			<hr>
+		</div>
+		<div class = "hidden-sm div_carrusel">
+			<div class = " visible-lg visible-md cuadro_carrusel">
+			<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
+				{% for i in imagenes_display %}
+				<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
+				{% endfor %}
+			</div>
+			</div>
+			<hr>
+			<button type="button" class="btn btn-xs btn-info btn_galeria"
+			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
+				Ver galería de imágenes</button>
+		</div> <!--div carrousel -->
+		<br>
+	
+	</div> <!--column 4-->
+{% endblock sidebar %}

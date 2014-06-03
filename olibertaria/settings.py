@@ -63,11 +63,11 @@ INSTALLED_APPS = (
     'citas',
     'imagenes',
     'videos',
+    'notificaciones',
     'django_extensions',
     'south',
     'endless_pagination',
     'crispy_forms',
-    'notificaciones',
     #'debug_toolbar',
     'gunicorn',
 )

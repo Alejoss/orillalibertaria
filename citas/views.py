@@ -61,6 +61,27 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
     return render(request, template, context)
 
 
+def cita(request, cita_id):
+    template = 'citas/cita.html'
+
+    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    cita = Cita.objects.get(id=cita_id)
+
+    cfavoritas_objects = Cfavoritas.objects.filter(
+        eliminado=False, perfil=perfil_usuario)
+    citas_favoritas = []
+    for x in cfavoritas_objects:
+        citas_favoritas.append(x.cita)
+
+    if cita in citas_favoritas:
+        es_favorita = "dorado"
+    else:
+        es_favorita = ""
+
+    context = {'cita': cita, 'es_favorita': es_favorita}
+    return render(request, template, context)
+
+
 def nueva(request):
     template = 'citas/nueva.html'
     if request.method == "POST":
