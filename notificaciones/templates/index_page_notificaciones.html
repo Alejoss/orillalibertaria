@@ -1,6 +1,12 @@
+{% load endless %}
 
-<ul class = "lista_notificaciones list-group">
-{% for notificacion in notificaciones %}
+{% paginate lista_notificaciones %}
+<div class = "row">
+	<div class = "col-md-12">
+		<div class = "endless_page_template">
+
+		<ul class = "lista_notificaciones_todas list-group">
+{% for notificacion in lista_notificaciones %}
 
 	{% if notificacion.0.tipo_objeto == "post" %}
 
@@ -86,5 +92,18 @@
 		
 	{% endif %}
 {% endfor %}
-</ul>
-<a href="{% url 'notificaciones:index' %} "> <small>ver todas</small> </a>
+	</ul>
+
+		</div> <!--endless -->
+	</div> <!--col md 12 -->
+
+	<div class = "row">
+		<hr>
+		<div class = "paginacion">
+		{% show_pages %}
+		</div>
+		</br>
+		</br>
+		</br>
+	</div> <!--row-->
+</div>

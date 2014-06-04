@@ -6,6 +6,9 @@ urlpatterns = patterns('',
                        url(r'^index/(?P<queryset>\w+)/$',
                            views.index, name='index'),
 
+                       url(r'^imagen/(?P<imagen_id>\d+)/$',
+                           views.imagen, name='imagen'),
+
                        url(r'^marcar_favorito/$', views.marcar_favorito,
                            name='marcar_favorito'),
                        url(r'^denunciar/$', views.denunciar,

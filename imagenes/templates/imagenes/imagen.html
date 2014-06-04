@@ -28,7 +28,15 @@
             </ul>
         </div>
         <div class="row clearfix">
-            {% include page_template %}
+           <div class="span3 galery"> <!--span cambiado -->
+            <div class="image-galery"><a class="group" rel="group1" href="{{imagen.url}}"><img class = "thumbnail" src=" {{imagen.url}} " /></a></div>
+              <div>
+                <p class = "hidden">{{imagen.id}}</p>
+                <span class='estrella fa fa-star fa-lg {{es_favorita}}'></span>
+            	<p class = "favoritos"> {{imagen.favoritos_recibidos}} </p>
+                <span rel="tooltip" title="Denunciar Imagen" class="reportar fa fa-flag"></span>
+            </div>
+        </div>
         </div>
     </div>
 </div>

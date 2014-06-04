@@ -49,7 +49,6 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
             citas.append([c, ""])
 
     imagenes_display = obtener_imagenes_display(7)
-    print imagenes_display
 
     context = {
         'citas': citas, 'imagenes_display': imagenes_display, 'autor': autor,
@@ -78,7 +77,9 @@ def cita(request, cita_id):
     else:
         es_favorita = ""
 
-    context = {'cita': cita, 'es_favorita': es_favorita}
+    imagenes_display = obtener_imagenes_display(7)
+
+    context = {'cita': cita, 'es_favorita': es_favorita, 'imagenes_display': imagenes_display}
     return render(request, template, context)
 
 
@@ -91,7 +92,7 @@ def nueva(request):
             perfil_usuario = Perfiles.objects.get(usuario=request.user)
             nueva_cita.creador = perfil_usuario
             nueva_cita.save()
-            return HttpResponseRedirect(reverse('citas:index'))
+            return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset': (u'recientes')}))
         else:
             pass  # !!! enviar errores
 
@@ -141,12 +142,15 @@ def marcar_favorito(request):
             cita.save()
 
             #Notificaciones de cita
-            notificacion_cita_fav = Notificacion(actor=perfil_usuario, target=cita.perfil,
+            notificacion_cita_fav = Notificacion(actor=perfil_usuario, target=cita.creador,
                                                  objeto_id=cita.id, tipo_objeto="cita",
                                                  tipo_notificacion="fav_voteup")
             notificacion_cita_fav.save()
+            print "notificacion creada"
+            print notificacion_cita_fav.target
+            print notificacion_cita_fav.objeto_id
             if cita.favoritos_recibidos == 100 or cita.favoritos_recibidos == 1000:
-                notificacion_cita_num = Notificacion(target=cita.perfil,
+                notificacion_cita_num = Notificacion(target=cita.creador,
                                                      objeto_id=cita.id, tipo_objeto="cita",
                                                      tipo_notificacion="num")
                 notificacion_cita_num.save()

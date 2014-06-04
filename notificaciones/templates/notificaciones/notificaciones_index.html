@@ -1,0 +1,83 @@
+{% extends 'base_index.html' %}
+
+{% block navbar_mobile_xs %}
+<!--click para marcar todos las notificaciones como leidas-->
+{% endblock navbar_mobile_xs %}
+
+{% block arriba %}
+<div class="col-md-8 column">
+	<div class = "row">
+		<br>
+	<ul class="breadcrumb">
+		<li>
+			<h4>Notificaciones</h4> 
+			<span class="divider"></span>
+		</li>
+	</ul>
+	</div>
+</div>
+{% endblock arriba %}
+
+{% block botones_control %}
+<div class = "col-md-8 div_control">
+	<div class = "pull-left">
+		<button id= "marcar_leidas" type="button" class="btn btn-warning" >
+		Marcar como leídas <span class = 'fa fa-check-square-o fa-lg'></span>
+		</button> 
+	</div>
+</div>
+{% endblock botones_control %}
+
+{% block tab_content %}
+<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
+		<div class="row clearfix">
+			{% include page_template %}
+		</div>
+</div>
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class="hidden-xs col-md-4 col-sm-4 column">
+	<div class = "div_perfil_datos">
+	<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
+		<ul class="nav nav-pills">
+		<br>
+			<li>
+				Puntos <span class="badge"> {{puntos_recibidos}} </span> 
+			</li>
+		<br>
+			<li>
+				Posts <span class="badge">{{num_posts}}</span> 
+			</li>
+		<br>
+		{% if creo_temas %}
+			<li>
+				Temas <span class="badge">{{num_temas}}</span>
+				<ul style = "margin-left: 10px" class = "list-unstyled">
+					{% for tema in temas_usuario %}
+					<li> <a href="{% url 'temas:index_tema' tema.slug 'recientes' %}">{{tema.nombre}}</a></li>
+					{% endfor %}
+				</ul>
+			</li>
+		{% endif %}
+		</ul>
+	</div>
+</div> <!--column 4-->
+{% endblock sidebar %}
+
+{% block javascript %}
+<script>
+
+$("#marcar_leidas").on('click', function(){
+	$('.no_leida').each(function(){
+		$(this).removeClass("no_leida")
+	});
+	$.ajax({
+			data: {'cantidad':'todos'},
+			url: '/notificaciones/marcar_leidas/',
+			type: 'get',
+			});
+});
+
+</script>
+{% endblock javascript %}

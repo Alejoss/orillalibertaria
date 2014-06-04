@@ -15,7 +15,7 @@
 		<br>
 	<ul class="breadcrumb">
 		<li>
-			<h4>Banco de Frases - frase de {{cita.autor}} </h4> 
+			<h4><a href=" {% url 'citas:index' 'recientes' %} ">Banco de Frases</a> - frase de {{cita.autor}} </h4> 
 			<span class="divider"></span>
 		</li>
 	</ul>
@@ -24,7 +24,7 @@
 {% endblock arriba %}
 
 {% block tab_content %}
-<div class = "row clearfix">
+<div class="col-md-8 column">
 	<div class="panel panel-info">
 		<div class="panel-body">
 			<blockquote>
@@ -58,7 +58,7 @@
 			</button>
 			<br>
 			<button type="button" class="btn btn-link btn_sidebar" 
-			onclick="location.href='{% url 'citas:colaborar_organizar' %}';">Ayúdanos a organizar este Banco de Frases
+			onclick="location.href='{% url 'citas:colaborar_organizar' %}';"> <i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
 			</button>
 			<hr>
 		</div>
@@ -79,3 +79,28 @@
 	
 	</div> <!--column 4-->
 {% endblock sidebar %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/cita_favorita.js' %} "></script>
+<script src="{% static 'js/owl.carousel.min.js' %} "></script>
+<script>
+$(document).ready(function() {	 
+	  $("#owl-demo").owlCarousel({
+	      navigation : false, // Show next and prev buttons
+	      slideSpeed : 300,
+	      paginationSpeed : 400,
+	      singleItem:true
+	 
+	      // "singleItem:true" is a shortcut for:
+	      // items : 1, 
+	      // itemsDesktop : false,
+	      // itemsDesktopSmall : false,
+	      // itemsTablet: false,
+	      // itemsMobile : false
+	 
+	  });
+	 
+	});
+</script>
+{% endblock javascript %}

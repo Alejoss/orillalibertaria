@@ -48,6 +48,25 @@ def index(request, queryset, template='imagenes/index.html', extra_context=None)
     return render(request, template, context)
 
 
+def imagen(request, imagen_id):
+    template = 'imagenes/imagen.html'
+    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    imagen = Imagen.objects.get(id=imagen_id)
+
+    # Saber si la imagen es fav del usuario visitante
+    imagenes_favoritas_obj = Ifavoritas.objects.filter(
+        perfil=perfil_usuario, eliminado=False)
+    imagenes_favoritas = []
+    for i in imagenes_favoritas_obj:
+        imagenes_favoritas.append(i.imagen)
+    es_favorita = "no_es_favorita"
+    if imagen in imagenes_favoritas:
+        es_favorita = "es_favorita"
+
+    context = {'imagen': imagen, 'es_favorita': es_favorita}
+    return render(request, template, context)
+
+
 def nueva(request):
     template = 'imagenes/nueva.html'
     if request.method == "POST":

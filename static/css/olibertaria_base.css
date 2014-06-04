@@ -37,6 +37,10 @@
 .lista_notificaciones{
 	margin-bottom: 5px;
 }
+.lista_notificaciones_todas >li{
+	height: 75px;
+	overflow: auto;
+}
 
 .no-close .ui-dialog-titlebar-close {
 	display: none;

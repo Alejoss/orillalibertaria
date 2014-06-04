@@ -16,8 +16,8 @@
 	
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 	<link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
-	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> <!--font awesome -->
+	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
 
 	<link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
 	<link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
@@ -75,14 +75,14 @@
 						 <a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">
 						 Notificaciones
 						 {% if num_notificaciones > 0 %}
-						 <span id = "num_notificaciones" class = "badge">{{num_notificaciones}} </span>
+						 <span class = "num_notificaciones badge">{{num_notificaciones}} </span>
 						 {% endif %}
 						 <span class = "fa fa-puzzle-piece fa-lg"></span></a>
 					</li>
 					<li class = "hidden-xs">
 						 <a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">
 						 {% if num_notificaciones > 0 %}
-						 <span id = "num_notificaciones" class = "badge">{{num_notificaciones}} </span>
+						 <span class = "num_notificaciones badge">{{num_notificaciones}} </span>
 						 {% endif %}
 						 <span class = "fa fa-puzzle-piece fa-lg"></span></a>
 					</li>
@@ -155,14 +155,15 @@
 			html: "<span class = 'fa fa-check-square-o fa-lg'></span>",
 			click: function() {
 			$( this ).dialog( "close" );
-			$("#num_notificaciones").addClass("hidden")
+			$(".num_notificaciones").addClass("hidden")
 			$.ajax({
+			data: {'cantidad':'cinco'},
 			url: '/notificaciones/marcar_leidas/',
 			type: 'get',
 			});
 			}
 			}
-]
+			]
 		});
 	$(".mostrar_notificaciones").click(function(){
 			$("#notificaciones").removeClass("hidden");
