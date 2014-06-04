@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 	<a href="{% url 'imagenes:index' request.user %}">Frases favoritas</a>
 {% else %}
-	<a href="{% url 'pefiles:login' %}">Login</a>
+	<a href="{% url 'perfiles:login' %}">Login</a>
 {% endif %}
 </li>
 <li class = "visible-xs">
