@@ -19,7 +19,17 @@ from notificaciones.models import Notificacion
 # Create your views here.
 @page_template('index_page_citas.html')
 def index(request, queryset, template='citas/index.html', extra_context=None):
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        #si user esta login:
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
+        cfavoritas_objects = Cfavoritas.objects.filter(eliminado=False, perfil=perfil_usuario)
+        citas_favoritas = []
+        for x in cfavoritas_objects:
+            citas_favoritas.append(x.cita)
+    else:
+        #no login
+        citas_favoritas = []
+
     autor = ""
     recientes = ""
     populares = ""
@@ -35,16 +45,14 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
         recientes = "active"
 
     citas = []
-    cfavoritas_objects = Cfavoritas.objects.filter(
-        eliminado=False, perfil=perfil_usuario)
-    citas_favoritas = []
-    for x in cfavoritas_objects:
-        citas_favoritas.append(x.cita)
-
     citas_obj = Cita.objects.filter(eliminada=False).order_by(q)
+
     for c in citas_obj:
-        if c in citas_favoritas:
-            citas.append([c, "dorado"])
+        if request.user.is_authenticated():
+            if c in citas_favoritas:
+                citas.append([c, "dorado"])
+            else:
+                citas.append([c, ""])
         else:
             citas.append([c, ""])
 
@@ -62,18 +70,21 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
 
 def cita(request, cita_id):
     template = 'citas/cita.html'
-
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
     cita = Cita.objects.get(id=cita_id)
 
-    cfavoritas_objects = Cfavoritas.objects.filter(
-        eliminado=False, perfil=perfil_usuario)
-    citas_favoritas = []
-    for x in cfavoritas_objects:
-        citas_favoritas.append(x.cita)
+    if request.user.is_authenticated():
+        #si usuario login
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
+        cfavoritas_objects = Cfavoritas.objects.filter(
+            eliminado=False, perfil=perfil_usuario)
+        citas_favoritas = []
+        for x in cfavoritas_objects:
+            citas_favoritas.append(x.cita)
 
-    if cita in citas_favoritas:
-        es_favorita = "dorado"
+        if cita in citas_favoritas:
+            es_favorita = "dorado"
+        else:
+            es_favorita = ""
     else:
         es_favorita = ""
 
@@ -163,29 +174,32 @@ def marcar_favorito(request):
 def favoritas(request, username):
     template = 'citas/favoritas.html'
     user_object = User.objects.get(username=username)
-    perfil_usuario = Perfiles.objects.get(usuario=user_object)
-    propio_usuario = False
-    if request.user == user_object:
-        propio_usuario = True
 
-    Cfavoritas_objects = Cfavoritas.objects.filter(
-        perfil=perfil_usuario, eliminado=False).order_by('-fecha')
+    perfil_usuario = Perfiles.objects.get(usuario=user_object)
+    Cfavoritas_objects = Cfavoritas.objects.filter(perfil=perfil_usuario, eliminado=False).order_by('-fecha')
+    propio_usuario = False
     citas_favoritas = []
-    if propio_usuario is True:
-        for c in Cfavoritas_objects:
-            citas_favoritas.append([c.cita, "dorado", c.fecha])
-    elif propio_usuario is False:
-        perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
-        cfavoritas_usuario_visitante = Cfavoritas.objects.filter(
-            perfil=perfil_usuario_visitante, eliminado=False)
-        citas_favoritas_visitante = []
-        for x in cfavoritas_usuario_visitante:
-            citas_favoritas_visitante.append(x.cita)
-        for c in Cfavoritas_objects:
-            if c.cita in citas_favoritas_visitante:
+    
+    if request.user.is_authenticated():
+        if user_object == request.user:
+            propio_usuario = True
+        if propio_usuario:
+            for c in Cfavoritas_objects:
                 citas_favoritas.append([c.cita, "dorado", c.fecha])
-            else:
-                citas_favoritas.append([c.cita, "", c.fecha])
+        else:
+            perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+            cfavoritas_usuario_visitante = Cfavoritas.objects.filter(
+                perfil=perfil_usuario_visitante, eliminado=False)
+            citas_favoritas_visitante = []
+            for x in cfavoritas_usuario_visitante:
+                citas_favoritas_visitante.append(x.cita)
+            for c in Cfavoritas_objects:
+                if c.cita in citas_favoritas_visitante:
+                    citas_favoritas.append([c.cita, "dorado", c.fecha])
+                else:
+                    citas_favoritas.append([c.cita, "", c.fecha])
+    else:
+        citas_favoritas.append([c.cita, "", c.fecha])
 
     imagenes_display = Imagen.objects.all().order_by(
         '-favoritos_recibidos')[:5]

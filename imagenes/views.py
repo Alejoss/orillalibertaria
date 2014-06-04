@@ -16,7 +16,14 @@ from notificaciones.models import Notificacion
 
 @page_template('index_page_imagenes.html')
 def index(request, queryset, template='imagenes/index.html', extra_context=None):
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        #si esta login
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
+        imagenes_favoritas_obj = Ifavoritas.objects.filter(
+            perfil=perfil_usuario, eliminado=False)
+        imagenes_favoritas_ids = []
+        for i in imagenes_favoritas_obj:
+            imagenes_favoritas_ids.append(int(i.imagen.id))
 
     populares = ""
     recientes = ""
@@ -30,15 +37,12 @@ def index(request, queryset, template='imagenes/index.html', extra_context=None)
 
     imagenes = []
     imagenes_obj = Imagen.objects.filter(eliminada=False).order_by(q)
-    imagenes_favoritas_obj = Ifavoritas.objects.filter(
-        perfil=perfil_usuario, eliminado=False)
-    imagenes_favoritas_ids = []
-    for i in imagenes_favoritas_obj:
-        imagenes_favoritas_ids.append(int(i.imagen.id))
     for imagen in imagenes_obj:
         es_favorita = "no_es_favorita"
-        if imagen.id in imagenes_favoritas_ids:
-            es_favorita = "es_favorita"
+        if request.user.is_authenticated():
+        #si esta login
+            if imagen.id in imagenes_favoritas_ids:
+                es_favorita = "es_favorita"
         imagenes.append([imagen, es_favorita])
 
     context = {'imagenes': imagenes, 'populares':
@@ -50,18 +54,22 @@ def index(request, queryset, template='imagenes/index.html', extra_context=None)
 
 def imagen(request, imagen_id):
     template = 'imagenes/imagen.html'
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
     imagen = Imagen.objects.get(id=imagen_id)
 
-    # Saber si la imagen es fav del usuario visitante
-    imagenes_favoritas_obj = Ifavoritas.objects.filter(
-        perfil=perfil_usuario, eliminado=False)
-    imagenes_favoritas = []
-    for i in imagenes_favoritas_obj:
-        imagenes_favoritas.append(i.imagen)
-    es_favorita = "no_es_favorita"
-    if imagen in imagenes_favoritas:
-        es_favorita = "es_favorita"
+    if request.user.is_authenticated():
+        #si esta login
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
+        # Saber si la imagen es fav del usuario visitante
+        imagenes_favoritas_obj = Ifavoritas.objects.filter(
+            perfil=perfil_usuario, eliminado=False)
+        imagenes_favoritas = []
+        for i in imagenes_favoritas_obj:
+            imagenes_favoritas.append(i.imagen)
+        es_favorita = "no_es_favorita"
+        if imagen in imagenes_favoritas:
+            es_favorita = "es_favorita"
+    else:
+        es_favorita = "no_es_favorita"
 
     context = {'imagen': imagen, 'es_favorita': es_favorita}
     return render(request, template, context)
@@ -179,38 +187,34 @@ def favoritas(request, username):
     template = 'imagenes/favoritas.html'
     user_object = User.objects.get(username=username)
     perfil_usuario = Perfiles.objects.get(usuario=user_object)
-    usuario_fav = user_object.username
-
     propio_usuario = False
-    if request.user == user_object:
-        propio_usuario = True
-    Ifavoritas_objects = Ifavoritas.objects.filter(
-        perfil=perfil_usuario, eliminado=False).order_by('-fecha')
-
+    Ifavoritas_objects = Ifavoritas.objects.filter(perfil=perfil_usuario, eliminado=False).order_by('-fecha')
     imagenes_favoritas = []
-    if propio_usuario:
-        for c in Ifavoritas_objects:
-            if c.portada is True:
-                imagenes_favoritas.append([c.imagen, True])
-            else:
-                imagenes_favoritas.append([c.imagen, False])
-    else:
-        perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
-        favoritas_usuario_visitante_obj = Ifavoritas.objects.filter(
-            perfil=perfil_usuario_visitante, eliminado=False)
-        favoritas_usuario_visitante = []
 
-        for x in favoritas_usuario_visitante_obj:
-            favoritas_usuario_visitante.append(x.imagen)
-
-        for i in Ifavoritas_objects:
-            if i.imagen in favoritas_usuario_visitante:
-                imagenes_favoritas.append([i.imagen, "es_favorita"])
-            else:
-                imagenes_favoritas.append([i.imagen, "no_es_favorita"])
+    if request.user.is_authenticated():
+        if request.user == user_object:
+            propio_usuario = True
+        if propio_usuario:
+            for i in Ifavoritas_objects:
+                if i.portada is True:
+                    imagenes_favoritas.append([i.imagen, True])
+                else:
+                    imagenes_favoritas.append([i.imagen, False])
+        else:
+            perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+            favoritas_usuario_visitante_obj = Ifavoritas.objects.filter(
+                perfil=perfil_usuario_visitante, eliminado=False)
+            favoritas_usuario_visitante = []
+            for x in favoritas_usuario_visitante_obj:
+                favoritas_usuario_visitante.append(x.imagen)
+            for i in Ifavoritas_objects:
+                if i.imagen in favoritas_usuario_visitante:
+                    imagenes_favoritas.append([i.imagen, "es_favorita"])
+                else:
+                    imagenes_favoritas.append([i.imagen, "no_es_favorita"])
 
     context = {
-        'imagenes_favoritas': imagenes_favoritas, 'usuario_fav': usuario_fav,
+        'imagenes_favoritas': imagenes_favoritas,
         'propio_usuario': propio_usuario, 'username': username}
     return render(request, template, context)
 

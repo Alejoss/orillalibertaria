@@ -14,8 +14,12 @@
                 <i class="fa fa-bookmark"></i> Recientes </a></li>
             <li class = "{{populares}}"><a href="{% url 'imagenes:index' 'populares' %}">
                 <i class="fa fa-star"></i> Populares</a></li>
+            {% if user.is_authenticated %}
             <li><a href="{% url 'imagenes:favoritas' user.username %}">
                 <i class="fa fa-certificate"></i> Favoritas </a></li>
+            {% else %}
+                <a href="{% url 'perfiles:login' %}">Login - imágenes favoritas</a>
+            {% endif %}
             </ul>
             <ul class="nav nav-tabs nav-stacked">
             <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="fa fa-home"></i> Orilla Libertaria </a></li>
