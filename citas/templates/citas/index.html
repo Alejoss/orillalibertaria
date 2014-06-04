@@ -102,7 +102,8 @@
 			{% if user.is_authenticated %}
 			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'citas:favoritas' request.user %}';"> Tus frases favoritas
 			{% else %}
-				<a href="{% url 'pefiles:login' %}">Login - frases favoritas</a>
+			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'perfiles:login'  %}';">	
+				<span class = "fa fa-lock"></span> Login - Favoritas
 			{% endif %}
 			</button>
 			<button type="button" class="btn btn-default btn_sidebar" 
