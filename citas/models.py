@@ -11,7 +11,7 @@ class Cita(models.Model):
     creador = models.ForeignKey(Perfiles, null=True)
     fecha = models.DateTimeField(auto_now_add=True, null=True)
     denunciada = models.SmallIntegerField(default=0)
-    correcta = models.BooleanField(default=False)
+    correcta = models.BooleanField(default=False)  # Todavia no se usa este campo
     eliminada = models.BooleanField(default=False)
     removidatotalmente = models.BooleanField(default=False)
 

@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from endless_pagination.decorators import page_template
-from olibertaria.utils import obtener_imagenes_display
+from olibertaria.utils import obtener_imagenes_display, obtener_cita
 from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
@@ -48,13 +48,14 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
     citas_obj = Cita.objects.filter(eliminada=False).order_by(q)
 
     for c in citas_obj:
+        cita = obtener_cita(c)
         if request.user.is_authenticated():
             if c in citas_favoritas:
-                citas.append([c, "dorado"])
+                citas.append([cita, "dorado"])
             else:
-                citas.append([c, ""])
+                citas.append([cita, ""])
         else:
-            citas.append([c, ""])
+            citas.append([cita, ""])
 
     imagenes_display = obtener_imagenes_display(7)
 

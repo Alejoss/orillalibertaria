@@ -7,6 +7,16 @@ from citas.models import Cita
 from imagenes.models import Imagen
 
 
+def obtener_cita(cita):
+    #Recibe una cita, devuelve una lista con:
+    #[Cita, tiene_fuente(boolean), fuente]
+    fuente = cita.fuente
+    tiene_fuente = False
+    if fuente is not None and len(fuente) > 0:
+        tiene_fuente = True
+    return [cita, tiene_fuente, cita.fuente]
+
+
 def obtener_num_notificaciones(perfil):
     num_notificaciones = Notificacion.objects.filter(target=perfil, leida=False).count()
     return num_notificaciones

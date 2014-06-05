@@ -10,15 +10,15 @@
 					<div class="panel-body">
 						<blockquote>
 							<p>
-								"{{c.0.texto}}"
-							</p> <small>{{c.0.autor}}, <cite>{{c.0.fuente}}</cite></small>
+								"{{c.0.0.texto}}"
+							</p> <small>{{c.0.0.autor}} {% if c.0.1 %}, {{c.0.2}} {% endif %} </small>
 						</blockquote>
 					</div>
 					<div class="panel-footer">
 						<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="reportar_cita fa fa-flag"></i></a>
-						<p class = "hidden"> {{c.0.id}} </p>
+						<p class = "hidden"> {{c.0.0.id}} </p>
 						<i class="estrella marcar_favorito fa fa-star-o fa-lg {{c.1}}"></i>
-						<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
+						<p class = "cita_favoritos" > {{c.0.0.favoritos_recibidos}}</p>
 						<br/>
 					</div>
 				</div>

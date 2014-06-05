@@ -64,12 +64,8 @@ INSTALLED_APPS = (
     'imagenes',
     'videos',
     'notificaciones',
-    #'django_extensions',
-    #'south',
     'endless_pagination',
     'crispy_forms',
-    #'debug_toolbar',
-    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -18,7 +18,8 @@ from models import Temas, Posts, Respuestas, Votos, Tema_descripcion
 from notificaciones.models import Notificacion
 from perfiles.models import Perfiles
 from citas.models import Cita
-from olibertaria.utils import obtener_imagenes_display, obtener_voted_status, obtener_imagen_tema, obtener_notificaciones
+from videos.models import Videos
+from olibertaria.utils import obtener_imagenes_display, obtener_voted_status, obtener_imagen_tema, obtener_cita
 from utils import obtener_posts_populares
 
 # print "variable %s" %(variable) <--- para debug
@@ -27,11 +28,7 @@ from utils import obtener_posts_populares
 @ensure_csrf_cookie
 def prueba(request):
     template = "temas/prueba.html"
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
-    notificaciones = obtener_notificaciones(perfil_usuario)
-    num_notificaciones = len(notificaciones)
-
-    context = {'notificaciones': notificaciones, 'num_notificaciones': num_notificaciones}
+    context = {}
 
     return render(request, template, context)
 
@@ -106,8 +103,9 @@ def buscar(request):
 
             imagen_tema = obtener_imagen_tema(tema)
             num_posts = Posts.objects.filter(tema=tema).count()
+            num_videos = Videos.objects.filter(tema=tema).count()
             temas_encontrados.append(
-                [tema, imagen_tema, descripcion, num_posts])
+                [tema, imagen_tema, descripcion, num_posts, num_videos])
 
         context = {'query_string': query_string,
                    'temas_encontrados': temas_encontrados}
@@ -144,9 +142,11 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
             descripcion = ""
         imagen = obtener_imagen_tema(tema)
         num_posts = Posts.objects.filter(tema=tema).count()
-        temas.append([tema, descripcion, imagen, num_posts])
+        num_videos = Videos.objects.filter(tema=tema).count()
+        temas.append([tema, descripcion, imagen, num_posts, num_videos])
 
-    cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
+    cita_obj = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
+    cita = obtener_cita(cita_obj)
 
     imagenes_posts_populares = []
     for post in posts_populares:
@@ -221,8 +221,11 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
         # lista de posts con respuestas y con voted status incluido
         num_respuestas = Respuestas.objects.filter(
             post_padre=post, post_respuesta__eliminado=False).count()
-        perfil = Perfiles.objects.get(usuario=request.user)
-        voted_status = obtener_voted_status(post, perfil)
+        if request.user.is_authenticated():
+            perfil = Perfiles.objects.get(usuario=request.user)
+            voted_status = obtener_voted_status(post, perfil)
+        else:
+            voted_status = "no-vote"
 
         posts.append([post, num_respuestas, voted_status])
 
@@ -285,7 +288,9 @@ def sumar_post(request, slug):
 
 def post(request, slug, post_id, queryset):
     template = 'temas/post.html'
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
     # tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -302,7 +307,10 @@ def post(request, slug, post_id, queryset):
 
     # post
     post_obj = Posts.objects.get(id=post_id)
-    post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
+    if request.user.is_authenticated():
+        post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
+    else:
+        post_voted_status = "no-vote"
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
     post = [post_obj, post_voted_status, post_numrespuestas]
@@ -314,12 +322,13 @@ def post(request, slug, post_id, queryset):
         # respuesta.
         respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
         post_padre_obj = respuesta_obj.post_padre
-        post_padre_estado = obtener_voted_status(
-            post_padre_obj, perfil_usuario)
+        if request.user.is_authenticated:
+            post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
+        else:
+            post_padre_estado = "no-vote"
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
-        post_padre = [post_padre_obj,
-                      post_padre_estado, post_padre_numrespuestas]
+        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas]
 
     # respuestas
     recientes = ""
@@ -642,7 +651,6 @@ def editar_tema(request, slug):
     if primera_edicion == "":
         primera_edicion = "Este tema no tiene descripción, todavía."
         tiene_descripcion = False
-    print primera_edicion
 
     form_editar_tema = FormEditarTema(initial={'descripcion': ultima_edicion})
 

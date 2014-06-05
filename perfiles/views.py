@@ -13,7 +13,7 @@ from endless_pagination.decorators import page_template
 
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
-from olibertaria.utils import obtener_voted_status
+from olibertaria.utils import obtener_voted_status, obtener_cita
 from temas.models import Temas
 from temas.models import Posts, Respuestas
 from citas.models import Cfavoritas
@@ -186,7 +186,8 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     # recibe del urlpattern un username y un queryset.
     usuario_user = User.objects.get(username=username)
     usuario_perfil = Perfiles.objects.get(usuario=usuario_user)
-    perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
     # Datos del usuario
     nombre_completo = usuario_user.get_full_name()
@@ -232,7 +233,10 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         else:
             post.extend([False, ""])
 
-        voted_status = obtener_voted_status(p, perfil_usuario_visitante)
+        if request.user.is_authenticated():
+            voted_status = obtener_voted_status(p, perfil_usuario_visitante)
+        else:
+            voted_status = "no-vote"
         post_en_video = False
         if p.video is not None:
             post_en_video = True
@@ -243,13 +247,15 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         posts.append(post)
 
     # cita
-    if Cfavoritas.objects.filter(perfil=usuario_perfil, eliminado=False).count() == 0:
-        cita_favorita = False
+    if num_frases_favoritas == 0:
+        cita_favorita = ""
     else:
         citas_favoritas_obj = Cfavoritas.objects.filter(
             perfil=usuario_perfil, eliminado=False)
-        cita_favorita = (random.choice(citas_favoritas_obj)).cita
+        cita_favorita_obj = (random.choice(citas_favoritas_obj)).cita
+        cita_favorita = obtener_cita(cita_favorita_obj)
 
+    print cita_favorita
     # videos
     num_videos_favoritos = VFavoritos.objects.filter(
         perfil=usuario_perfil, eliminado=False).count()
@@ -267,11 +273,9 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
             imagenes_display = 3
         else:
             imagenes_display = numero_imgfavoritas
-        print numero_imgfavoritas
         ifavoritas_objects = Ifavoritas.objects.filter(
             perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
         for i in ifavoritas_objects:
-            print i.imagen.url
             imagenes_favoritas.append(i.imagen.url)
 
         if Ifavoritas.objects.filter(perfil=usuario_perfil, portada=True).exists():
@@ -281,8 +285,6 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
             portada_obj = Ifavoritas.objects.filter(
                 perfil=usuario_perfil, eliminado=False).latest('id')
         portada = portada_obj.imagen.url
-
-    print "portada %s" % (portada)
 
     # links
     links = obtener_links_perfil(usuario_perfil)

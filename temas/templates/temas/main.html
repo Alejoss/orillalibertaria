@@ -133,8 +133,8 @@
 	<div class = "sidebar_cita">
 		<blockquote>
 			<p>
-				{{cita.texto}}
-			</p> <small> {{cita.autor}} <cite> {{cita.fuente}} </cite></small>
+				"{{cita.0.texto}}"
+			</p> <small> {{cita.0.autor}} {% if cita.1 %}, {{cita.2}} {% endif %} </small>
 		</blockquote> 
 
 		<div>

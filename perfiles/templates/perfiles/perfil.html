@@ -172,9 +172,11 @@
 			<div class = "frase_perfil">
 			{% if num_frases_favoritas > 0 %}
 				<blockquote>
-					<p>
-						{{cita_favorita.texto}}
-					</p> <small>{{cita_favorita.autor}}, <cite>{{cita_favorita.fuente}}</cite></small>
+					<p class = "cita_small">
+						"{{cita_favorita.0.texto}}"
+					</p> 
+					<small>{{cita_favorita.0.autor}} {% if cita_favorita.1 %}, {{cita_favorita.0.fuente}} 
+					{% endif %}</small>
 				</blockquote> 
 			{% endif %}
 			</div>

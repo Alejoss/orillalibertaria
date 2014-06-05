@@ -29,7 +29,7 @@
             <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{user.username}} </a></li>
             <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-wrench"></i> Ayúdanos a revisar la Galería </a></li> 
             {% else %}
-            <li><a href="url 'perfiles:login'"><i class="fa fa-user"></i> Login </a></li>
+            <li><a href="{% url 'perfiles:login' %}"><i class="fa fa-user"></i> Login </a></li>
             {% endif %}
             </ul>
         </div>

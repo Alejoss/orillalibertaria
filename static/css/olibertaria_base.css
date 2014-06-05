@@ -72,6 +72,9 @@
 
 
 /*css para el perfil*/
+.cita_small{
+	font-size: 100%;
+}
 .div_perfil_datos{
 	margin-left: 40px;
 }
