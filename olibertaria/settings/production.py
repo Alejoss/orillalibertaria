@@ -1,3 +1,3 @@
 from .base import *
 
-INSTALLED_APPS += ("guinicorn",)
+INSTALLED_APPS += ("gunicorn",)
