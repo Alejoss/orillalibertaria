@@ -83,7 +83,7 @@ def registrar(request):
             perfil_nuevo, created = Perfiles.objects.get_or_create(
                 usuario=user)
             perfil_nuevo.save()
-            return HttpResponseRedirect(reverse('perfiles:registro_ok'))
+            return HttpResponseRedirect(reverse('temas:main', kwargs={'queryset': u'recientes'}))
         else:
             error = "error en form.is_valid"  # !!!
     # Crea un nuevo form vacio. (unbound)

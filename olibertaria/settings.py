@@ -12,17 +12,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 import dj_database_url  # Heroku
 
-from unipath import Path
-# from os.path import join
-
+from os.path import join
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
-
-PROJECT_DIR = Path(__file__).ancestor(3)
-STATIC_ROOT = PROJECT_DIR.child('staticfiles')
-STATICFILES_DIRS = (
-    PROJECT_DIR.child("static"),)
-
-TEMPLATE_DIRS = (PROJECT_DIR.child("templates"),)
 
 #notificaciones
 TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',)
@@ -33,15 +24,16 @@ ENDLESS_PAGINATION_PER_PAGE = 10
 ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
 ENDLESS_PAGINATION_NEXT_LABEL = "Siguiente"
 
+
 #crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-#TEMPLATE_DIRS = (
-#    join(BASE_DIR,  'templates'),
-#)
+TEMPLATE_DIRS = (
+    join(BASE_DIR,  'templates'),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -72,8 +64,12 @@ INSTALLED_APPS = (
     'imagenes',
     'videos',
     'notificaciones',
+    #'django_extensions',
+    #'south',
     'endless_pagination',
     'crispy_forms',
+    #'debug_toolbar',
+    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -121,8 +117,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-#STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),)
 
 STATIC_URL = '/static/'
 
@@ -136,4 +132,4 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
-#STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = 'staticfiles'

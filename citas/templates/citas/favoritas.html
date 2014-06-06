@@ -14,17 +14,18 @@
 
 {% block content %}
 <div class="row clearfix">
-	<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
-		<ul class="breadcrumb">
+	<div class="col-md-6 column">
+		<ul class="breadcrumb_top breadcrumb">
 			<li>
 				{% if propio_usuario %}
-                <p> {{user.username}}, tus frases favoritas. </p>
+                <h4> Frases favoritas. </h4>
                 {% else%}
-                <p> Imágenes favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></p>
+                <h4> Frases favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></h4>
                 {% endif %}
 			</li>
 		</ul>
-		<hr>
+	</div>
+	<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
 		<div class="row clearfix">
 			<div class = "col-md-12">
 			{% for c in citas_favoritas %}
