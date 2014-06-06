@@ -137,10 +137,12 @@ def marcar_favorito(request):
             imagen.save()
 
         #Notificaciones de imagen
-            notificacion_imagen_fav = Notificacion(actor=perfil_usuario, target=imagen.perfil,
-                                                   objeto_id=imagen.id, tipo_objeto="imagen",
-                                                   tipo_notificacion="fav_voteup")
-            notificacion_imagen_fav.save()
+            if perfil_usuario != imagen.perfil:
+                notificacion_imagen_fav = Notificacion(actor=perfil_usuario, target=imagen.perfil,
+                                                       objeto_id=imagen.id, tipo_objeto="imagen",
+                                                       tipo_notificacion="fav_voteup")
+                notificacion_imagen_fav.save()
+
             if imagen.favoritos_recibidos == 100 or imagen.favoritos_recibidos == 1000:
                 notificacion_imagen_num = Notificacion(target=imagen.perfil,
                                                        objeto_id=imagen.id, tipo_objeto="imagen",

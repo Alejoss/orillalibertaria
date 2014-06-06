@@ -72,6 +72,14 @@
 
 
 /*css para el perfil*/
+.puntos_posts{
+	display: block;
+}
+.imagen_perfil{
+	max-height: 160px;
+	max-width: 160px;
+	display: block;
+}
 .cita_small{
 	font-size: 100%;
 }

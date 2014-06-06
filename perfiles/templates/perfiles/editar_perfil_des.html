@@ -74,7 +74,9 @@
 		<h4> {{user.first_name}} {{user.last_name}} </h4>
 		<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
 		<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
-		<h5 class = "text-muted"> Revisa tus <a href="{% url 'citas:favoritas' 'recientes' %}">frases favoritas.</a></h5>
+		<h5 class = "text-muted"> Revisa tus 
+		<a href="{% url 'citas:favoritas' 'recientes' %}">frases favoritas.</a>
+		</h5>
 	</div>
 </div>
 {% endblock description %}

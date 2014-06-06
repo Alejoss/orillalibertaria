@@ -317,10 +317,12 @@ def marcar_favorito(request):
             registro_favorito.save()
 
             #Notificaciones video
-            notificacion_video_fav = Notificacion(actor=perfil_usuario, target=video.perfil,
-                                                  objeto_id=video.id, tipo_objeto="video",
-                                                  tipo_notificacion="fav_voteup")
-            notificacion_video_fav.save()
+            if perfil_usuario != video.perfil:
+                notificacion_video_fav = Notificacion(actor=perfil_usuario, target=video.perfil,
+                                                      objeto_id=video.id, tipo_objeto="video",
+                                                      tipo_notificacion="fav_voteup")
+                notificacion_video_fav.save()
+
             if video.favoritos_recibidos == 100 or video.favoritos_recibidos == 1000:
                 notificacion_video_num = Notificacion(target=video.perfil,
                                                       objeto_id=video.id, tipo_objeto="video",

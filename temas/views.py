@@ -418,10 +418,11 @@ def respuesta(request, slug, post_id):
             respuesta_db.save()
 
             #Notificacion respuesta
-            notificacion_respuesta = Notificacion(actor=perfil_usuario, target=post_padre.creador,
-                                                  objeto_id=post_padre.id, tipo_objeto="post",
-                                                  tipo_notificacion="comment")
-            notificacion_respuesta.save()
+            if perfil_usuario != post_padre.creador:
+                notificacion_respuesta = Notificacion(actor=perfil_usuario, target=post_padre.creador,
+                                                      objeto_id=post_padre.id, tipo_objeto="post",
+                                                      tipo_notificacion="comment")
+                notificacion_respuesta.save()
 
             if post_padre.video is not None:
                 return HttpResponseRedirect(reverse('videos:post_video',

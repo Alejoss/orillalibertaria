@@ -37,30 +37,34 @@
 {% endblock tab_content %}
 
 {% block sidebar %}
-<div class="hidden-xs col-md-4 col-sm-4 column">
-	<div class = "div_perfil_datos">
-	<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-thumbnail" />
-		<ul class="nav nav-pills">
-		<br>
-			<li>
-				Puntos <span class="badge"> {{puntos_recibidos}} </span> 
-			</li>
-		<br>
-			<li>
-				Posts <span class="badge">{{num_posts}}</span> 
-			</li>
-		<br>
-		{% if creo_temas %}
-			<li>
-				Temas <span class="badge">{{num_temas}}</span>
-				<ul style = "margin-left: 10px" class = "list-unstyled">
-					{% for tema in temas_usuario %}
-					<li> <a href="{% url 'temas:index_tema' tema.slug 'recientes' %}">{{tema.nombre}}</a></li>
-					{% endfor %}
-				</ul>
-			</li>
-		{% endif %}
-		</ul>
+<div class="hidden-xs col-md-4 col-sm-4 column ">
+	<div class = "div_perfil_datos ">
+	<div class = "row clearfix imagen_perfil ">
+		<img src="http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg" class= "img-thumbnail"/>
+	</div>
+		<div class = "puntos_posts  row clearfix">
+			<ul class="nav nav-pills ">
+			<br>
+				<li>
+					Text1 <span class="badge"> {{puntos_recibidos}} </span> 
+				</li>
+			<br>
+				<li>
+					Text2 <span class="badge">{{num_posts}}</span> 
+				</li>
+			<br>
+			{% if creo_temas %}
+				<li>
+					Temas <span class="badge">{{num_temas}}</span>
+					<ul style = "margin-left: 10px" class = "list-unstyled">
+						{% for tema in temas_usuario %}
+						<li> <a href="{% url 'temas:index_tema' tema.slug 'recientes' %}">{{tema.nombre}}</a></li>
+						{% endfor %}
+					</ul>
+				</li>
+			{% endif %}
+			</ul>
+		</div>
 	</div>
 </div> <!--column 4-->
 {% endblock sidebar %}

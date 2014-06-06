@@ -154,13 +154,12 @@ def marcar_favorito(request):
             cita.save()
 
             #Notificaciones de cita
-            notificacion_cita_fav = Notificacion(actor=perfil_usuario, target=cita.creador,
-                                                 objeto_id=cita.id, tipo_objeto="cita",
-                                                 tipo_notificacion="fav_voteup")
-            notificacion_cita_fav.save()
-            print "notificacion creada"
-            print notificacion_cita_fav.target
-            print notificacion_cita_fav.objeto_id
+            if perfil_usuario != cita.creador:
+                notificacion_cita_fav = Notificacion(actor=perfil_usuario, target=cita.creador,
+                                                     objeto_id=cita.id, tipo_objeto="cita",
+                                                     tipo_notificacion="fav_voteup")
+                notificacion_cita_fav.save()
+
             if cita.favoritos_recibidos == 100 or cita.favoritos_recibidos == 1000:
                 notificacion_cita_num = Notificacion(target=cita.creador,
                                                      objeto_id=cita.id, tipo_objeto="cita",
