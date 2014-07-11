@@ -1,4 +1,4 @@
-$('.estrella').on('click', marcar_favorito);
+$('.marcar_favorito').on('click', marcar_favorito);
 $('.reportar').on('click', reportar);
 $('.close').on('click', close_modal_reportar);
 $('.div_marcar_portada').on('click', '.marcar_portada' , marcar_portada);

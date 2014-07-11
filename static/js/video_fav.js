@@ -12,16 +12,29 @@ $('.estrella').on('click', marcar_favorito);
 $('.js-lazyYT').lazyYT();
 $('#enviar_respuesta').on('click', sumar_respuesta);
 $('#mostrar_post_padre').on('click', mostrar_post_padre);
-
+$('#reportar_video').on('click', reportar);
 $('.es_favorito').hover(function(){
     $(this).addClass("fa-star-o");
     $(this).removeClass("fa-star");
     }, function(){
     if ($(this).hasClass("es_favorito")){
         $(this).addClass("fa-star");
-        $(this).removeClass("fa-star-o");    
+        $(this).removeClass("fa-star-o");
     }
 });
+
+function reportar(){
+    $(this).addClass("red")
+    $('#modal_reportar').removeClass("hidden");
+    var p_hidden = $(this).parent().next(".hidden");
+    var video_id = p_hidden.text();
+    console.log(video_id);
+    $.ajax({
+        data: {'video_id':video_id},
+        url: '/videos/denunciar_video/',
+        type: 'get'
+    });
+}
 
 function marcar_favorito(){
     var p_hidden = $(this).prev('.hidden');

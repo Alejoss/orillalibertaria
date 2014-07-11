@@ -1,5 +1,4 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
@@ -13,18 +12,61 @@
 {% block form %}
 <br><br>
 
-<form action = "{% url 'imagenes:nueva' %}" method = "post">
-	{% csrf_token %}
-	{{form_nueva_imagen|crispy}}
-	<input class = "btn pull-right" type = "submit" value ="enviar"/>
-</form>
+<div class = "col-md-10 col-md-offset-1">
+<div class = "form_margins">
+	<div class = "row">
+	<form id = "formulario" class = "form-horizontal" action = "{% url 'imagenes:nueva' %}" method = "post">
+		{% csrf_token %}
+		{{form_nueva_imagen.non_field_errors}}
+		<fieldset>
 
+		<div class = "form-group">
+			{{form_nueva_imagen.url.errors}}
+			<label class = "control-label" for="url"> URL* </label>
+			{{form_nueva_imagen.url}}
+			<span class="help-block">Pega el URL, revisa que termine en .jpg o en .png</span>
+		</div>
+
+		<div class = "form-group">
+			{{form_nueva_imagen.favorita.errors}}
+			<label class = "control-label" for="favorita"> Favorita* </label>
+			{{form_nueva_imagen.favorita}}
+			<span class="help-block">Sumar esta imagen a mis favoritas</span>
+		</div>
+
+		</fieldset>
+		<input class = "btn pull-right" type = "submit" value ="enviar"/>
+	</form>
+	</div>
+</div>
+</div>
 {% endblock form %}
 
 {% block description %}
-<dt>Imagen:</dt>
+<dt>Para compartir una imagen:</dt>
 Pega el url de una imagen. <br>
 Revisa que el url que elegiste termine en ".jpg", o ".png" ".gif".<br>
 Se recomienda imágenes de tamaño mediano: menores a 800x600px. <br>
-Por ahora no hay como subir imágenes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. <br>
+Por ahora no hay como subir imágenes directamentes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. <br>
 {% endblock description %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			url: {
+				required: true,
+				minlength: 10,
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			url: "*Se requiere una URL válida",
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}

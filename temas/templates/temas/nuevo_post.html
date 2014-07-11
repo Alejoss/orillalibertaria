@@ -1,5 +1,4 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Nuevo post en <a href = "{% url 'temas:index_tema' tema.slug 'recientes' %}"> {{tema.nombre}}</a> </h2>
@@ -10,9 +9,20 @@
 {% block form %}
 	<div class = "row">
 		<div class = "col-md-8 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-			<form action = "{% url 'temas:sumar_post' tema.slug %}" method = "post"> {% csrf_token %}
-				{{form_nuevo_post|crispy}}
+			<form id = "formulario" class = "form-horizontal" action = "{% url 'temas:sumar_post' tema.slug %}" method = "post"> 
+			{% csrf_token %}
+			{{form_nuevo_post.non_field_errors}}
+			<fieldset>
+			<div class = "form-group">
+				{{form_nuevo_post.texto.errors}}
+				<label class = "control-label" for = "texto"></label>
+				<div class = "row textarea_form">
+				{{form_nuevo_post.texto}}
+				<span class="help-block">Las urls que compartas se verán como <u class = "apariencia_link">links</u>.</span>
 				<br/>
+				</div>
+			</div>
+			</fieldset>
 				<input class = "btn pull-right" type = "submit" value = "Enviar"/>
 			</form>
 			<br>
@@ -23,3 +33,25 @@
  		<span class="fa fa-check-circle"></span> Gracias por aportar a la comunidad
  	</h5>
 {% endblock form %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 15,
+				maxlength: 10000
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*El post debe tener min 10, max 10.000 caracteres."
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}

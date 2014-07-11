@@ -15,9 +15,13 @@
 						</blockquote>
 					</div>
 					<div class="panel-footer">
+						{% if user.is_authenticated %}
 						<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="reportar_cita fa fa-flag"></i></a>
 						<p class = "hidden"> {{c.0.0.id}} </p>
 						<i class="estrella marcar_favorito fa fa-star-o fa-lg {{c.1}}"></i>
+						{% else %}
+						<i class = "fa fa-star"></i>
+						{% endif %}
 						<p class = "cita_favoritos" > {{c.0.0.favoritos_recibidos}}</p>
 						<br/>
 					</div>

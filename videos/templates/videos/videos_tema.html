@@ -1,6 +1,11 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/videos.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">
 	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
@@ -74,14 +79,19 @@
 	<br>
 	<div class="row clearfix">
 		<div class="col-md-12 column">
+		{% if user.is_authenticated %}
 		<button type="button" class="btn btn-warning btn_sidebar" 
 		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
 		Nuevo Video en {{tema.0.nombre}}</button>
+		{% else %}
+		<button type="button" class="btn btn-warning btn_sidebar" 
+		onclick = "location.href='{% url 'perfiles:login' %}';">
+		<span class = "fa fa-lock"></span> Nuevo Video en {{tema.0.nombre}}</button>
+		{% endif %}
 		<button type="button" class="btn btn_sidebar btn-default " 
 		onclick = "location.href='{% url 'temas:index_tema' tema.0.slug 'recientes' %}';">
 		<i class= "fa fa-pencil-square-o fa-lg"> </i>
 		Posts en {{tema.0.nombre}}</button>
-		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
 		<button type="button" class="btn btn-default btn_sidebar" 
 		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
 		</button>

@@ -15,6 +15,10 @@ import dj_database_url  # Heroku
 from os.path import join
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
+# login required redirect
+LOGIN_URL = 'perfiles:login'
+# LOGIN_REDIRECT_URL = 'temas/main/recientes' no sirve porque no se usa el login default de django.
+
 #notificaciones
 TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',)
 
@@ -23,10 +27,6 @@ TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
 ENDLESS_PAGINATION_PER_PAGE = 10
 ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
 ENDLESS_PAGINATION_NEXT_LABEL = "Siguiente"
-
-
-#crispy forms
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -67,7 +67,6 @@ INSTALLED_APPS = (
     #'django_extensions',
     #'south',
     'endless_pagination',
-    'crispy_forms',
     #'debug_toolbar',
     'gunicorn',
 )

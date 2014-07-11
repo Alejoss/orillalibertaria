@@ -1,34 +1,32 @@
 # -*- coding: utf-8 -*-
 from models import Cita
 from django import forms
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, TextInput
 
 
 class FormNuevaCita(forms.ModelForm):
-    #fuente = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(FormNuevaCita, self).__init__(*args, **kwargs)
         self.fields['fuente'].required = False
+        self.fields['autor'].required = True
+        self.fields['texto'].required = True
 
     class Meta:
         model = Cita
         fields = ('texto', 'autor', 'fuente')
         widgets = {
-            'texto': Textarea(attrs={'rows': 3, 'data-maxlength': 500})
-        }
-        labels = {
-            'texto': 'Frase'
-        }
-        help_texts = {
-            'fuente': 'Libro, artículo, video, audio',
+            'texto': Textarea(attrs={'rows': 3, 'data-maxlength': 1000,
+                                     'class': 'form-control',
+                                     'id': 'wchar'}),
+            'autor': TextInput(attrs={'class': 'form-control'}),
+            'fuente': TextInput(attrs={'class': 'form-control'})
         }
 
 
 class FormEditarCita(forms.Form):
-    texto = forms.CharField(max_length=500, widget=forms.Textarea,
-                            help_text='No pongas comillas, se añaden automáticamente.')
-    autor = forms.CharField(max_length=150, required=False)
-    fuente = forms.CharField(max_length=150, required=False)
+    texto = forms.CharField(max_length=500, widget=Textarea(attrs={'class': 'form-control', 'id': 'wchar'}))
+    autor = forms.CharField(max_length=150, required=False, widget=TextInput(attrs={'class': 'form-control'}))
+    fuente = forms.CharField(max_length=150, required=False, widget=TextInput(attrs={'class': 'form-control'}))
     razon = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': "¿Qué es lo que estaba mal?"}))
+        widget=TextInput(attrs={'class': "form-control", 'placeholder':'¿Qué es lo que estaba mal?'}))

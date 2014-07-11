@@ -1,6 +1,13 @@
 {% extends "base_index.html" %}
 <!--index CITAS -->
 
+{% block extra_css %}
+{% load staticfiles %}
+<link href="{% static 'css/citas.css' %}" rel="stylesheet">
+<link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
+
+{% endblock extra_css %}
+
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">
 {% if user.is_authenticated %}
@@ -113,17 +120,17 @@
 			<button type="button" class="btn btn-link btn_sidebar" 
 			onclick="location.href='{% url 'citas:colaborar_organizar' %}';"><i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
 			</button>
-			<hr>
+			<hr class = "sidebar_cita">
 		</div>
-	<div class = "hidden-sm div_carrusel">
-		<div class = " visible-lg visible-md cuadro_carrusel">
-		<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
+	<div class = "hidden-sm">
+		<div class = " visible-lg visible-md div_carrusel">
+		<div id="owl-demo" class="owl-carousel owl-theme cuadro_carrusel tema_slide_imagenes">
 			{% for i in imagenes_display %}
 			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
 			{% endfor %}
 		</div>
 		</div>
-		<hr>
+		<hr class = "sidebar_cita">
 		<button type="button" class="btn btn-xs btn-info btn_galeria"
 		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 			Ver galería de imágenes</button>

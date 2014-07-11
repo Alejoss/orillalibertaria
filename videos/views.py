@@ -4,14 +4,16 @@
 import urlparse
 from datetime import datetime
 
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from endless_pagination.decorators import page_template
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from perfiles.models import Perfiles
-from forms import FormNuevoVideo
+from forms import FormNuevoVideo, FormEditarVideo
 from temas.forms import FormNuevoPost
 from models import Videos, VFavoritos, VDenunciados
 from temas.models import Temas, Tema_descripcion, Posts, Respuestas
@@ -20,6 +22,7 @@ from notificaciones.models import Notificacion
 from olibertaria.utils import obtener_imagen_tema, obtener_voted_status
 
 
+@login_required
 def nuevo_video(request, slug):
     template = 'videos/nuevo.html'
     tema = Temas.objects.get(slug=slug)
@@ -46,17 +49,53 @@ def nuevo_video(request, slug):
             return redirect('videos:videos_tema', slug=tema.slug, queryset='recientes')
         else:
             return redirect('videos:nuevo_video', slug=tema.slug)
-            #!!! enviar errores
     else:
         form_nuevo_video = FormNuevoVideo()
         context = {'form_nuevo_video': form_nuevo_video, 'tema': tema}
         return render(request, template, context)
 
 
+@login_required
+def editar_video(request, video_id):
+    template = 'videos/editar_video.html'
+    video = Videos.objects.get(id=video_id)
+    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if video.perfil == perfil_usuario:
+        if request.method == "POST":
+            form = FormEditarVideo(request.POST)
+            if form.is_valid():
+                url = form.cleaned_data['url']
+                titulo = form.cleaned_data['titulo']
+                descripcion = form.cleaned_data['descripcion']
+                url_data = urlparse.urlparse(url)
+                query = urlparse.parse_qs(url_data.query)
+                network_location = url_data.netloc
+                youtube_id = ""
+                if network_location in ("www.youtube.com", "youtube.com"):
+                    es_youtube = True
+                    youtube_id = query['v'][0]
+                else:
+                    es_youtube = False
+                video.url = url
+                video.titulo = titulo
+                video.descripcion = descripcion
+                video.youtube_id, video.es_youtube = youtube_id, es_youtube
+                video.save()
+                return redirect('videos:video', video_id=video.id, slug=video.tema.slug, queryset='recientes')
+        else:
+            form_editar_video = FormEditarVideo(initial={'url': video.url, 'titulo': video.titulo,
+                                                         'descripcion': video.descripcion})
+            context = {'video': video, 'form_editar_video': form_editar_video}
+            return render(request, template, context)
+    else:
+        raise Http404
+
+
 @page_template('index_page_videos.html')
 def videos_tema(request, slug, queryset, template='videos/videos_tema.html', extra_context=None):
     # La pagina principal del tema pero desplegando los videos.
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
     # Tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -83,11 +122,13 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
     videos = []
     videos_obj = Videos.objects.filter(
         tema=tema_obj, eliminado=False).order_by(q)
-    videos_favoritos_obj = VFavoritos.objects.filter(
-        perfil=perfil_usuario, eliminado=False)
-    videos_favoritos_ids = []
-    for v in videos_favoritos_obj:
-        videos_favoritos_ids.append(int(v.video.id))
+
+    if request.user.is_authenticated():
+        videos_favoritos_obj = VFavoritos.objects.filter(
+            perfil=perfil_usuario, eliminado=False)
+        videos_favoritos_ids = []
+        for v in videos_favoritos_obj:
+            videos_favoritos_ids.append(int(v.video.id))
 
     for video in videos_obj:
         if video.es_youtube is True:
@@ -96,8 +137,9 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
             imagen_video = "http://www.flaticon.es/png/256/24933.png"
 
         es_favorito = "no_es_favorito"
-        if video.id in videos_favoritos_ids:
-            es_favorito = "es_favorito"
+        if request.user.is_authenticated():
+            if video.id in videos_favoritos_ids:
+                es_favorito = "es_favorito"
 
         num_respuestas_video = Posts.objects.filter(
             video=video, eliminado=False).count()
@@ -119,14 +161,15 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
 @page_template('index_page_videos_favoritos.html')
 def videos_perfil(request, username, template="videos/videos_perfil.html", extra_context=None):
     # View para la pagina de videos del usuario
-    perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
-    print "username: %s" % (username)
     user_object = User.objects.get(username=username)
     perfil_usuario = Perfiles.objects.get(usuario=user_object)
-    if perfil_usuario == perfil_usuario_visitante:
-        propio_usuario = True
-    else:
-        propio_usuario = False
+    propio_usuario = False
+    if request.user.is_authenticated():
+        perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+        if perfil_usuario == perfil_usuario_visitante:
+            propio_usuario = True
+        else:
+            propio_usuario = False
 
     # Videos
     videos_favoritos_obj = VFavoritos.objects.filter(
@@ -134,17 +177,21 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
     videos_obj = []
     for v in videos_favoritos_obj:
         videos_obj.append(v.video)
-
     videos = []
-    for video in videos_obj:
-        if propio_usuario:
-            es_favorito = "es_favorito"
-        else:
-            if VFavoritos.objects.filter(video=video, perfil=perfil_usuario_visitante, eliminado=False).exists():
+
+    if request.user.is_authenticated():
+        for video in videos_obj:
+            if propio_usuario:
                 es_favorito = "es_favorito"
             else:
-                es_favorito = "no_es_favorito"
+                if VFavoritos.objects.filter(video=video, perfil=perfil_usuario_visitante, eliminado=False).exists():
+                    es_favorito = "es_favorito"
+                else:
+                    es_favorito = "no_es_favorito"
+    else:
+        es_favorito = "no_es_favorito"
 
+    for video in videos_obj:
         if video.es_youtube is True:
             imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
         else:
@@ -168,13 +215,19 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
 
 def video(request, video_id, slug, queryset):
     template = 'videos/video.html'
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
     # Video
     video = Videos.objects.get(id=video_id)
     es_favorito = "no_es_favorito"
-    if VFavoritos.objects.filter(video=video, perfil=perfil_usuario, eliminado=False).exists():
-        es_favorito = "es_favorito"
+    propio_video = False
+    if request.user.is_authenticated():
+        if video.perfil == perfil_usuario:
+            propio_video = True
+        if VFavoritos.objects.filter(video=video, perfil=perfil_usuario, eliminado=False).exists():
+            es_favorito = "es_favorito"
+
     num_respuestas_video = Posts.objects.filter(
         video=video, eliminado=False).count()
     origen_no_youtube = ""
@@ -213,7 +266,10 @@ def video(request, video_id, slug, queryset):
         # Respuestas y voted status
         num_respuestas = Respuestas.objects.filter(
             post_padre=post, post_respuesta__eliminado=False).count()
-        voted_status = obtener_voted_status(post, perfil_usuario)
+        if request.user.is_authenticated():
+            voted_status = obtener_voted_status(post, perfil_usuario)
+        else:
+            voted_status = "no-vote"
         posts.append([post, num_respuestas, voted_status])
 
     # cita
@@ -224,20 +280,19 @@ def video(request, video_id, slug, queryset):
 
     context = {'tema': tema, 'video': video, 'es_favorito': es_favorito,
                'origen_no_youtube': origen_no_youtube, 'num_respuestas_video': num_respuestas_video,
-               'posts': posts, 'populares': populares,
+               'posts': posts, 'populares': populares, 'propio_video': propio_video,
                'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta}
 
     return render(request, template, context)
 
 
+@login_required
 def sumar_post_video(request, slug, video_id):
     tema = Temas.objects.get(slug=slug)
     video_padre = Videos.objects.get(id=video_id)
     if request.method == "POST":
-        print "llego respuesta con post"
         form = FormNuevoPost(request.POST)
         if form.is_valid():
-            print "form is valid respuesta"
             texto = form.cleaned_data.get('texto')
             perfil_usuario = Perfiles.objects.get(usuario=request.user)
             post_video = Posts(texto=texto, creador=perfil_usuario,
@@ -270,22 +325,19 @@ def sumar_post_video(request, slug, video_id):
 
             tema.save()
 
-            print "respuesta guardada"
             return HttpResponseRedirect(reverse('videos:video',
                                                 kwargs={'video_id': video_padre.id, 'slug': tema.slug, 'queryset': u'recientes'}))
         else:
-            print "form invalid"
             pass  # !!! enviar errores
     else:
-        print "llego respuesta sin post"
         return HttpResponseRedirect(reverse('videos:video',
                                             kwargs={'video_id': video_padre.id, 'slug': tema.slug, 'queryset': u'recientes'}))
 
 
+@login_required
 def marcar_favorito(request):
     if request.is_ajax():
         video_id = request.GET.get('video_id', '')
-        print video_id
         video = Videos.objects.get(id=video_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         # reveisa si ya marco como favorito ese video
@@ -333,7 +385,8 @@ def marcar_favorito(request):
     #!!! falta 404 si la respuesta no es ajax.
 
 
-def denunciar(request):
+@login_required
+def denunciar_video(request):
     if request.is_ajax():
         video_id = request.GET.get('video_id')
         video = Videos.objects.get(id=video_id)
@@ -346,18 +399,10 @@ def denunciar(request):
             return HttpResponse('video ya denunciado')
         else:
             if perfil_usuario.votos_recibidos > 10:
-                vdenunciada_object = VDenunciados(
+                vdenunciado_object = VDenunciados(
                     video=video, perfil=perfil_usuario)
                 video.denunciado += 1
-                vdenunciada_object.save()
-                if video.denunciado > 3:
-                    video.eliminado = True
-                    #Notificacion video denunciado
-                    notificacion_denuncia = Notificacion(target=video.perfil,
-                                                         objeto_id=video.id, tipo_objeto="imagen",
-                                                         tipo_notificacion="denuncia")
-                    notificacion_denuncia.save()
-
+                vdenunciado_object.save()
                 video.save()
 
             return HttpResponse('video denunciado')
@@ -365,13 +410,15 @@ def denunciar(request):
 
 def post_video(request, video_id, slug, post_id, queryset):
     template = 'videos/post_video.html'
-    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
     # Video
     video = Videos.objects.get(id=video_id)
     es_favorito = "no_es_favorito"
-    if VFavoritos.objects.filter(video=video, perfil=perfil_usuario, eliminado=False).exists():
-        es_favorito = "es_favorito"
+    if request.user.is_authenticated():
+        if VFavoritos.objects.filter(video=video, perfil=perfil_usuario, eliminado=False).exists():
+            es_favorito = "es_favorito"
     num_respuestas_video = Posts.objects.filter(
         video=video, eliminado=False).count()
 
@@ -390,7 +437,10 @@ def post_video(request, video_id, slug, post_id, queryset):
 
     # Post
     post_obj = Posts.objects.get(id=post_id)
-    post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
+    if request.user.is_authenticated():
+        post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
+    else:
+        post_voted_status = "no-vote"
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
     post = [post_obj, post_voted_status, post_numrespuestas]
@@ -402,8 +452,10 @@ def post_video(request, video_id, slug, post_id, queryset):
         # respuesta.
         respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
         post_padre_obj = respuesta_obj.post_padre
-        post_padre_estado = obtener_voted_status(
-            post_padre_obj, perfil_usuario)
+        if request.user.is_authenticated():
+            post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
+        else:
+            post_padre_estado = "no-vote"
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
         post_padre = [post_padre_obj,
@@ -429,8 +481,10 @@ def post_video(request, video_id, slug, post_id, queryset):
         if post_respuesta.eliminado is False:
             respuesta_numrespuestas = Respuestas.objects.filter(
                 post_padre=post_respuesta, post_respuesta__eliminado=False).count()
-            respuesta_estado = obtener_voted_status(
-                post_respuesta, perfil_usuario)
+            if request.user.is_authenticated():
+                respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
+            else:
+                respuesta_estado = "no-vote"
             respuestas.append(
                 [post_respuesta, respuesta_numrespuestas, respuesta_estado])
 
@@ -446,3 +500,4 @@ def post_video(request, video_id, slug, post_id, queryset):
                'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta}
 
     return render(request, template, context)
+

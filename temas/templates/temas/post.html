@@ -1,5 +1,11 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+
+{% block extra_css %}
+{% load staticfiles %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
+
+{% endblock extra_css %}
 
 {% block content %}
 
@@ -11,6 +17,7 @@
 			Mostrar el post de {{post_padre.0.creador.usuario.username}}
 			<i class="fa fa-comments-o"></i>
 		</h5>
+
 		<div id = "post_hidden" class = "hidden"> <!--post padre respuesta -->
 		
 		{% if post_padre.0.eliminado %}
@@ -56,7 +63,7 @@
 			 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
 			 			<span class="fa fa-comments"></span>
-			 			<span class="fa fa-chevron-right"></a>
+			 			<span class="fa fa-chevron-right"></span></a>
 			 		</div>
 				</div>
 			</div>
@@ -67,16 +74,28 @@
 			<div class = "col-md-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
+					{% if user.is_authenticated %}
 						<p class = "vote-id hidden">{{post_padre.0.id}}</p>
 						<button type="button" class = "btn btn-default vote-up"> 
 							<span class="fa fa-chevron-up"></span>
 						</button>
+					{% else %}
+						<button type="button" class = "btn btn-default disabled"> 
+							<span class="fa fa-chevron-up"></span>
+						</button>
+					{% endif %}
 						<button type="button" class = "btn btn-default puntaje"> 
 						<h2 class = "numero_puntaje {{post_padre.1}} "> {{post_padre.0.votos_total}} </h2>
 						</button>
+					{% if user.is_authenticated %}
 						<button type="button" class = "btn btn-default vote-down"> 
 							<span class="fa fa-chevron-down"></span>
 						</button>
+					{% else %}
+						<button type="button" class = "btn btn-default disabled"> 
+							<span class="fa fa-chevron-down"></span>
+						</button>
+					{% endif %}
 					</div>
 				</div>
 			</div>
@@ -92,7 +111,8 @@
 						{% if post_padre.0.creador.usuario == request.user %}
 						<div class = "eliminar_editar pull-left">
 							<div class = "btn-group dropup">
-							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+							<span class="fa fa-cog"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li>
@@ -116,7 +136,7 @@
 				 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
 			 				<span class="fa fa-comments"></span>
-			 				<span class="fa fa-chevron-right"> </a>
+			 				<span class="fa fa-chevron-right"></span> </a>
 				 		</div>
 					</div>
 				</div>
@@ -135,7 +155,8 @@
 					<p class = "text">
 						<i class = "fa fa-exclamation-triangle"></i>
 						{% if post.0.creador.usuario == request.user %}
-						Eliminaste este post. Si deseas restaurarlo has click aquí: <a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
+						Eliminaste este post. Si deseas restaurarlo has click aquí:
+						 <a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
 						{% else %}
 						 Post eliminado por usuario. 
 						{% endif %}
@@ -146,7 +167,8 @@
 					{% if post.0.creador.usuario == request.user %}
 					<div class = "eliminar_editar pull-left">
 						<div class = "btn-group dropup">
-						<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+						<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+						<span class="fa fa-cog"></span>
 						</button>
 						<ul class="dropdown-menu">
 							<li>
@@ -169,28 +191,41 @@
 			 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
 			 				{{post.2}}
 			 			<span class="fa fa-comments"></span>
-			 			<span class="fa fa-chevron-right"> </a>
+			 			<span class="fa fa-chevron-right"></span> 
+			 			</a>
 			 		</div>
 				</div>
 			</div>
 		</div><!-- post eliminado -->
 {% else %}
 <!-- Post. -->
-	<div>
+	<div class = "row">
 		<br>
 		<div class = "col-md-2">
 			<div class = "control_votos">
 				<div class = "btn-group-vertical">
-					<p class = "vote-id hidden">{{post.0.id}}</p>
-					<button type="button" class = "btn btn-default vote-up"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-					<button type="button" class = "btn btn-default puntaje"> 
-					<h2 class = "numero_puntaje {{post.1}}"> {{post.0.votos_total}} </h2>
-					</button>
-					<button type="button" class = "btn btn-default vote-down"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
+					{% if user.is_authenticated %}
+						<p class = "vote-id hidden">{{post.0.id}}</p>
+						<button type="button" class = "btn btn-default vote-up"> 
+							<span class="fa fa-chevron-up"></span>
+						</button>
+					{% else %}
+						<button type="button" class = "btn btn-default disabled"> 
+							<span class="fa fa-chevron-up"></span>
+						</button>
+					{% endif %}
+						<button type="button" class = "btn btn-default puntaje"> 
+						<h2 class = "numero_puntaje {{post.1}} "> {{post.0.votos_total}} </h2>
+						</button>
+					{% if user.is_authenticated %}
+						<button type="button" class = "btn btn-default vote-down"> 
+							<span class="fa fa-chevron-down"></span>
+						</button>
+					{% else %}
+						<button type="button" class = "btn btn-default disabled"> 
+							<span class="fa fa-chevron-down"></span>
+						</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -203,21 +238,11 @@
 					<br/>
 				</div>
 				<div class="panel-footer">
-					<div class = "nombre_fecha">
-					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-						{{post.0.creador.usuario.username}}</a>
-						{% if post.0.es_respuesta %}
-						en respuesta a 
-						<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-						{{post_padre.0.creador.usuario.username}}</a> 
-						{% endif %}
-						<small> el {{post.0.fecha}} </small>
-					</p>
-					</div>
 					{% if post.0.creador.usuario == request.user %}
 					<div class = "eliminar_editar pull-left">
 						<div class = "btn-group dropup">
-						<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+						<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+						<span class="fa fa-cog"></span>
 						</button>
 						<ul class="dropdown-menu">
 							<li>
@@ -231,22 +256,44 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "nombre_fecha">
+					<p>
+					<a href ="{% url 'perfiles:perfil' post.0.creador.usuario.username 'recientes' %}">
+					{{post.0.creador.usuario.username}}</a>
+						{% if post.0.es_respuesta %}
+						en respuesta a 
+					<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
+					{{post_padre.0.creador.usuario.username}}</a> 
+					</p>
+					{% endif %}
+						<small> el {{post.0.fecha}} </small>
+					</div>
 				</div>
 			</div>
 		<hr/>
-		</div> <!-- class md 11 -->
+		</div> <!-- class md 10 -->
 	</div> <!--post -->
 {% endif %}
 
-	<div class = "row clearfix">
-		<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta ">
-			<form action = "{% url 'temas:respuesta' tema.0.slug post.0.id %}" method = "POST"/>
-				{% csrf_token %}
-				{{form_respuesta|crispy}}
-			<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
-			</form>
-		</div>
+{% if user.is_authenticated %}
+<div class = "row clearfix">
+	<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta ">
+		<form id = "formulario" class = "form-horizontal" action = "{% url 'temas:respuesta' tema.0.slug post.0.id %}" method = "POST"/>
+			{% csrf_token %}
+			<fieldset>
+			<div class = "form-group">
+				<label = class = "control-label" for = "texto"></label>
+				<div class = "row textarea_form">
+				{{form_respuesta.texto}}
+				</div>
+			</div>
+			</fieldset>
+
+		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
+		</form>
 	</div>
+</div>
+{% endif %}
 
 <div class = "col-md-12">
 	<h5 class="text-muted">
@@ -260,16 +307,28 @@
 	<div class = "col-md-2">
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
-				<p class = "vote-id hidden">{{respuesta.0.id}}</p>
-				<button type="button" class = "btn btn-default vote-up"> 
-					<span class="fa fa-chevron-up"></span>
-				</button>
-				<button type="button" class = "btn btn-default puntaje"> 
-				<h2 class = "numero_puntaje {{respuesta.2}} "> {{respuesta.0.votos_total}} </h2>
-				</button>
-				<button type="button" class = "btn btn-default vote-down"> 
-					<span class="fa fa-chevron-down"></span>
-				</button>
+				{% if user.is_authenticated %}
+					<p class = "vote-id hidden">{{respuesta.0.id}}</p>
+					<button type="button" class = "btn btn-default vote-up"> 
+						<span class="fa fa-chevron-up"></span>
+					</button>
+				{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-up"></span>
+					</button>
+				{% endif %}
+					<button type="button" class = "btn btn-default puntaje"> 
+					<h2 class = "numero_puntaje {{respuesta.1}} "> {{respuesta.0.votos_total}} </h2>
+					</button>
+				{% if user.is_authenticated %}
+					<button type="button" class = "btn btn-default vote-down"> 
+						<span class="fa fa-chevron-down"></span>
+					</button>
+				{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-down"></span>
+					</button>
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -294,14 +353,15 @@
 						</li>
 						<li class = "divider"></li>
 						<li>
-							<a href="{% url 'temas:editar_post' respuesta.0.id %}">Editar</a> <!-- -->
+							<a href="{% url 'temas:editar_post' respuesta.0.id %}">Editar</a> 
 						</li>
 					</ul>
 					</div>
 				</div>
 				{% endif %}
 				<div class = "nombre_fecha">
-				<p><a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
+				<p>
+				<a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
 					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
 				</p>
 				</div>
@@ -309,7 +369,7 @@
 		 			<a href = "{% url 'temas:post' tema.0.slug respuesta.0.id 'recientes' %} ">
 		 				{{respuesta.1}}
 		 			<span class="fa fa-comments"></span>
-		 			<span class="fa fa-chevron-right">  </a>
+		 			<span class="fa fa-chevron-right"> </span>  </a>
 		 		</div>
 			</div>
 		</div>
@@ -326,9 +386,14 @@
 			<img src="{{tema.1}}" class="imagen_tema"/>
 		</div>
 		<div class = "post_datos_tema">
-			<a href=" {% url 'temas:index_tema' tema.0.slug 'recientes' %} "> 
-				<strong> {{tema.0.nombre}} </strong> </a>
+		<strong> {{tema.0.nombre}} </strong> 
+			<a href=" {% url 'temas:index_tema' tema.0.slug 'recientes' %} ">
 			<p> {{tema.3}} Posts </p>
+			</a>
+			<a href=" {% url 'videos:videos_tema' tema.0.slug 'recientes' %} ">
+			<p> {{tema.4}} Videos </p>
+			</a>
+			
 			<a href=" {% url 'temas:sumar_post' tema.0.slug %} "> 
 				<small> Nuevo Post en {{tema.0.nombre}} </small> </a>
 		<div class="panel-link">
@@ -352,4 +417,28 @@
 {% load staticfiles %}
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{% static 'js/votos.js' %} "></script>
+<script src="{% static 'js/validation-core.js' %} "></script>
+<script src="{% static 'js/validation-ajax.js' %} "></script>
+<script src="{% static 'js/validation-delegate.js' %} "></script>
+
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 15,
+				maxlength: 10000
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*Escribe una post de mínimo 15 y máximo 10.000 caracteres.",
+		}
+	});
+});
+</script>
+
 {% endblock javascript %}

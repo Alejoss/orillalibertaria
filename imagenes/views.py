@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 from models import Imagen, Ifavoritas, Idenunciadas
@@ -75,6 +76,7 @@ def imagen(request, imagen_id):
     return render(request, template, context)
 
 
+@login_required
 def nueva(request):
     template = 'imagenes/nueva.html'
     if request.method == "POST":
@@ -94,13 +96,16 @@ def nueva(request):
 
             return HttpResponseRedirect(reverse('imagenes:index', args=[u'recientes']))
         else:
-            pass  # !!! enviar errores
+            form_nueva_imagen = FormNuevaImagen()
+            context = {'form_nueva_imagen': form_nueva_imagen}
+            return render(request, template, context)
     else:
         form_nueva_imagen = FormNuevaImagen()
         context = {'form_nueva_imagen': form_nueva_imagen}
         return render(request, template, context)
 
 
+@login_required
 def marcar_favorito(request):
     if request.is_ajax():
         imagen_id = request.GET.get('imagen_id', '')
@@ -153,6 +158,7 @@ def marcar_favorito(request):
     # falta 404 si el request no es ajax.
 
 
+@login_required
 def marcar_portada_ajax(request):
     print "llego ajax function"
     if request.is_ajax():
@@ -214,6 +220,9 @@ def favoritas(request, username):
                     imagenes_favoritas.append([i.imagen, "es_favorita"])
                 else:
                     imagenes_favoritas.append([i.imagen, "no_es_favorita"])
+    else:
+        for i in Ifavoritas_objects:
+            imagenes_favoritas.append([i.imagen, "no_es_favorita"])
 
     context = {
         'imagenes_favoritas': imagenes_favoritas,
@@ -221,6 +230,7 @@ def favoritas(request, username):
     return render(request, template, context)
 
 
+@login_required
 def denunciar(request):
     if request.is_ajax():
         imagen_id = request.GET.get('imagen_id')
@@ -252,6 +262,7 @@ def denunciar(request):
     # falta 404 si request no es ajax
 
 
+@login_required
 def colaborar_organizar(request):
     template = 'imagenes/imagenes_coorg.html'
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
@@ -318,6 +329,7 @@ def colaborar_organizar(request):
     return render(request, template, context)
 
 
+@login_required
 def marcar_visto(request, imagen_id):
     imagen = Imagen.objects.get(id=imagen_id)
     print imagen.denunciada
@@ -344,6 +356,7 @@ def marcar_visto(request, imagen_id):
     return redirect('imagenes:colaborar_organizar')
 
 
+@login_required
 def marcar_x(request, imagen_id):
     print "llego marcar_x"
     imagen = Imagen.objects.get(id=imagen_id)

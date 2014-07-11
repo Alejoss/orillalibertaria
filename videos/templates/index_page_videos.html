@@ -8,9 +8,15 @@
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
 				<p class = "vote-id hidden">{{video.0.id}}</p>
+				{% if user.is_authenticated %}
 				<button type="button" class = "btn btn-default estrella {{video.2}}"> 
 					<span class = "fa fa-star fa-lg"></span>
 				</button>
+				{% else %}
+				<button type="button" class = "btn btn-default disabled"> 
+					<span class = "fa fa-star fa-lg"></span>
+				</button>
+				{% endif %}
 				<button class = "btn puntaje"> 
 					<h2 class = "numero_puntaje"> {{video.0.favoritos_recibidos}} </h2>
 				</button>

@@ -1,0 +1,54 @@
+/* css para el video.html */
+.fecha_video{
+margin-right: 15px;
+}
+
+#denunciar_video{
+	margin-right: 2px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.div_video{
+	margin-left: 15px;
+	width: 415px;
+}
+.div_descripcion_video{
+	margin-top: 20px;
+	height: 300px;
+	max-height: 315px;
+	overflow: auto;
+}
+.favoritos_video{
+	margin-right: 15px;
+	margin-top: 10px;
+	text-align: right;
+}
+.favoritos_video > span{
+	margin-left: 10px;
+}
+.favoritos_video > h4{
+	display: inline-block;
+	text-align: left;
+}
+.favoritos_video > p{
+	display: inline-block;
+	margin-top: 10px;
+}
+
+.video_no_youtube{
+	height: 300px;
+	width: 400px;
+}
+.video_no_youtube > img{
+	height: 200px;
+	width: 200px;
+	margin-left: 50px;
+	margin-bottom: 10px;
+}
+.video_no_youtube > p{
+	margin-left: 15px;
+}
+.video_no_youtube > a{
+	margin-left: 45px;
+}

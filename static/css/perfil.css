@@ -1,0 +1,42 @@
+/*css para el perfil*/
+.puntos_posts{
+	display: block;
+}
+.imagen_perfil{
+	max-height: 160px;
+	max-width: 160px;
+	display: block;
+}
+.cita_small{
+	font-size: 100%;
+}
+.div_perfil_datos{
+	margin-left: 40px;
+}
+.perfil_panel_sm{
+	margin-top: 20px;
+	margin-right: 20px;
+}
+.nombre_usuario{
+	margin-top: 0px;
+	margin-left: 80px;
+}
+.frase_perfil{
+	display: inline-block;
+	height: 100px;
+	width: 200px;
+}
+
+.imagenes_frases_perfil{
+	display: inline-block;
+	margin-top: 5px;
+	width: 200px;
+}
+
+.imagen_perfil{
+	max-height: 150px;
+	width: auto;
+}
+.imagenes_portada{
+	margin-left: 60px;
+}

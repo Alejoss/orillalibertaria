@@ -1,0 +1,108 @@
+
+<div class = "row clearfix">
+{% if video.es_youtube %}
+<div class = "col-md-7">
+	<div class = "div_video thumbnail">
+		<div class="thumbnail js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
+		</div>
+		<div class = "favoritos_video ">
+			{% if user.is_authenticated %}
+			<p class = "hidden">{{video.id}}</p>
+			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span>
+			{% else %}
+			<span class = "fa fa-star pull-left"> </span>
+			{% endif %}
+			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>
+			<p class = "fecha_video"> <small> farseer el 14 de Marzo </small> </p>
+			{% if propio_video %}
+			<div class = "eliminar_editar pull-right">
+				<div class = "btn-group dropup">
+				<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href = "#" data-toggle="modal" class= "reportar_video" data-target = "#modal_reportar">Reportar video
+						<i rel="tooltip" title = "Reportar" class ="fa fa-flag"></i></a>
+					</li>
+					<li class = "divider"></li>
+					<li>
+						<a href="{% url 'videos:editar_video' video.id %}">Editar video</a> 
+					</li>
+				</ul>
+				</div>
+			</div>
+			{% else %}
+			<div class = "pull-right">
+				<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class = "reportar_video fa fa-flag"></i></a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class = "col-md-5">
+<div class = "div_descripcion_video">
+	<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
+	</p>
+</div>
+</div>
+{% else %}
+<div class = "col-md-7">
+	<div class = "div_video thumbnail">
+	<div class = "video_no_youtube">
+	<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Photo-Video-Start-icon.png">
+
+	{% if origen_no_youtube == "vimeo" %}
+		<p> Video disponible en Vimeo: </p>
+		<a href="{{video.url}}"> <i class = "fa fa-vimeo-square"></i><small> {{video.url}} </small></a>
+	{% elif origen_no_youtube == "ted" %}
+		<p> Video disponible en TED </p>
+		<a href="{{video.url}}"> <i class = "fa fa-university"></i><small> {{video.url}} </small></a>
+	{% else %}
+		<p> Video disponible en: </p>
+		<a href="{{video.url}}"> <i class = "fa fa-play-circle"></i><small> {{video.url}} </small></a>
+	{% endif %}
+	<hr>
+	</div>
+		<div class = "favoritos_video ">
+			{% if user.is_authenticated %}
+			<p class = "hidden">{{video.id}}</p>
+			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span>
+			{% else %}
+			<span class = "fa fa-star pull-left"> </span>
+			{% endif %}
+			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>
+			<p class = "fecha_video"> <small> farseer el 14 de Marzo </small> </p>
+			{% if propio_video %}
+			<div class = "eliminar_editar pull-right">
+				<div class = "btn-group dropup">
+				<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						<a href = "#" data-toggle="modal" class= "reportar_video" data-target = "#modal_reportar">Reportar video
+						<i rel="tooltip" title = "Reportar" class ="fa fa-flag"></i></a>
+					</li>
+					<li class = "divider"></li>
+					<li>
+						<a href="{% url 'videos:editar_video' video.id %}">Editar video</a> 
+					</li>
+				</ul>
+				</div>
+			</div>
+			{% else %}
+			<div class = "pull-right">
+				<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class = "reportar_video fa fa-flag"></i></a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class = "col-md-5">
+	<div class = "div_descripcion_video">
+		<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+		</p>
+	</div>
+</div>
+{% endif %}
+</div>

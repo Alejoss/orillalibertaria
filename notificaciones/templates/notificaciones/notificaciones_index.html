@@ -1,4 +1,9 @@
 {% extends 'base_index.html' %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'css/perfil.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block navbar_mobile_xs %}
 <!--click para marcar todos las notificaciones como leidas-->
@@ -39,11 +44,11 @@
 {% block sidebar %}
 <div class="hidden-xs col-md-4 col-sm-4 column ">
 	<div class = "div_perfil_datos ">
-	<div class = "row clearfix imagen_perfil ">
+	<div class = "row imagen_perfil">
 		<img src="http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg" class= "img-thumbnail"/>
 	</div>
-		<div class = "puntos_posts  row clearfix">
-			<ul class="nav nav-pills ">
+		<div class = "puntos_posts row ">
+			<ul class="nav nav-pills">
 			<br>
 				<li>
 					Text1 <span class="badge"> {{puntos_recibidos}} </span> 

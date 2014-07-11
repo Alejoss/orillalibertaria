@@ -1,0 +1,13 @@
+/* prueba */
+#p_show{
+	display: none;
+	border: 1px solid red;
+}
+
+.borde {
+	border: 1px solid red;
+}
+
+.subrayar{
+	text-decoration: underline;
+}

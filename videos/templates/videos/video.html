@@ -1,79 +1,57 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/videos.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block content %}
-
 <div class="row clearfix">
 <div class="col-md-8 column">
-
-<div class = "row clearfix">
-{% if video.es_youtube %}
-<div class = "col-md-7">
-	<div class = "div_video thumbnail">
-		<div class="js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
+{% include 'cuadro_video.html' %}
+<!--modal reportar -->
+<div class="modal fade" id="modal_reportar" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+			{% if propio_video %}
+			<h4 class="modal-title" id="myModalLabel">Has denunciado un video que has compartido</h4>
+			</div>
+			<div class="modal-body">
+			    <p>Recuerda que puedes editarlo. Los videos denunciados son analizados y luego removidos del sitio web.</p>
+			</div>
+			{% else %}
+			<h4 class="modal-title" id="myModalLabel">Has denunciado un video</h4>
+			</div>
+			<div class="modal-body">
+			    <p>Gracias por colaborar con la comunidad de Orilla Libertaria. Los videos denunciados son analizados y luego removidos del sitio web.</p>
+			</div>
+			{% endif %}
 		</div>
-		<div class = "favoritos_video ">
-			<p class = "hidden">{{video.id}}</p>
-			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span> 
-			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>  
-			<p> <small> farseer el 14 de Marzo </small> </p>
-		</div>
-	</div>
-</div>
-<div class = "col-md-5">
-<div class = "div_descripcion_video">
-	<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
-		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
-	</p>
 </div>
 </div>
-{% else %}
-<div class = "col-md-7">
-	<div class = "div_video thumbnail">
-	<div class = "video_no_youtube">
-	<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Photo-Video-Start-icon.png">
-
-	{% if origen_no_youtube == "vimeo" %}
-		<p> Video disponible en Vimeo: </p>
-		<a href="{{video.url}}"> <i class = "fa fa-vimeo-square"></i><small> {{video.url}} </small></a>
-	{% elif origen_no_youtube == "ted" %}
-		<p> Video disponible en TED </p>
-		<a href="{{video.url}}"> <i class = "fa fa-university"></i><small> {{video.url}} </small></a>
-	{% else %}
-		<p> Video disponible en: </p>
-		<a href="{{video.url}}"> <i class = "fa fa-play-circle"></i><small> {{video.url}} </small></a>
-	{% endif %}
-	<hr>
-	</div>
-		<div class = "favoritos_video ">
-			<p class = "hidden">{{video.id}}</p>
-			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span> 
-			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>  
-			<p> <small> farseer el 14 de Marzo </small> </p>
-		</div>
-	</div>
-</div>
-<div class = "col-md-5">
-	<div class = "div_descripcion_video">
-		<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
-		</p>
-	</div>
-</div>
-{% endif %}
-</div>
-
 
 <hr/>
+{% if user.is_authenticated %}
 <div class = "row clearfix">
 	<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta">
-		<form action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
+		<form id = "formulario" class = "form-horizontal" action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
 			{% csrf_token %}
-			{{form_respuesta|crispy}}
+			<fieldset>
+			<div class = "form-group">
+				<label = class = "control-label" for = "texto"></label>
+				<div class = "row textarea_form">
+				{{form_respuesta.texto}}
+				</div>
+			</div>
+			</fieldset>
 		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
 		</form>
 	</div>
 </div>
+{% endif %}
 
 <div class = "col-md-12">
 	<h5 class="text-muted">
@@ -86,16 +64,28 @@
 <div class = "col-md-2 col-sm-2 col-xs-2">
 	<div class = "control_votos">
 		<div class = "btn-group-vertical">
+			{% if user.is_authenticated %}
 			<p class = "vote-id hidden">{{post.0.id}}</p>
 			<button type="button" class = "btn btn-default vote-up"> 
 				<span class="fa fa-chevron-up"></span>
 			</button>
+			{% else %}
+			<button type="button" class = "btn btn-default disabled"> 
+				<span class="fa fa-chevron-up"></span>
+			</button>
+			{% endif %}
 			<button class = "btn puntaje"> 
 			<h2 class = "numero_puntaje {{post.2}}"> {{post.0.votos_total}} </h2>
 			</button>
+			{% if user.is_authenticated %}
 			<button type="button" class = "btn btn-default vote-down"> 
 				<span class="fa fa-chevron-down"></span>
 			</button>
+			{% else %}
+			<button type="button" class = "btn btn-default disabled"> 
+				<span class="fa fa-chevron-down"></span>
+			</button>
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -158,8 +148,13 @@
 			<p>
 	
 			</p>
-			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} "> 
-				<i class = "fa fa-puzzle-piece"></i><small> Compartir un video en {{tema.0.nombre}} </small> </a>
+			{% if user.is_authenticated %}
+			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} ">
+				<small> Compartir un video en {{tema.0.nombre}} </small> </a>
+			{% else %}
+			<a href=" {% url 'perfiles:login' %} ">
+				<small> <span class = "fa fa-lock"></span> Compartir un video en {{tema.0.nombre}} </small> </a>
+			{% endif %}
 		<div class="panel-link">
 			<div>
 				<br>
@@ -183,4 +178,28 @@
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{% static 'js/video_fav.js' %}"></script>
 <script src="{% static 'js/votos.js' %} "></script>
+
+<script src="{% static 'js/validation-core.js' %} "></script>
+<script src="{% static 'js/validation-ajax.js' %} "></script>
+<script src="{% static 'js/validation-delegate.js' %} "></script>
+
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 15,
+				maxlength: 10000
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*Escribe una post de mínimo 15 y máximo 10.000 caracteres.",
+		}
+	});
+});
+</script>
 {% endblock javascript %}

@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 
@@ -26,7 +27,6 @@ from utils import obtener_links_perfil
 
 
 def login_page(request):
-
     template = 'perfiles/login.html'
     # Custom login. No es el login normal de Django.
     return render(request, template)
@@ -99,6 +99,7 @@ def registro_ok(request):
     return render(request, 'perfiles/registro_ok.html', context)
 
 
+@login_required
 def editar_perfil_des(request):
     template = 'perfiles/editar_perfil_des.html'
 
@@ -151,31 +152,36 @@ def editar_perfil_des(request):
     return render(request, template, context)
 
 
+@login_required
 def editar_perfil_info(request):
     template = 'perfiles/editar_perfil_info.html'
 
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
-            obj = User.objects.get(username=request.user.username)
-            e = form.cleaned_data['email']
-            f = form.cleaned_data['first_name']
-            l = form.cleaned_data['last_name']
-            if e != "":
-                obj.email = e
+            user_object = User.objects.get(username=request.user.username)
+            form_email = form.cleaned_data['email']
+            form_firstname = form.cleaned_data['first_name']
+            form_lastname = form.cleaned_data['last_name']
 
-            if f != "":
-                obj.first_name = f
+            if form_email != "":
+                user_object.email = form_email
 
-            if l != "":
-                obj.last_name = l
+            if form_firstname != "":
+                user_object.first_name = form_firstname
 
-            obj.save()
-            return redirect('perfiles:perfil', username=request.user.username)
+            if form_lastname != "":
+                user_object.last_name = form_lastname
+            user_object.save()
+            return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
         else:
             pass  # !!! enviar errores
-
-    perfil_info_form = UserForm()
+    user_object = request.user
+    print user_object.first_name
+    print user_object.last_name
+    perfil_info_form = UserForm(initial={'email': user_object.email,
+                                         'first_name': user_object.first_name,
+                                         'last_name': user_object.last_name})
     context = {'perfil_info_form': perfil_info_form}
     return render(request, template, context)
 
@@ -255,7 +261,6 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         cita_favorita_obj = (random.choice(citas_favoritas_obj)).cita
         cita_favorita = obtener_cita(cita_favorita_obj)
 
-    print cita_favorita
     # videos
     num_videos_favoritos = VFavoritos.objects.filter(
         perfil=usuario_perfil, eliminado=False).count()

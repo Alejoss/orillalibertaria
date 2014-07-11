@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, TextInput
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -33,16 +33,25 @@ class PerfilesForm(forms.Form):
         help_text="Quién eres en los clásicos 250 caracteres.",
         widget=forms.Textarea(attrs={'data-maxlength': 250,
                                      'rows': 3,
+                                     'class': 'form-control',
+                                     'id': 'wchar_250'
                                      }))
-    link1 = forms.CharField(max_length=250, label="Links:", required=False)
-    link2 = forms.CharField(max_length=250, label="", required=False)
-    link3 = forms.CharField(max_length=250, label="", required=False)
-    link4 = forms.CharField(max_length=250, label="", required=False)
-    link5 = forms.CharField(max_length=250, label="", required=False,
-                            help_text="Comparte cinco links que digan algo sobre ti.")
+    link1 = forms.CharField(max_length=250, required=False,
+                            widget=TextInput(attrs={'class': 'form-control'}))
+    link2 = forms.CharField(max_length=250, required=False,
+                            widget=TextInput(attrs={'class': 'form-control'}))
+    link3 = forms.CharField(max_length=250, required=False,
+                            widget=TextInput(attrs={'class': 'form-control'}))
+    link4 = forms.CharField(max_length=250, required=False,
+                            widget=TextInput(attrs={'class': 'form-control'}))
+    link5 = forms.CharField(max_length=250, required=False,
+                            widget=TextInput(attrs={'class': 'form-control'}))
 
 
 class UserForm(forms.Form):
-    email = forms.EmailField(max_length=250, required=False)
-    first_name = forms.CharField(max_length=250, required=False)
-    last_name = forms.CharField(max_length=250, required=False)
+    email = forms.EmailField(max_length=250, required=False,
+                             widget=TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(max_length=250, required=False,
+                                 widget=TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=250, required=False,
+                                widget=TextInput(attrs={'class': 'form-control'}))

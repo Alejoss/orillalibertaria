@@ -1,5 +1,11 @@
 {% extends "base_index.html" %}
+
+{% block extra_css %}
 {% load staticfiles %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
+
+{% endblock extra_css %}
 
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">
@@ -15,6 +21,9 @@
 
 {% block arriba %}
 <div class="col-md-8 column">
+	<div class = "visible-xs">
+		<img class = "thumbnail imagen_tema" src = "{{imagen}}">
+	</div>
 	<div class="page-header">
 		<h1 >
 			{{ tema.nombre }}
@@ -74,14 +83,20 @@
 	<br>
 	<div class="row clearfix">
 		<div class="col-md-12 column">
+		{% if user.is_authenticated %}
 		<button type="button" class="btn btn-warning btn_sidebar" 
 		onclick = "location.href='{% url 'temas:sumar_post' tema.slug %}';">
 		Nuevo Post en {{tema.nombre}}</button>
+		{% else %}
+		<button type="button" class="btn btn-warning btn_sidebar" 
+		onclick = "location.href='{% url 'perfiles:login' %}';">
+		<span class = "fa fa-lock"></span>
+		Nuevo Post en {{tema.nombre}}</button>
+		{% endif %}
 		<button type="button" class="btn btn_sidebar btn-default " 
 		onclick = "location.href='{% url 'videos:videos_tema' tema.slug 'recientes' %}';">
 		<i class= "fa fa-play-circle fa-lg"> </i>
 		Videos de {{tema.nombre}}</button>
-		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'temas:nuevo_tema' %}';">Crear un nuevo Tema</button>
 		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
 		<button type="button" class="btn btn-default btn_sidebar visible-sm" 
 		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
@@ -103,16 +118,19 @@
 	<hr>
 	</div>
 	
-	<div class = " visible-lg visible-md cuadro_carrusel">
-		<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
+	<div class = "hidden-sm">
+		<div class = " visible-lg visible-md div_carrusel">
+		<div id="owl-demo" class="owl-carousel owl-theme cuadro_carrusel tema_slide_imagenes">
 			{% for i in imagenes_display %}
-			<div class="item"><img src=" {{i}} " alt="404 imagen libertaria"></div>
+			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
 			{% endfor %}
 		</div>
-	</div>
-	<button type="button" class="btn btn-xs btn-info btn_galeria visible-lg visible-md"
-	onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
-		Ver galería de imágenes</button>
+		</div>
+		<hr class = "sidebar_cita">
+		<button type="button" class="btn btn-xs btn-info btn_galeria"
+		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
+			Ver galería de imágenes</button>
+	</div> <!--div carrousel -->
 </div>
 {% endblock sidebar %}
 

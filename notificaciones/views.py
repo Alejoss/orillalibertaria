@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 
@@ -9,6 +10,7 @@ from models import Notificacion
 from olibertaria.utils import obtener_args_notificacion, obtener_num_notificaciones
 
 
+@login_required
 def marcar_leidas(request):
     #Marca las 5 ultimas notificaciones como leidas
     if request.is_ajax():
@@ -30,6 +32,7 @@ def marcar_leidas(request):
         return HttpResponse("notificaciones_leidas_error")
 
 
+@login_required
 @page_template('index_page_notificaciones.html')
 def notificaciones_index(request, template='notificaciones/notificaciones_index.html', extra_context=None):
     #muestra todas las notificaciones.

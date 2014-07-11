@@ -1,5 +1,4 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
@@ -11,8 +10,45 @@
 {% endblock arriba %}
 
 {% block form %}
-	<form action = "{% url 'temas:editar_post' post.id %}" method = "post"> {% csrf_token %}
-		{{form_editar_post|crispy}}
-		<input class = "btn" type = "submit" value = "Enviar"/>
+<div class = "row">
+<div class = "col-md-8 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+	<form action = "{% url 'temas:editar_post' post.id %}" method = "post"> 
+		{% csrf_token %}
+		<fieldset>
+			<div class = "form-group">
+				{{form_editar_post.texto.errors}}
+				<label class = "control-label" for = "texto"></label>
+				<div class = "row textarea_form">
+				{{form_editar_post.texto}}
+				<span class="help-block">Las urls que compartas se verán como <u class = "apariencia_link">links</u>.</span>
+				<br/>
+				</div>
+			</div>
+		</fieldset>
+		<input class = "btn pull-right" type = "submit" value = "Enviar"/>
 	</form>
+</div>
+</div>
 {% endblock form %}
+
+{% block extra_javascript %}
+	<script>
+	$(document).ready(function(){
+		$('#formulario').validate({
+			rules: {
+				texto: {
+					required: true,
+					minlength: 15,
+					maxlength: 10000
+				}
+			},
+			errorElement: "span",
+			onfocusout: false,
+			onkeyup: false,
+			messages: {
+				texto: "*El post debe tener min 10, max 10.000 caracteres."
+			}
+		});
+	});
+	</script>
+{% endblock extra_javascript %}

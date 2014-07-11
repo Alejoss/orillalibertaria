@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 from olibertaria.utils import obtener_imagenes_display, obtener_cita
@@ -95,6 +96,7 @@ def cita(request, cita_id):
     return render(request, template, context)
 
 
+@login_required
 def nueva(request):
     template = 'citas/nueva.html'
     if request.method == "POST":
@@ -121,6 +123,7 @@ def nueva(request):
     return render(request, template, context)
 
 
+@login_required
 def marcar_favorito(request):
     if request.is_ajax():
         cita_id = request.GET.get('frase_id', '')
@@ -175,11 +178,11 @@ def favoritas(request, username):
     template = 'citas/favoritas.html'
     user_object = User.objects.get(username=username)
 
-    perfil_usuario = Perfiles.objects.get(usuario=user_object)
+    perfil_usuario = Perfiles.objects.get(usuario=user_object)  # perfil usuario visitado
     Cfavoritas_objects = Cfavoritas.objects.filter(perfil=perfil_usuario, eliminado=False).order_by('-fecha')
     propio_usuario = False
     citas_favoritas = []
-    
+
     if request.user.is_authenticated():
         if user_object == request.user:
             propio_usuario = True
@@ -199,7 +202,8 @@ def favoritas(request, username):
                 else:
                     citas_favoritas.append([c.cita, "", c.fecha])
     else:
-        citas_favoritas.append([c.cita, "", c.fecha])
+        for c in Cfavoritas_objects:
+            citas_favoritas.append([c.cita, "", c.fecha])
 
     imagenes_display = Imagen.objects.all().order_by(
         '-favoritos_recibidos')[:5]
@@ -211,6 +215,7 @@ def favoritas(request, username):
     return render(request, template, context)
 
 
+@login_required
 def colaborar_organizar(request):
     template = 'citas/citas_coorg.html'
     citas_eliminadas = Cita.objects.filter(
@@ -285,6 +290,7 @@ def colaborar_organizar(request):
     return render(request, template, context)
 
 
+@login_required
 def denunciar_cita(request):
     if request.is_ajax:
         cita_id = request.GET.get('frase_id', '')
@@ -313,9 +319,9 @@ def denunciar_cita(request):
         return HttpResponse("cita denunciada")
 
 
+@login_required
 def marcar_visto(request, cita_id):
     cita = Cita.objects.get(id=cita_id)
-    print cita.denunciada
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
     if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
         cdenunciada_obj = Cdenunciadas.objects.get(
@@ -339,6 +345,7 @@ def marcar_visto(request, cita_id):
     return redirect('citas:colaborar_organizar')
 
 
+@login_required
 def marcar_x(request, cita_id):
     cita = Cita.objects.get(id=cita_id)
     print cita.denunciada
@@ -364,6 +371,7 @@ def marcar_x(request, cita_id):
     return redirect('citas:colaborar_organizar')
 
 
+@login_required
 def coorg_editar(request, cita_id):
     template = 'citas/editar_cita.html'
     cita = Cita.objects.get(id=cita_id)
@@ -388,12 +396,20 @@ def coorg_editar(request, cita_id):
             return redirect('citas:colaborar_organizar')
         else:
             form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
-                                                       'autor': cita.autor, 'fuente': cita.fuente})
+                                                       'autor': cita.autor,
+                                                       'fuente': cita.fuente})
             #!!! enviar errores
 
     else:
         form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
-                                                   'autor': cita.autor, 'fuente': cita.fuente})
+                                                   'autor': cita.autor,
+                                                   'fuente': cita.fuente})
+        lista_de_autores = []
+        lista_de_autores_obj = Cita.objects.filter(eliminada=False).values('autor').order_by('autor')
+        for x in lista_de_autores_obj:
+            if x['autor'] not in lista_de_autores:
+                lista_de_autores.append(x['autor'])
 
-    context = {'form_editar_cita': form_editar_cita, 'cita_id': cita_id}
+    context = {'form_editar_cita': form_editar_cita, 'cita_id': cita_id,
+               'lista_de_autores': lista_de_autores}
     return render(request, template, context)

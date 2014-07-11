@@ -1,0 +1,76 @@
+/* css para los forms */
+.apariencia_link{
+	color: #428BCA;
+}
+
+.textarea_form{
+	margin-left: 5px;
+}
+.info_editar_perfil_des{
+	margin-top: 20px;
+	margin-left: 10px;
+}
+
+.form_margins{
+	margin-right: 20px;
+}
+
+.link_alert{
+	color:#a47e3c;
+}
+.barco_logo{
+  display: inline-block;
+  height: 150px;
+  max-width: 100%;
+  padding: 4px;
+  line-height: 1.428571429;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+   margin-bottom: 5px
+}
+.titulo_con_barco{
+	margin-left: 30px;
+	margin-bottom: 10px
+}
+.titulo_con_barco h2{
+	display:inline-block;
+}
+
+.editar_tema_imagen{
+	display:inline-block;
+}
+
+.perfil_descripcion{
+	margin-top: 30px;
+
+}
+
+.citas_lista_autores{
+	width: 250px;
+	margin-left: 50px;
+	margin-top: 20px;
+	max-height: 600px;
+	overflow: auto;
+}
+
+.imagen_editar_tema{
+display: inline-block;
+max-height: 150px;
+width:auto;
+border-top-left-radius: 10px 5px;
+border-bottom-right-radius: 10% 5%;
+border-top-right-radius: 10px;
+border-color: #FFBD32; 
+border-style: ridge;
+border-width: 2px;
+padding: 5px
+}
+
+.des_editar_tema{
+margin-top:5px;
+margin-left: 5px;
+display: inline-block;
+}

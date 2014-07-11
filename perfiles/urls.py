@@ -19,8 +19,7 @@ urlpatterns = patterns('',
                        url(r'^registrar/$', views.registrar, name='registrar'),
                        url(r'^registro_ok/$', views.registro_ok,
                            name='registro_ok'),
-                       # urls de perfil. perfil/ pasa un string "username" a la
-                       # view function
+                       # urls de perfil. perfil/ pasa un string "username" y un queryset
                        url(r'^(?P<username>\w+)/(?P<queryset>\w+)/$',
                            views.perfil, name='perfil'),
                        )

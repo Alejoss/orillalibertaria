@@ -1,0 +1,54 @@
+
+/* css para los thumbnails de temas/main */
+.thumbnail_imagen {
+  display: inline-block;
+  display: block;
+  height: auto;
+  max-width: 100%;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.428571429;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+}
+.thumbnail_main_post{
+	min-height: 115px;
+}
+
+.thumbnail_main_post img{
+	margin-right: 10px;
+	height: 100px;
+}
+
+.thumbnail_main_div{
+	overflow: hidden;
+	height: 200px;
+}
+
+.thumbnail_main_div > img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* css para temas/main general */
+
+.main_sidebar_btns{
+	margin-left: 30px
+}
+
+/* css para el panel con el tema y el link */
+.flecha{
+  top:30%;
+  height: 60%;
+  margin:-25% 0 0 -10%;
+}
+
+.col_flecha{
+  height: 110px;
+}

@@ -1,0 +1,82 @@
+{% extends "base_forms.html" %}
+
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<div class = "col-md-8">
+	<h4> Editar el video "{{video.titulo}}" del tema <a href=" {% url 'temas:index_tema' video.tema.slug 'recientes' %} ">{{video.tema.nombre}}</a></h4>
+	</div>
+	<div class = "col-md-4">
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	</div>
+	<br/>
+</div>
+{% endblock arriba %}
+
+{% block form %}
+
+<br><br>
+<div class = "col-md-10 col-md-offset-1">
+<div class = "form_margins">
+	<div class = "row">
+		<form id = "formulario" class = "form-horizontal" action = "{% url 'videos:editar_video' video.id %}" method = "post">
+			{% csrf_token %}
+			<div class = "form-group">
+				{{form_editar_video.titulo.errors}}
+				<label class = "control-label" for ="titulo"> Título </label>
+				{{form_editar_video.titulo}}
+			</div>
+
+			<div class = "form-group">
+				{{form_editar_video.url.errors}}
+				<label class = "control-label" for ="url"> URL </label>
+				{{form_editar_video.url}}
+			</div>
+
+			<div class = "form-group">
+				{{form_editar_video.descripcion.errors}}
+				<label class = "control-label" for ="descripcion"> Título </label>
+				<div class = "row textarea_form">
+				{{form_editar_video.descripcion}}
+				</div>
+			</div>
+
+			<input class = "btn pull-right" type = "submit" value ="enviar"/>
+		</form>
+	</div>
+</div>
+</div>
+{% endblock form %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			titulo: {
+				required: true,
+				minlength: 15,
+				maxlength: 150,
+			},
+			url: {
+				required: true,
+				minlength: 15,
+				maxlength: 150,
+			},
+			descripcion: {
+				required: true,
+				minlength: 20,
+				maxlength: 1000,
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			titulo: "*El título debe tener mínimo 15 y máximo 150 caracteres.",
+			url: "*Proporciona una url válida.",
+			descripcion: "*La descripción debe tener mínimo 20 y máximo 1000 caracteres:"
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}

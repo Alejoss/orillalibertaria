@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -163,6 +164,7 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     return render(request, template, context)
 
 
+@login_required
 def nuevo_tema(request):
     template = 'temas/nuevo_tema.html'
 
@@ -243,6 +245,7 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
     return render(request, template, context)
 
 
+@login_required
 def sumar_post(request, slug):
     template = 'temas/nuevo_post.html'
     if request.method == "POST":
@@ -302,8 +305,9 @@ def post(request, slug, post_id, queryset):
         descripcion_tema = "No tiene descripción por el momento"
     posts_count = Posts.objects.filter(
         tema=tema_obj, eliminado=False, es_respuesta=False).count()
-    print posts_count
-    tema = [tema_obj, imagen_tema, descripcion_tema, posts_count]
+    videos_count = Videos.objects.filter(
+        tema=tema_obj, eliminado=False).count()
+    tema = [tema_obj, imagen_tema, descripcion_tema, posts_count, videos_count]
 
     # post
     post_obj = Posts.objects.get(id=post_id)
@@ -322,7 +326,7 @@ def post(request, slug, post_id, queryset):
         # respuesta.
         respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
         post_padre_obj = respuesta_obj.post_padre
-        if request.user.is_authenticated:
+        if request.user.is_authenticated():
             post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
         else:
             post_padre_estado = "no-vote"
@@ -350,8 +354,10 @@ def post(request, slug, post_id, queryset):
         if post_respuesta.eliminado is False:
             respuesta_numrespuestas = Respuestas.objects.filter(
                 post_padre=post_respuesta, post_respuesta__eliminado=False).count()
-            respuesta_estado = obtener_voted_status(
-                post_respuesta, perfil_usuario)
+            if request.user.is_authenticated():
+                respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
+            else:
+                respuesta_estado = "no-vote"
             respuestas.append(
                 [post_respuesta, respuesta_numrespuestas, respuesta_estado])
 
@@ -368,6 +374,7 @@ def post(request, slug, post_id, queryset):
     return render(request, template, context)
 
 
+@login_required
 def editar_post(request, post_id):
     post = Posts.objects.get(id=post_id)
     if request.method == "POST":
@@ -396,6 +403,7 @@ def editar_post(request, post_id):
             return render(request, template, context)
 
 
+@login_required
 def respuesta(request, slug, post_id):
     tema = Temas.objects.get(slug=slug)
     if request.method == "POST":
@@ -439,7 +447,7 @@ def respuesta(request, slug, post_id):
         return HttpResponseRedirect(reverse('temas:post',
                                             kwargs={'slug': tema.slug, 'post_id': post_id, 'queryset': u'recientes'}))
 
-
+@login_required
 def remover_voto_ajax(request):
     if request.is_ajax():
         post_id = request.GET.get('post_id', '')
@@ -464,7 +472,7 @@ def remover_voto_ajax(request):
     else:
         return HttpResponse('error_no_ajax')
 
-
+@login_required
 def vote_up_ajax(request):
     if request.is_ajax():
         post_id = request.GET.get('post_id', '')
@@ -601,6 +609,7 @@ def vote_down_ajax(request):
         return HttpResponse('error_no_ajax')
 
 
+@login_required
 def editar_tema(request, slug):
     template = "temas/editar_tema.html"
 
@@ -665,6 +674,7 @@ def editar_tema(request, slug):
     return render(request, template, context)
 
 
+@login_required
 def eliminar_propio_post(request, post_id):
     post = Posts.objects.get(id=post_id)
     if post.creador.usuario == request.user:

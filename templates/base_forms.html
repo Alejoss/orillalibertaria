@@ -2,7 +2,11 @@
 {% load staticfiles %}
 
 {% block extra_css %}
+<link href="{% static 'css/forms.css' %}" rel="stylesheet">
 <link href="{% static 'css/wChar.css' %}" rel="stylesheet">
+
+{% block form_specific_css %}
+{% endblock form_specific_css %}
 {% endblock extra_css %}
 
 {% block content %}
@@ -30,11 +34,17 @@
 {% load staticfiles %}
 
 <script src="{% static 'js/wChar.js' %} "></script>
+<script src="{% static 'js/validation-core.js' %} "></script>
+<script src="{% static 'js/validation-ajax.js' %} "></script>
+<script src="{% static 'js/validation-delegate.js' %} "></script>
 
+{% block extra_javascript %}
+
+{% endblock extra_javascript %}
 <script>
 $(document).ready(function(){
 	$('.textarea').wChar();
+	$('#wchar').wChar();
 });
-
 </script>
 {% endblock javascript %}

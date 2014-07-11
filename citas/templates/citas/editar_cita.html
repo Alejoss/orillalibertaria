@@ -1,16 +1,93 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% extends "base_forms.html" %}
 
-{% block content %}
+{% block arriba %}
+<div class = "row titulo_con_barco">
+	<h2> Editar Frase </h2>
+	<img class = "barco_logo pull-right" 
+	src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<br/>
+</div>
+{% endblock arriba %}
 
+
+{% block form %}
 <div class = "col-md-10 col-md-offset-2">
-<form action = "{% url 'citas:coorg_editar' cita_id %}" method = "post">
+<form id = "formulario" class = "form-horizontal" action = "{% url 'citas:coorg_editar' cita_id %}" method = "post">
     {% csrf_token %}
-   {{ form_editar_cita.non_field_errors }}
-   	<div>
-   		{{ form_editar_cita|crispy }}	  	
-	  	<input class = "btn" type="submit" value="Enviar" />
+    {{ form_editar_cita.non_field_errors }}
+   	
+   	<div class = "form-group">
+   		<label class = "control-label" for = "texto"> Frase </label>
+   		<div class = "row textarea_form">
+   			{{ form_editar_cita.texto }}
+   		</div>
+   		<span class = "help-block"> Edita la frase. No incluyas comillas. </span>
   	</div>
-</form>
+	
+	  <div class = "form-group">
+		<label class = "control-label" for = "autor"> Autor </label>
+   			{{ form_editar_cita.autor }}
+   		<span class = "help-block"> Evita repeticiones. Revisa la lista de autores antes de crear uno nuevo.</span>
+   	</div>
 
-{% endblock content %}
+   	<div class = "form-group">
+   		<label class = "control-label" for = "fuente"> Fuente </label>
+   			{{form_editar_cita.fuente}}
+   		<span class = "help-block"> Libro, artículo, video, audio. </span>
+   	</div>
+
+   	<div class = "form-group">
+   		<label class = "control-label" for = "razon" placeholder = "¿Qué es lo que estaba mal?" > Fuente </label>
+   			{{form_editar_cita.razon}}
+   	</div>
+
+
+	  	<input class = "btn pull-right" type="submit" value="Enviar" />
+</form>
+</div>
+{% endblock form %}
+
+{% block description %}
+<div>
+	<br><br>
+	<dt>
+		Lista de autores:
+	</dt>
+	<ul class="list-group citas_lista_autores">
+		{% for autor in lista_de_autores %}
+	  <li class="list-group-item"> {{autor}} </li>
+	  	{% endfor %}
+	</ul>
+</div>
+{% endblock description %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+  $('#formulario').validate({
+    rules: {
+      texto: {
+        required: true,
+        minlength: 15,
+        maxlength: 1000
+      },
+      autor: {
+        required: true,
+        maxlength: 75,
+      },
+      razon: {
+        required: true,
+      }
+    },
+    errorElement: "span",
+    onfocusout: false,
+    onkeyup: false,
+    messages: {
+      texto: "*La frase dene tener mínimo 15 y máximo 1000 caracteres.",
+      autor: "*Proporciona un autor, hasta 75 caracteres.",
+      razon: "*Describe qué estaba mal. Ej: 'ortografía', 'fuente', 'traducción'"
+    }
+  });
+});
+</script>
+{% endblock extra_javascript %}

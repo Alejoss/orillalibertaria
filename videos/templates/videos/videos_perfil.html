@@ -1,6 +1,10 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/videos.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">

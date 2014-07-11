@@ -1,5 +1,4 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
@@ -11,11 +10,39 @@
 {% endblock arriba %}
 
 {% block form %}
+<div class = "col-md-10 col-md-offset-1">
+<div class = "form_margins">
+	<div class = "row">
+	<form id = "formulario" class = "form-horizontal" action = "{% url 'temas:nuevo_tema' %}" method = "post"> {% csrf_token %}
+		{{form_crear_tema.non_field_errors}}
+		<fieldset>
 
-	<form action = "{% url 'temas:nuevo_tema' %}" method = "post"> {% csrf_token %}
-		{{form_crear_tema|crispy}}
-		<input class = "btn" type = "submit" value = "Crear Tema"/>
+		<div class = "form-group">
+			<label class = "control-label" for = "nombre"> Nombre </label>
+			{{form_crear_tema.nombre}}
+			<span class = "help-block">Dale un título al tema</span>
+		</div>
+
+		<div class = "form-group">
+			<label class = "control-label" for = "texto"> Descripción </label>
+			<div class = "row textarea_form">
+			{{form_crear_tema.texto}}
+			</div>
+			<span class = "help-block"> Añádele una descripción al tema </span>
+		</div>
+
+		<div class = "form-group">
+			<label class = "control-label" for = "imagen"> Imagen </label>
+			{{form_crear_tema.imagen}}
+			<span class = "help-block"> URL a una imagen que le sirva de portada al tema </span>
+		</div>
+		</fieldset>
+
+		<input class = "btn pull-right" type = "submit" value = "Crear Tema"/>
 	</form>
+	</div>
+</div> <!--form_margins-->
+</div> <!--col md 10 -->
 	<!-- debe redireccionar a la pagina del nuevo tema -->
 {% endblock form %}
 
@@ -45,3 +72,39 @@
 	</dd>
 </div>
 {% endblock description %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#wchar_min').wChar({
+		min: 150
+	});
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 150,
+				maxlength: 1000
+			},
+			nombre: {
+				required: true,
+				maxlength: 75,
+			},
+			imagen: {
+				required: true,
+				minlength: 15,
+				maxlength: 150
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*Escribe una descripción de mínimo 150 y máximo 1000 caracteres.",
+			nombre: "*El nombre del tema debe tener hasta 75 caracteres.",
+			imagen: "*Inserta una URL válida"
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}

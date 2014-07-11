@@ -1,0 +1,26 @@
+/* css para la pagina de citas */
+.sidebar_citas{
+	margin-left: 10px;
+}
+
+.cita_favoritos{
+	display: inline-block;
+}
+.marcar_favorito{
+	display: inline-block;
+	cursor: pointer;
+}
+.reportar_cita{
+	float: right;
+	margin-top: 10px;
+	cursor:pointer;
+}
+.link_coorg_citas{
+	text-align: left;
+	margin-left: 40px;
+	margin-top: 10px
+}
+
+.div_cita{
+	padding-left: 0px;
+}

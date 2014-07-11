@@ -1,27 +1,60 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
+
+{% block form_specific_css %}
+{% load staticfiles %}
+<link href="{% static 'css/perfil.css' %}" rel="stylesheet">
+{% endblock form_specific_css %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<img style = "margin-right:20px" class = "barco_logo" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
-	<h2 class = "pull-right"> Edita tu perfil {{user.username}} </h2>
+	<h2> Edita tu perfil</h2>
 	<br/>
 </div>
 {% endblock arriba %}
 
 {% block form %}
 <div class = "row">
-	<p class = "perfil_descripcion pull-right">{{descripcion}}</p>	
-		
-</div>
-<div class = "row">
-	<form action = "/perfiles/editar_perfil_des/" method = "post">
-	{% csrf_token %}
-		<ul>
-			{{editar_perfil_form|crispy}}
-		</ul>
-		<input class= "btn pull-right" type = "submit" name = "submit" value = "Guardar">
-	</form>
+<div class = "col-md-10 col-md-offset-1">
+	<div class = "form_margins">
+		<p class = "perfil_descripcion pull-right">{{descripcion}}</p>		
+	</div>
+	<div class = "row">
+		<form id = "formulario" class = "form-horizontal" action = "/perfiles/editar_perfil_des/" method = "post">
+		{% csrf_token %}
+		<fieldset>
+			<div class = "form-group">
+				<label class = "control-label" for = "descripcion"> Descripción </label>
+				<div class = "row textarea_form">
+				{{editar_perfil_form.descripcion}}
+				</div>
+				<span class = "help-block"> En 250 caracteres </span>
+			</div>
+
+			<div class = "form-group">
+				<label class = "control-label" for = "link1"> Links</label>
+				{{editar_perfil_form.link1}}
+			</div>
+			<div class = "form-group">
+				{{editar_perfil_form.link2}}
+			</div>
+			<div class = "form-group">
+				{{editar_perfil_form.link3}}
+			</div>
+			<div class = "form-group">
+				{{editar_perfil_form.link4}}
+			</div>
+			<div class = "form-group">
+				{{editar_perfil_form.link5}}
+				<span class = "help-block"> Comparte cinco links que digan algo de ti</span>
+			</div>
+
+
+		</fieldset>
+ 		<input class= "btn pull-right" type = "submit" name = "submit" value = "Guardar">
+		</form>
+	</div>
+	</div>
 </div>
 {% endblock form %}
 <div class = "col-md-10 col-md-offset-2">
@@ -53,16 +86,6 @@
 				<a href=" {% url 'citas:index' 'recientes' %} ">Banco de Frases</a>, 
 				puedes elegir tus favoritas y aparecerán en tu perfil. </p>
 		{% endif %}
-
-	<p>Edita tu descripcion y tus links {{user.username}}</p>
-
-		<form action = "/perfiles/editar_perfil_des/" method = "post">
-			{% csrf_token %}
-			<ul>
-				{{editar_perfil_form.as_ul}}
-			</ul>
-			<input type = "submit" name = "submit" value = "Guardar">
-		</form>
 	</div>
 
 {% block description %}
@@ -71,7 +94,9 @@
 		<img class = "imagen_perfil" src = "http://th03.deviantart.net/fs70/PRE/f/2011/071/1/6/demon_hunter_illidan_stormrage_by_siakim-d3bghq6.jpg">
 	</div>
 	<div class = "pull-right">
-		<h4> {{user.first_name}} {{user.last_name}} </h4>
+		<h4> {{user.username}} </h4>
+		<h5 class = "text-muted"> {{user.first_name}} {{user.last_name}} </h5>
+		<h5 class = "text-muted"> {{user.email}} </h5>
 		<h5 class = "text-muted"> Edita tu <a href="{% url 'perfiles:editar_perfil_info' %}">información.</a> </h5>
 		<h5 class = "text-muted"> Revisa tu portada y tus <a href=" {% url 'imagenes:favoritas' user.username %} ">imágenes favoritas.</a> </h5>
 		<h5 class = "text-muted"> Revisa tus 
@@ -80,3 +105,50 @@
 	</div>
 </div>
 {% endblock description %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#wchar_250').wChar({max:250});
+	$('#formulario').validate({
+		rules: {
+			descripcion: {
+				required: false,
+				maxlength: 250
+			},
+			link1: {
+				required: false,
+				maxlength: 150,
+			},
+			link2: {
+				required: false,
+				maxlength: 150,
+			},
+			link3: {
+				required: false,
+				maxlength: 150,
+			},
+			link4: {
+				required: false,
+				maxlength: 150,
+			},
+			link5: {
+				required: false,
+				maxlength: 150,
+			},
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			descripcion: "*Tu descripción debe tener como máximo 250 caracteres.",
+			link1: "*Este link parece no ser válido.",
+			link2: "*Este link parece no ser válido.",
+			link3: "*Este link parece no ser válido.",
+			link4: "*Este link parece no ser válido.",
+			link5: "*Este link parece no ser válido.",
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}

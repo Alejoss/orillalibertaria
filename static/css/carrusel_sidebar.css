@@ -1,0 +1,33 @@
+
+/*css para el carrusel de imágenes */
+.cuadro_carrusel{
+	margin-top: 30px;
+	max-height: 465px;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+}
+
+.imagen_carrusel{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.div_carrusel{
+	height: 500px;
+	overflow: hidden;
+	margin-left: 15px;
+}
+
+.btn_galeria{
+	margin-right: 15px;
+	margin-left: 30px;
+}
+
+.tema_slide_imagenes{
+	border-color: #FFBD32; 
+	border-style: ridge;
+	border-width: 2px;
+	padding: 10px;
+}

@@ -1,36 +1,15 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 
 <div class="row clearfix">
 <div class="col-md-8 column">
 
-<div class = "row clearfix"> <!-- cuadro arriba -->
-	{% if video.es_youtube %}
-	<div class = "col-md-7">
-		<div class = "div_video thumbnail">
-			<div class="js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
-			</div>
-			<div class = "favoritos_video ">
-				<p class = "hidden">{{video.id}}</p>
-				<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span> 
-				<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>  
-				<p> <small> farseer el 14 de Marzo </small> </p>
-			</div>
-		</div>
-	</div>
-	<div class = "col-md-5">
-		<div class = "div_descripcion_video">
-			<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
-				<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
-			</p>
-		</div>
-	</div>
-	{% endif %}
-</div>
+{% include 'cuadro_video.html' %}
 
+<a href=" {% url 'videos:video' video.id video.tema.slug 'recientes' %} ">  {{video.titulo}} <i class ="fa fa-level-up"></i> </a>
+<hr>
 <div class = "row clearfix"> <!--cuadro para posts -->
 
 <!-- post_padre -si el post respuesta-->
@@ -81,7 +60,7 @@
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
-			 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
+			 			<a href = "{% url 'videos:post_video' video.id tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
 			 			<span class="fa fa-comments"></span>
 			 			<span class="fa fa-chevron-right"></a>
@@ -95,16 +74,28 @@
 			<div class = "col-md-1">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
-						<p class = "vote-id hidden">{{post_padre.0.id}}</p>
-						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje {{post_padre.1}} "> {{post_padre.0.votos_total}} </h2>
-						</button>
-						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
+					{% if user.is_authenticated %}
+					<p class = "vote-id hidden">{{post_padre.0.id}}</p>
+					<button type="button" class = "btn btn-default vote-up"> 
+						<span class="fa fa-chevron-up"></span>
+					</button>
+					{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-up"></span>
+					</button>
+					{% endif %}
+					<button class = "btn puntaje"> 
+					<h2 class = "numero_puntaje {{post_padre.1}}"> {{post_padre.0.votos_total}} </h2>
+					</button>
+					{% if user.is_authenticated %}
+					<button type="button" class = "btn btn-default vote-down"> 
+						<span class="fa fa-chevron-down"></span>
+					</button>
+					{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-down"></span>
+					</button>
+					{% endif %}
 					</div>
 				</div>
 			</div>
@@ -141,7 +132,7 @@
 						</p>
 						</div>
 						<div class = "footer_respuestas pull-right">
-				 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
+				 			<a href = "{% url 'videos:post_video' video.id tema.0.slug post_padre.0.id 'recientes' %} ">
 			 				{{post_padre.2}}
 			 				<span class="fa fa-comments"></span>
 			 				<span class="fa fa-chevron-right"> </a>
@@ -194,7 +185,7 @@
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
-			 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
+			 			<a href = "{% url 'videos:post_video' video.id tema.0.slug post.0.id 'recientes' %} ">
 			 				{{post.2}}
 			 			<span class="fa fa-comments"></span>
 			 			<span class="fa fa-chevron-right"> </a>
@@ -209,16 +200,28 @@
 		<div class = "col-md-1">
 			<div class = "control_votos">
 				<div class = "btn-group-vertical">
+					{% if user.is_authenticated %}
 					<p class = "vote-id hidden">{{post.0.id}}</p>
 					<button type="button" class = "btn btn-default vote-up"> 
 						<span class="fa fa-chevron-up"></span>
 					</button>
-					<button type="button" class = "btn btn-default puntaje"> 
+					{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-up"></span>
+					</button>
+					{% endif %}
+					<button class = "btn puntaje"> 
 					<h2 class = "numero_puntaje {{post.1}}"> {{post.0.votos_total}} </h2>
 					</button>
+					{% if user.is_authenticated %}
 					<button type="button" class = "btn btn-default vote-down"> 
 						<span class="fa fa-chevron-down"></span>
 					</button>
+					{% else %}
+					<button type="button" class = "btn btn-default disabled"> 
+						<span class="fa fa-chevron-down"></span>
+					</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -267,15 +270,23 @@
 </div> <!--cuadro para posts -->
 
 <hr/>
-<div class = "row clearfix">
+{% if user.is_authenticated %}
+<div class = "row clearfix borde">
 <div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta">
-		<form action = " {% url 'temas:respuesta' tema.0.slug post.0.id %} " method = "POST"/>
-			{% csrf_token %}
-			{{form_respuesta|crispy}}
+		<form id = "formulario" class = "form-horizontal" action = " {% url 'temas:respuesta' tema.0.slug post.0.id %} " method = "POST"/>
+		<fieldset>
+		<div class = "form-group">
+			<label = class = "control-label" for = "texto"></label>
+			<div class = "row textarea_form">
+			{{form_respuesta.texto}}
+			</div>
+		</div>
+		</fieldset>
 		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
 		</form>
 	</div>
 </div>
+{% endif %}
 
 <div class = "col-md-12">
 	<h5 class="text-muted">
@@ -291,16 +302,28 @@
 	<div class = "col-md-1">
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
+				{% if user.is_authenticated %}
 				<p class = "vote-id hidden">{{respuesta.0.id}}</p>
 				<button type="button" class = "btn btn-default vote-up"> 
 					<span class="fa fa-chevron-up"></span>
 				</button>
-				<button type="button" class = "btn btn-default puntaje"> 
-				<h2 class = "numero_puntaje {{respuesta.2}} "> {{respuesta.0.votos_total}} </h2>
+				{% else %}
+				<button type="button" class = "btn btn-default disabled"> 
+					<span class="fa fa-chevron-up"></span>
 				</button>
+				{% endif %}
+				<button class = "btn puntaje"> 
+				<h2 class = "numero_puntaje {{respuesta.2}}"> {{respuesta.0.votos_total}} </h2>
+				</button>
+				{% if user.is_authenticated %}
 				<button type="button" class = "btn btn-default vote-down"> 
 					<span class="fa fa-chevron-down"></span>
 				</button>
+				{% else %}
+				<button type="button" class = "btn btn-default disabled"> 
+					<span class="fa fa-chevron-down"></span>
+				</button>
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -393,4 +416,27 @@
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{% static 'js/video_fav.js' %}"></script>
 <script src="{% static 'js/votos.js' %} "></script>
+<script src="{% static 'js/validation-core.js' %} "></script>
+<script src="{% static 'js/validation-ajax.js' %} "></script>
+<script src="{% static 'js/validation-delegate.js' %} "></script>
+
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 15,
+				maxlength: 10000
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*Escribe una post de mínimo 15 y máximo 10.000 caracteres.",
+		}
+	});
+});
+</script>
 {% endblock javascript %}

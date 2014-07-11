@@ -1,226 +1,25 @@
-/* prueba */
-#p_show{
-	display: none;
-	border: 1px solid red;
-}
-.red{
-  color: red;
-}
-.borde {
-	border: 1px solid red;
-}
-.dorado {
-	color: #ffd700;
-}
-.subrayar{
-	text-decoration: underline;
-}
-/* css para el cuadro de notificaciones */
-.no_leida{
-	background-color: #fcf8e3
-}
-
-.imagen_notificacion{
-	max-height: 48px;
-	max-width: 48px;
-	margin-bottom: 5px;
-	margin-left: 2px;
-	border-top-left-radius: 10px 5px;
-	border-bottom-right-radius: 10% 5%;
-	border-top-right-radius: 10px;
-	border-color: #FFBD32;
-	border-style: ridge;
-	border-width: 2px;
-	padding: 2px
-}
-
-.lista_notificaciones{
-	margin-bottom: 5px;
-}
-.lista_notificaciones_todas >li{
-	height: 75px;
-	overflow: auto;
-}
-
-.no-close .ui-dialog-titlebar-close {
-	display: none;
-}
-
-.ui-dialog-buttonset{
-	position: relative;
-	float:right;
-	border-radius: 6px;
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	background-clip: padding-box;
-}
-
-.cuadro_notificaciones{
-
-	margin-top: 50px;
-	padding: 10px;
-	background-color: #ffffff;
-	border: 1px solid #999999;
-	border: 1px solid rgba(0, 0, 0, 0.2);
-	border-radius: 6px;
-	outline: none;
-	-webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-	      box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-	background-clip: padding-box;
-
-}
-
-
-/*css para el perfil*/
-.puntos_posts{
-	display: block;
-}
-.imagen_perfil{
-	max-height: 160px;
-	max-width: 160px;
-	display: block;
-}
-.cita_small{
-	font-size: 100%;
-}
-.div_perfil_datos{
-	margin-left: 40px;
-}
-.perfil_panel_sm{
-	margin-top: 20px;
-	margin-right: 20px;
-}
-.nombre_usuario{
-	margin-top: 0px;
-	margin-left: 80px;
-}
-.frase_perfil{
-	display: inline-block;
-	height: 100px;
-	width: 200px;
-}
-
-.imagenes_frases_perfil{
-	display: inline-block;
-	margin-top: 5px;
-	width: 200px;
-}
-
-.imagen_perfil{
-	max-height: 150px;
-	width: auto;
-}
-.imagenes_portada{
-	margin-left: 60px;
-}
-
 /* css para el navbar */
 .logo{
-	height: 50px;
+	display: inline-block;
+	height: 40px;
+	margin-top: -8px;
+	margin-bottom: 0px;
 	width: auto;
+}
+
+.display_inline_block{
+	display: inline-block;
 }
 
 .nombre_perfil{
-	float:left;
+	display: inline-block;
 	margin-right: 5px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .glyphicon_perfil{
 	display: inline;
 }
 
-/*css para el carrusel de imágenes */
-.cuadro_carrusel{
-	margin-top: 30px;
-	max-height: 500px;
-	overflow: hidden;
-	margin-left: auto;
-	margin-right: auto;
-	width: 90%;
-}
-
-.imagen_carrusel{
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.div_carrusel{
-	height: 500px;
-	overflow: hidden;
-	margin-left: 15px;
-}
-
-.btn_galeria{
-	margin-right: 15px;
-	margin-left: 30px;
-}
-
-.tema_slide_imagenes{
-	border-color: #FFBD32; 
-	border-style: ridge;
-	border-width: 2px;
-	padding: 10px;
-}
-
-/* css para el panel con el post y los votos */
-.post_resaltado{
-	border: 2px solid transparent;
-	border-radius: 4px;
-	border-color: #faebcc;
-	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-	      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-#mostrar_post_padre{
-	margin-left: 10px;
-	cursor: pointer;
-}
-.control_votos{
-	vertical-align: center;
-	max-width: 80px;
-}
-.puntaje{
-	height: 50px;
-	cursor: default;
-	color: #333333;
-	background-color: #ffffff;
-	border-color: #cccccc;
-}
-.numero_puntaje{
-	height: 40px;
-	vertical-align: top;
-	margin-top: 5px;
-}
-.nombre_fecha{
-	margin-left: 10px;
-	display: inline-block;
-}
-.eliminar_editar{
-	text-align: right;
-	text-decoration: none;
-	font-size: 8px;
-}
-.eliminar_post{
-	display: block;
-	padding: 3px 20px;
-	clear: both;
-	font-weight: normal;
-	line-height: 1.428571429;
-	color: #333333;
-	white-space: nowrap;
-}
-.footer_respuestas{
-	display: inline-block;
-}
-
-/* css para el panel con el tema y el link */
-.flecha{
-	top:30%;
-	height: 60%;
-	margin:-25% 0 0 -10%;
-}
-
-.col_flecha{
-	height: 110px;
-}
 
 /* css para el control de tipo de entradas. "Activo", "Popular", etc. */
 .div_control{
@@ -265,110 +64,6 @@ padding: 5px
 	margin-left: 75px;
 }
 
-/*css para el post y las respuestas */
-.form_respuesta{
-	display: block;
-}
-
-.post_datos_tema{
-	display:block;
-	margin-left: 70px;
-	margin-top: 10px;
-}
-
-/* css para los thumbnails de temas/main */
-.thumbnail_imagen {
-  display: inline-block;
-  display: block;
-  height: auto;
-  max-width: 100%;
-  padding: 4px;
-  margin-bottom: 20px;
-  line-height: 1.428571429;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  -webkit-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
-}
-.thumbnail_main_post{
-	min-height: 115px;
-}
-
-.thumbnail_main_post img{
-	margin-right: 10px;
-	height: 100px;
-}
-
-.thumbnail_main_div{
-	overflow: hidden;
-	height: 200px;
-}
-
-.thumbnail_main_div > img {
-  display: block;
-  height: auto;
-  max-width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-/* css para temas/main general */
-
-.main_sidebar_btns{
-	margin-left: 30px
-}
-
-/* css para los forms */
-.info_editar_perfil_des{
-	margin-top: 20px;
-	margin-left: 10px;
-}
-
-.form_margins{
-	margin-right: 20px;
-}
-
-.link_alert{
-	color:#a47e3c;
-}
-.barco_logo{
-  display: inline-block;
-  height: 150px;
-  max-width: 100%;
-  padding: 4px;
-  line-height: 1.428571429;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  -webkit-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
-   margin-bottom: 5px
-}
-.titulo_con_barco{
-	margin-left: 30px;
-}
-.titulo_con_barco h2{
-	display:inline-block;
-}
-
-.editar_tema_imagen{
-	display:inline-block;
-}
-
-.perfil_descripcion{
-	margin-top: 30px;
-
-}
-
-.citas_lista_autores{
-	width: 250px;
-	margin-left: 50px;
-	margin-top: 20px;
-	max-height: 600px;
-	overflow: auto;
-	}
-
 /*css para el sidebar*/
 .btn_sidebar{
 	display: block;
@@ -386,76 +81,21 @@ padding: 5px
 	margin-left: 30px
 }
 
-/* css para la pagina de citas */
-.breadcrumb_top{
-	margin-left: 30px;
-}
-.cita_favoritos{
-	display: inline-block;
-}
-.marcar_favorito{
-	display: inline-block;
-	cursor: pointer;
-}
-.reportar_cita{
-	float: right;
-	margin-top: 10px;
-	cursor:pointer;
-}
-.link_coorg_citas{
+/* otros */
+.whitespace_pre{
 	text-align: left;
-	margin-left: 40px;
-	margin-top: 10px
-}
-
-.div_cita{
-	padding-left: 0px;
-}
-
-/* css para el video.html */
-.div_video{
-	margin-left: 15px;
-	width: 415px;
-}
-.div_descripcion_video{
-	margin-top: 20px;
-	height: 300px;
-	max-height: 315px;
-	overflow: auto;
-}
-.favoritos_video{
-	margin-right: 15px;
-	margin-top: 10px;
-	text-align: right;
-}
-.favoritos_video > span{
-	margin-left: 10px;
-}
-.favoritos_video > h4{
-	display: inline-block;
-	text-align: left;
-}
-.favoritos_video > p{
-	display: inline-block;
-	margin-top: 10px;
+	white-space: pre;
 }
 .estrella {
 	display: inline-block;
   	cursor: pointer;
 }
-.video_no_youtube{
-	height: 300px;
-	width: 400px;
+.dorado {
+	color: #ffd700;
 }
-.video_no_youtube > img{
-	height: 200px;
-	width: 200px;
-	margin-left: 50px;
-	margin-bottom: 10px;
+.red{
+  color: red;
 }
-.video_no_youtube > p{
-	margin-left: 15px;
-}
-.video_no_youtube > a{
-	margin-left: 45px;
+.breadcrumb_top{
+	margin-left: 30px;
 }

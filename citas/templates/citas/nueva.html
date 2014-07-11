@@ -1,5 +1,4 @@
 {% extends "base_forms.html" %}
-{% load crispy_forms_tags %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
@@ -10,11 +9,51 @@
 {% endblock arriba%}
 
 {% block form %}
+<div class = "col-md-10 col-md-offset-1">
 <div class = "form_margins">
 	<div class = "row">
-		<form action = "{% url 'citas:nueva' %}" method = "post">
+		<form id = "formulario" class = "form-horizontal" action = "{% url 'citas:nueva' %}" method = "post">
 			{% csrf_token %}
-			{{FormNuevaCita|crispy}}
+			{{FormNuevaCita.non_field_errors}}
+			<fieldset>
+
+			<div class = "form-group">
+				{{FormNuevaCita.texto.errors}}
+				<label class = "control-label" for="texto"> Frase* </label>
+				<div class = "row textarea_form">
+				{{FormNuevaCita.texto}}
+				<span class="help-block">No escribas comillas, se añaden automáticamente</span>
+				</div>
+			</div>
+
+			<div class = "form-group">
+				{{FormNuevaCita.autor.errors}}
+				<label class = "control-label" for="autor"> Autor* </label>
+				{{FormNuevaCita.autor}}
+				<span class="help-block">Evita repeticiones</span>
+			</div>
+
+			<div class = "form-group">
+				{{FormNuevaCita.fuente.errors}}
+				<label class = "control-label" for="fuente"> Fuente </label>
+				{{FormNuevaCita.fuente}}
+				<span class="help-block">Libro, artículo, video, audio</span>
+			</div>
+
+			<div class = "form-group">
+				<label class = "control-label" for="checkbox">
+				<span class = "fa fa-unlock-alt"></span>
+				</label>
+				<label class = "checkbox-inline" for="checkbox">
+					<input name="check" id ="checkbox" value="1"
+					type="checkbox">
+					<small>
+					Revisé que ésta frase es nueva en Orilla Libertaria
+					</small>
+				</label>
+			</div>
+
+			</fieldset>
 			<input class = "btn pull-right" type = "submit" value ="enviar"/>
 		</form>
 	</div>
@@ -23,6 +62,7 @@
 		<span class="fa fa-check-circle"></span> Gracias por aportar a la comunidad
 	</h5>
 	</div>
+</div>
 </div>
 {% endblock form %}
 
@@ -47,3 +87,34 @@
 </div>
 
 {% endblock description %}
+
+{% block extra_javascript %}
+<script>
+$(document).ready(function(){
+	$('#formulario').validate({
+		rules: {
+			texto: {
+				required: true,
+				minlength: 15,
+				maxlength: 1000
+			},
+			autor: {
+				required: true,
+				maxlength: 75,
+			},
+			check: {
+				required: true,
+			}
+		},
+		errorElement: "span",
+		onfocusout: false,
+		onkeyup: false,
+		messages: {
+			texto: "*Escribe una frase de mínimo 15 y máximo 1000 caracteres.",
+			autor: "*Proporciona un autor, hasta 75 caracteres.",
+			check: "*Esto es importante:"
+		}
+	});
+});
+</script>
+{% endblock extra_javascript %}
