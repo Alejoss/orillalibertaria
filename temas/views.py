@@ -20,7 +20,8 @@ from notificaciones.models import Notificacion
 from perfiles.models import Perfiles
 from citas.models import Cita
 from videos.models import Videos
-from olibertaria.utils import obtener_imagenes_display, obtener_voted_status, obtener_imagen_tema, obtener_cita
+from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
+    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat
 from utils import obtener_posts_populares
 
 # print "variable %s" %(variable) <--- para debug
@@ -111,6 +112,8 @@ def buscar(request):
         context = {'query_string': query_string,
                    'temas_encontrados': temas_encontrados}
         return render(request, template, context)
+    else:
+        return redirect('temas:main', queryset=u'recientes')
 
 
 @page_template('index_page_temas.html')
@@ -138,7 +141,7 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
         if Tema_descripcion.objects.filter(tema=tema).exists():
             descripcion_obj = Tema_descripcion.objects.filter(
                 tema=tema).latest('id')
-            descripcion = descripcion_obj.texto
+            descripcion = procesar_espacios(descripcion_obj.texto)
         else:
             descripcion = ""
         imagen = obtener_imagen_tema(tema)
@@ -155,8 +158,8 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
         imagenes_posts_populares.append(imagen)
 
     context = {'temas': temas, 'posts_populares': posts_populares,
-               'cita': cita, 'todos': todos, 'activos': activos, 'populares': populares,
-               'imagenes_posts_populares': imagenes_posts_populares}
+               'cita': cita, 'todos': todos, 'activos': activos,
+               'populares': populares, 'imagenes_posts_populares': imagenes_posts_populares}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -190,7 +193,9 @@ def nuevo_tema(request):
             pass  # !!! enviar errores
 
     form_crear_tema = FormCrearTema()
-    context = {'form_crear_tema': form_crear_tema}
+    lista_bersuit = bersuit_vergarabat()
+
+    context = {'form_crear_tema': form_crear_tema, 'lista_bersuit': lista_bersuit}
     return render(request, template, context)
 
 
@@ -204,7 +209,7 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
     if Tema_descripcion.objects.filter(tema=tema).exists():
         descripcion_obj = Tema_descripcion.objects.filter(
             tema=tema).latest('id')
-        descripcion = descripcion_obj.texto
+        descripcion = procesar_espacios(descripcion_obj.texto)
     imagen = obtener_imagen_tema(tema)
 
     # Posts
@@ -229,7 +234,8 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
         else:
             voted_status = "no-vote"
 
-        posts.append([post, num_respuestas, voted_status])
+        texto_procesado = procesar_espacios(post.texto)
+        posts.append([post, num_respuestas, voted_status, texto_procesado])
 
     # thumbnail de imágenes.
     imagenes_display = obtener_imagenes_display(7)
@@ -301,6 +307,7 @@ def post(request, slug, post_id, queryset):
     if Tema_descripcion.objects.filter(tema=tema_obj).exists():
         descripcion_tema = (
             Tema_descripcion.objects.filter(tema=tema_obj).latest('id')).texto
+        descripcion_tema = procesar_espacios(descripcion_tema)
     else:
         descripcion_tema = "No tiene descripción por el momento"
     posts_count = Posts.objects.filter(
@@ -317,7 +324,8 @@ def post(request, slug, post_id, queryset):
         post_voted_status = "no-vote"
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
-    post = [post_obj, post_voted_status, post_numrespuestas]
+    texto_procesado_post = procesar_espacios(post_obj.texto)
+    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado_post]
 
     # post_padre
     post_padre = []
@@ -332,7 +340,8 @@ def post(request, slug, post_id, queryset):
             post_padre_estado = "no-vote"
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
-        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas]
+        texto_procesado_postpadre = procesar_espacios(post_padre_obj.texto)
+        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas, texto_procesado_postpadre]
 
     # respuestas
     recientes = ""
@@ -358,8 +367,9 @@ def post(request, slug, post_id, queryset):
                 respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
             else:
                 respuesta_estado = "no-vote"
+            texto_procesado_resp = procesar_espacios(post_respuesta.texto)
             respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado])
+                [post_respuesta, respuesta_numrespuestas, respuesta_estado, texto_procesado_resp])
 
     # otros
     # utiliza el mismo form que los posts normales
@@ -546,10 +556,11 @@ def vote_up_ajax(request):
                     notificacion_num.save()
 
                 #Notificacion voteup
-                notificacion_voteup = Notificacion(actor=usuario_votante, target=usuario_votado,
-                                                   objeto_id=post_votado.id, tipo_objeto="post",
-                                                   tipo_notificacion="fav_voteup")
-                notificacion_voteup.save()
+                if usuario_votante != usuario_votado:
+                    notificacion_voteup = Notificacion(actor=usuario_votante, target=usuario_votado,
+                                                       objeto_id=post_votado.id, tipo_objeto="post",
+                                                       tipo_notificacion="fav_voteup")
+                    notificacion_voteup.save()
 
             return HttpResponse('vote-up ajax procesado')
     else:
@@ -663,13 +674,14 @@ def editar_tema(request, slug):
         tiene_descripcion = False
 
     form_editar_tema = FormEditarTema(initial={'descripcion': ultima_edicion})
+    lista_bersuit = bersuit_vergarabat()
 
     context = {
         'puede_editar': puede_editar, 'primera_edicion': primera_edicion,
         'ultima_edicion': ultima_edicion, 'numero_de_ediciones': numero_de_ediciones,
         'tema': tema, 'form_editar_tema': form_editar_tema,
         'ha_sido_editado': ha_sido_editado, 'imagen': imagen,
-        'tiene_descripcion': tiene_descripcion}
+        'tiene_descripcion': tiene_descripcion, 'lista_bersuit': lista_bersuit}
 
     return render(request, template, context)
 

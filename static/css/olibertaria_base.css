@@ -1,8 +1,8 @@
 /* css para el navbar */
 .logo{
 	display: inline-block;
-	height: 40px;
-	margin-top: -8px;
+	height: 60px;
+	margin-top: -15px;
 	margin-bottom: 0px;
 	width: auto;
 }
@@ -82,6 +82,11 @@ padding: 5px
 }
 
 /* otros */
+.leer_mas{
+	cursor: pointer;
+	color: #428BCA;
+}
+
 .whitespace_pre{
 	text-align: left;
 	white-space: pre;
@@ -96,6 +101,6 @@ padding: 5px
 .red{
   color: red;
 }
-.breadcrumb_top{
+.titulo_top{
 	margin-left: 30px;
 }

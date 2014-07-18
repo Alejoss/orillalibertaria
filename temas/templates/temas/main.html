@@ -1,13 +1,18 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+<link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+
 <!--navbar mobile. li con class = "hidden-md hidden-lg"-->
 {% block navbar_mobile_xs %}
 <li class = "visible-xs">
 	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
 </li>
 <li class = "visible-xs">
-	<a href="{% url 'citas:index' 'recientes' %}">Ver galería de frases</a>
+	<a href="{% url 'citas:index' 'recientes' %}">Ver banco de frases</a>
 </li>
 <li class = "visible-xs">
 	<a href="{% url 'imagenes:index' 'recientes' %}">Ver galería de imágenes</a>
@@ -133,14 +138,13 @@
 	<div class = "sidebar_cita">
 		<blockquote>
 			<p>
-				"{{cita.0.texto}}"
+				"{{cita.3|safe}}"
 			</p> <small> {{cita.0.autor}} {% if cita.1 %}, {{cita.2}} {% endif %} </small>
 		</blockquote> 
-
 		<div>
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
 			onclick="location.href='{% url 'citas:index' 'recientes' %}';">
-			Ver galería de frases</button>
+			Ver banco de frases</button>
 		</div>
 	<hr/>
 	</div>
@@ -167,6 +171,3 @@
 	</div>
 </div>
 {% endblock sidebar %}
-
-{% block extra_javascript %}
-{% endblock extra_javascript %}

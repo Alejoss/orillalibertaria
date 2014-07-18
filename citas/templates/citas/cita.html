@@ -18,15 +18,10 @@
 {% endblock navbar_mobile_xs %}
 
 {% block arriba %}
-<div class="col-md-6 column">
+<div class="col-md-7 column">
 	<div class = "row">
-		<br>
-	<ul class="breadcrumb_top breadcrumb">
-		<li>
-			<h4><a href=" {% url 'citas:index' 'recientes' %} ">Banco de Frases</a> - frase de {{cita.autor}} </h4> 
-			<span class="divider"></span>
-		</li>
-	</ul>
+		<h2 class = "titulo_top"> <a href="{% url 'citas:index' 'recientes' %}"> Banco de Frases</a>  <small> - frase de {{cita.0.autor}} </small></h2>
+		<hr class = "titulo_top">
 	</div>
 </div>
 {% endblock arriba %}
@@ -35,11 +30,13 @@
 <div class="col-md-8 column">
 	<div class="panel panel-info">
 		<div class="panel-body">
+
 			<blockquote>
-				<p>
-					"{{cita.texto}}"
-				</p> <small>{{cita.autor}}, <cite>{{cita.fuente}}</cite></small>
+				<p class = "text">
+					"{{cita.3|safe}}"
+				</p><small>{{cita.0.autor}} {% if c.1 %}, {{c.2}} {% endif %} </small>
 			</blockquote>
+
 		</div>
 		<div class="panel-footer">
 			{% if user.is_authenticated %}
@@ -86,10 +83,10 @@
 			</div>
 			</div>
 			<hr>
+		</div> <!--div carrousel -->
 			<button type="button" class="btn btn-xs btn-info btn_galeria"
 			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
 				Ver galería de imágenes</button>
-		</div> <!--div carrousel -->
 		<br>
 	
 	</div> <!--column 4-->

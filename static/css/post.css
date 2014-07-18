@@ -57,6 +57,8 @@
 /*css para el post y las respuestas */
 .form_respuesta{
 	display: block;
+	max-width: 475px;
+	margin-left: 20px;
 }
 
 .post_datos_tema{

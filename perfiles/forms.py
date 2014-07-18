@@ -3,6 +3,7 @@ from django.forms import ModelForm, Textarea, TextInput
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.utils import html
 
 
 class FormRegistroUsuario(UserCreationForm):
@@ -46,6 +47,11 @@ class PerfilesForm(forms.Form):
                             widget=TextInput(attrs={'class': 'form-control'}))
     link5 = forms.CharField(max_length=250, required=False,
                             widget=TextInput(attrs={'class': 'form-control'}))
+
+    def clean_descripcion(self):
+        texto = self.cleaned_data['descripcion']
+        texto_limpio = html.strip_tags(texto)
+        return texto_limpio
 
 
 class UserForm(forms.Form):

@@ -19,7 +19,7 @@ from models import Videos, VFavoritos, VDenunciados
 from temas.models import Temas, Tema_descripcion, Posts, Respuestas
 from citas.models import Cita
 from notificaciones.models import Notificacion
-from olibertaria.utils import obtener_imagen_tema, obtener_voted_status
+from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios, bersuit_vergarabat
 
 
 @login_required
@@ -51,7 +51,8 @@ def nuevo_video(request, slug):
             return redirect('videos:nuevo_video', slug=tema.slug)
     else:
         form_nuevo_video = FormNuevoVideo()
-        context = {'form_nuevo_video': form_nuevo_video, 'tema': tema}
+        lista_bersuit = bersuit_vergarabat()
+        context = {'form_nuevo_video': form_nuevo_video, 'tema': tema, 'lista_bersuit': lista_bersuit}
         return render(request, template, context)
 
 
@@ -83,9 +84,10 @@ def editar_video(request, video_id):
                 video.save()
                 return redirect('videos:video', video_id=video.id, slug=video.tema.slug, queryset='recientes')
         else:
+            lista_bersuit = bersuit_vergarabat()
             form_editar_video = FormEditarVideo(initial={'url': video.url, 'titulo': video.titulo,
                                                          'descripcion': video.descripcion})
-            context = {'video': video, 'form_editar_video': form_editar_video}
+            context = {'video': video, 'form_editar_video': form_editar_video, 'lista_bersuit': lista_bersuit}
             return render(request, template, context)
     else:
         raise Http404
@@ -103,6 +105,7 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
     if Tema_descripcion.objects.filter(tema=tema_obj).exists():
         descripcion_tema = (
             Tema_descripcion.objects.filter(tema=tema_obj).latest('id')).texto
+        descripcion_tema = procesar_espacios(descripcion_tema)
     else:
         descripcion_tema = "No tiene descripción por el momento"
     posts_count = Posts.objects.filter(
@@ -143,8 +146,8 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
 
         num_respuestas_video = Posts.objects.filter(
             video=video, eliminado=False).count()
-
-        videos.append([video, imagen_video, es_favorito, num_respuestas_video])
+        descripcion_video = procesar_espacios(video.descripcion)
+        videos.append([video, imagen_video, es_favorito, num_respuestas_video, descripcion_video])
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -236,6 +239,7 @@ def video(request, video_id, slug, queryset):
             origen_no_youtube = "vimeo"
         elif "ted.com" in video.url:
             origen_no_youtube = "ted"
+    descripcion_video = procesar_espacios(video.descripcion)
 
     # Tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -243,6 +247,7 @@ def video(request, video_id, slug, queryset):
     if Tema_descripcion.objects.filter(tema=tema_obj).exists():
         descripcion_tema = (
             Tema_descripcion.objects.filter(tema=tema_obj).latest('id')).texto
+        descripcion_tema = procesar_espacios(descripcion_tema)
     else:
         descripcion_tema = "No tiene descripción por el momento"
     posts_count = Posts.objects.filter(
@@ -260,7 +265,7 @@ def video(request, video_id, slug, queryset):
         q = "-id"
         recientes = "subrayar"
 
-    posts_obj = Posts.objects.filter(video=video, eliminado=False).order_by(q)
+    posts_obj = Posts.objects.filter(video=video, eliminado=False, es_respuesta=False).order_by(q)
     posts = []
     for post in posts_obj:
         # Respuestas y voted status
@@ -270,7 +275,8 @@ def video(request, video_id, slug, queryset):
             voted_status = obtener_voted_status(post, perfil_usuario)
         else:
             voted_status = "no-vote"
-        posts.append([post, num_respuestas, voted_status])
+        texto_procesado = procesar_espacios(post.texto)
+        posts.append([post, num_respuestas, voted_status, texto_procesado])
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -278,8 +284,9 @@ def video(request, video_id, slug, queryset):
     # form_respuesta
     form_respuesta = FormNuevoPost()
 
-    context = {'tema': tema, 'video': video, 'es_favorito': es_favorito,
-               'origen_no_youtube': origen_no_youtube, 'num_respuestas_video': num_respuestas_video,
+    context = {'tema': tema, 'video': video, 'descripcion_video': descripcion_video,
+               'es_favorito': es_favorito, 'origen_no_youtube': origen_no_youtube,
+               'num_respuestas_video': num_respuestas_video,
                'posts': posts, 'populares': populares, 'propio_video': propio_video,
                'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta}
 
@@ -300,10 +307,11 @@ def sumar_post_video(request, slug, video_id):
             post_video.save()
 
             #Notificacion respuesta
-            notificacion_respuesta = Notificacion(actor=perfil_usuario, target=video_padre.creador,
-                                                  objeto_id=video_padre.id, tipo_objeto="video",
-                                                  tipo_notificacion="comment")
-            notificacion_respuesta.save()
+            if perfil_usuario != video_padre.perfil:
+                notificacion_respuesta = Notificacion(actor=perfil_usuario, target=video_padre.perfil,
+                                                      objeto_id=video_padre.id, tipo_objeto="video",
+                                                      tipo_notificacion="comment")
+                notificacion_respuesta.save()
 
             # sumar a nivel de popularidad del Tema
             tema.nivel_popularidad += 1
@@ -416,11 +424,15 @@ def post_video(request, video_id, slug, post_id, queryset):
     # Video
     video = Videos.objects.get(id=video_id)
     es_favorito = "no_es_favorito"
+    propio_video = False
     if request.user.is_authenticated():
+        if video.perfil == perfil_usuario:
+            propio_video = True
         if VFavoritos.objects.filter(video=video, perfil=perfil_usuario, eliminado=False).exists():
             es_favorito = "es_favorito"
     num_respuestas_video = Posts.objects.filter(
         video=video, eliminado=False).count()
+    descripcion_video = procesar_espacios(video.descripcion)
 
     # Tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -428,6 +440,7 @@ def post_video(request, video_id, slug, post_id, queryset):
     if Tema_descripcion.objects.filter(tema=tema_obj).exists():
         descripcion_tema = (
             Tema_descripcion.objects.filter(tema=tema_obj).latest('id')).texto
+        descripcion_tema = procesar_espacios(descripcion_tema)
     else:
         descripcion_tema = "No tiene descripción por el momento"
     posts_count = Posts.objects.filter(
@@ -443,7 +456,8 @@ def post_video(request, video_id, slug, post_id, queryset):
         post_voted_status = "no-vote"
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
-    post = [post_obj, post_voted_status, post_numrespuestas]
+    texto_procesado = procesar_espacios(post_obj.texto)
+    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado]
 
     # post_padre
     post_padre = []
@@ -458,8 +472,9 @@ def post_video(request, video_id, slug, post_id, queryset):
             post_padre_estado = "no-vote"
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
+        texto_procesado_pp = procesar_espacios(post_padre_obj.texto)
         post_padre = [post_padre_obj,
-                      post_padre_estado, post_padre_numrespuestas]
+                      post_padre_estado, post_padre_numrespuestas, texto_procesado_pp]
 
     # respuestas
     recientes = ""
@@ -485,19 +500,17 @@ def post_video(request, video_id, slug, post_id, queryset):
                 respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
             else:
                 respuesta_estado = "no-vote"
+            texto_procesado_resp = procesar_espacios(r.post_respuesta.texto)
             respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado])
-
-    # cita
-    cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
+                [post_respuesta, respuesta_numrespuestas, respuesta_estado, texto_procesado_resp])
 
     # form_respuestas
     form_respuesta = FormNuevoPost()
 
-    context = {'tema': tema, 'video': video, 'es_favorito': es_favorito,
-               'post': post, 'post_padre': post_padre, 'respuestas': respuestas,
-               'num_respuestas_video': num_respuestas_video, 'post': post, 'primeras': primeras,
-               'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta}
+    context = {'tema': tema, 'video': video, 'descripcion_video': descripcion_video,
+               'es_favorito': es_favorito, 'post': post, 'post_padre': post_padre,
+               'respuestas': respuestas, 'num_respuestas_video': num_respuestas_video,
+               'post': post, 'primeras': primeras, 'recientes': recientes,
+               'form_respuesta': form_respuesta, 'propio_video': propio_video}
 
     return render(request, template, context)
-

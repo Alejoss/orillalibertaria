@@ -21,16 +21,13 @@
 
 {% block content %}
 <div class="row clearfix">
-	<div class="col-md-6 column">
-		<ul class="breadcrumb_top breadcrumb">
-			<li>
-				{% if propio_usuario %}
-                <h4> Frases favoritas. </h4>
-                {% else%}
-                <h4> Frases favoritas de <a href="{%url 'perfiles:perfil' user_object.username 'recientes' %}">{{user_object.username}} </a></h4>
-                {% endif %}
-			</li>
-		</ul>
+	<div class="col-md-7 column">
+		{% if propio_usuario %}
+		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas </small></h2>
+        {% else%}
+		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas de {{user_object.username}} </small></h2>
+        {% endif %}
+        <hr class = "titulo_top">
 	</div>
 	<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
 		<div class="row clearfix">

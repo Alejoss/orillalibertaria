@@ -2,6 +2,7 @@
 from models import Posts
 from django import forms
 from django.forms import Textarea, TextInput
+from django.utils import html
 
 
 class FormCrearTema(forms.Form):
@@ -18,6 +19,11 @@ class FormCrearTema(forms.Form):
         }))
     imagen = forms.CharField(label="Imagen", max_length=250, required=False,
                              widget=TextInput(attrs={'class': 'form-control'}))
+
+    def clean_texto(self):
+        texto = self.cleaned_data['texto']
+        texto_limpio = html.strip_tags(texto)
+        return texto_limpio
 
 
 class FormNuevoPost(forms.ModelForm):
@@ -37,6 +43,11 @@ class FormNuevoPost(forms.ModelForm):
             })
         }
 
+    def clean_texto(self):
+        texto = self.cleaned_data['texto']
+        texto_limpio = html.strip_tags(texto)
+        return texto_limpio
+
 
 class FormEditarTema(forms.Form):
     descripcion = forms.CharField(label="Descripción", max_length=1000,
@@ -50,6 +61,11 @@ class FormEditarTema(forms.Form):
     imagen = forms.CharField(label="Imagen", max_length=250, required=False,
                              widget=TextInput(attrs={'class': 'form-control'}))
 
+    def clean_texto(self):
+        texto = self.cleaned_data['descripcion']
+        texto_limpio = html.strip_tags(texto)
+        return texto_limpio
+
 
 class FormEditarPost(forms.Form):
     texto = forms.CharField(label="Post", max_length=1000, required=False,
@@ -58,3 +74,8 @@ class FormEditarPost(forms.Form):
                                 'rows': 5,
                                 'class': 'form-control'
                             }))
+
+    def clean_texto(self):
+        texto = self.cleaned_data['texto']
+        texto_limpio = html.strip_tags(texto)
+        return texto_limpio

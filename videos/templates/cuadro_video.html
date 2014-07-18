@@ -13,7 +13,7 @@
 			<span class = "fa fa-star pull-left"> </span>
 			{% endif %}
 			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>
-			<p class = "fecha_video"> <small> farseer el 14 de Marzo </small> </p>
+			<p class = "fecha_video"> <small> farseer el 14 de Marzo {{propio_video}}  </small> </p>
 			{% if propio_video %}
 			<div class = "eliminar_editar pull-right">
 				<div class = "btn-group dropup">
@@ -41,7 +41,7 @@
 </div>
 <div class = "col-md-5">
 <div class = "div_descripcion_video">
-	<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+	<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
 		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
 	</p>
 </div>
@@ -100,7 +100,7 @@
 </div>
 <div class = "col-md-5">
 	<div class = "div_descripcion_video">
-		<p> <strong> {{video.titulo}}. </strong> <br> {{video.descripcion}} <br> 
+		<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
 		</p>
 	</div>
 </div>

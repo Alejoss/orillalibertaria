@@ -15,7 +15,7 @@
 		<br>
 	<ul class="breadcrumb_top breadcrumb">
 		<li>
-			<h4>Notificaciones</h4> 
+			<h2>Notificaciones</h2> 
 			<span class="divider"></span>
 		</li>
 	</ul>
@@ -26,7 +26,7 @@
 {% block botones_control %}
 <div class = "col-md-8 div_control">
 	<div class = "pull-left">
-		<button id= "marcar_leidas" type="button" class="btn btn-warning" >
+		<button id= "marcar_leidas" type="button" class="btn btn-warning btn_marcar_leidas" >
 		Marcar como leídas <span class = 'fa fa-check-square-o fa-lg'></span>
 		</button> 
 	</div>
@@ -51,11 +51,11 @@
 			<ul class="nav nav-pills">
 			<br>
 				<li>
-					Text1 <span class="badge"> {{puntos_recibidos}} </span> 
+					Puntos <span class="badge"> {{puntos_recibidos}} </span> 
 				</li>
 			<br>
 				<li>
-					Text2 <span class="badge">{{num_posts}}</span> 
+					Posts <span class="badge">{{num_posts}}</span> 
 				</li>
 			<br>
 			{% if creo_temas %}

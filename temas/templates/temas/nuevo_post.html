@@ -1,8 +1,10 @@
 {% extends "base_forms.html" %}
+{% load staticfiles %}
+
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Nuevo post en <a href = "{% url 'temas:index_tema' tema.slug 'recientes' %}"> {{tema.nombre}}</a> </h2>
-	<img class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<img class = "barco_logo pull-right" src=" {% static '/static/img/barco_2.jpg' %} ">
 	<br/>
 </div>
 {% endblock arriba %}

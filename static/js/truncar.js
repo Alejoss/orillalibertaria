@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('.truncate').trunk8({
 	  	lines: 4,
-	  	fill: '&hellip; <a class="leer_mas" href="#">leer más</a>',
+	  	fill: '<a class="leer_mas" href="#">...leer más</a>',
 	  	tooltip: false
 	  });
 	  $('.leer_mas').on('click', function(){

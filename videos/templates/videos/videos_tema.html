@@ -54,6 +54,11 @@
 				<li class = " {{populares}}">
 					<a href="{% url 'videos:videos_tema' tema.0.slug 'populares' %}">Populares</a>
 				</li>
+				<li class = "divider">
+				</li>
+				<li>
+					<a href = "{% url 'temas:index_tema' tema.0.slug 'recientes' %}">Posts</a>
+				</li>
 			</ul>
 		</div>
 		<div class = "pull-right visible-xs">
@@ -107,7 +112,7 @@
 			<br/>
 			{{ tema.0.nombre }} 
 			<br/>
-			<small><h4> {{tema.2}} </h4>
+			<small><h5> {{tema.2|safe}} </h5>
 			<h6><a href="{% url 'temas:editar_tema' tema.0.slug %}"><i>editar tema</i></a></h6></small>
 		</h2>
 	<hr>

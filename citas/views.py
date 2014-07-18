@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
-from olibertaria.utils import obtener_imagenes_display, obtener_cita
+from olibertaria.utils import obtener_imagenes_display, obtener_cita, bersuit_vergarabat
 from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
@@ -90,6 +90,7 @@ def cita(request, cita_id):
     else:
         es_favorita = ""
 
+    cita = obtener_cita(cita)
     imagenes_display = obtener_imagenes_display(7)
 
     context = {'cita': cita, 'es_favorita': es_favorita, 'imagenes_display': imagenes_display}
@@ -118,7 +119,9 @@ def nueva(request):
             lista_de_autores.append(x['autor'])
 
     form = FormNuevaCita()
-    context = {'FormNuevaCita': FormNuevaCita,
+    lista_bersuit = bersuit_vergarabat()
+
+    context = {'FormNuevaCita': FormNuevaCita, 'lista_bersuit': lista_bersuit,
                'lista_de_autores': lista_de_autores}
     return render(request, template, context)
 
@@ -270,7 +273,6 @@ def colaborar_organizar(request):
                 accion_usr = ["", "-circle"]
             else:
                 accion_usr = ["-circle", ""]
-        print color
         tabla_citas.append([frase, correcciones, estado, color, accion_usr])
 
     # variables y calculo del progress bar
@@ -398,18 +400,18 @@ def coorg_editar(request, cita_id):
             form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
                                                        'autor': cita.autor,
                                                        'fuente': cita.fuente})
-            #!!! enviar errores
 
-    else:
-        form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
-                                                   'autor': cita.autor,
-                                                   'fuente': cita.fuente})
-        lista_de_autores = []
-        lista_de_autores_obj = Cita.objects.filter(eliminada=False).values('autor').order_by('autor')
-        for x in lista_de_autores_obj:
-            if x['autor'] not in lista_de_autores:
-                lista_de_autores.append(x['autor'])
+    form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
+                                               'autor': cita.autor,
+                                               'fuente': cita.fuente})
+    lista_de_autores = []
+    lista_de_autores_obj = Cita.objects.filter(eliminada=False).values('autor').order_by('autor')
+    for x in lista_de_autores_obj:
+        if x['autor'] not in lista_de_autores:
+            lista_de_autores.append(x['autor'])
+
+    lista_bersuit = bersuit_vergarabat()
 
     context = {'form_editar_cita': form_editar_cita, 'cita_id': cita_id,
-               'lista_de_autores': lista_de_autores}
+               'lista_de_autores': lista_de_autores, 'lista_bersuit': lista_bersuit}
     return render(request, template, context)

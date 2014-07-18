@@ -34,8 +34,8 @@ function close_modal_reportar(){
 function marcar_favorito(){
     var p_hidden = $(this).prev('.hidden');
     var imagen_id = p_hidden.text();
-
-    var favoritos_recibidos_obj = $(this).next('.favoritos');
+    var container = $(this).parent();
+    var favoritos_recibidos_obj = container.find('.favoritos');
     var favoritos_recibidos = parseInt(favoritos_recibidos_obj.text());
 
     if ($(this).hasClass('no_es_favorita')){

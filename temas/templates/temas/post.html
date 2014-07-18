@@ -12,6 +12,7 @@
 <div class="row clearfix">
 <div class="col-md-8 column ">
 <!-- post_padre -si el post respuesta-->
+<div class = "row">
 {% if post.0.es_respuesta %}
 		<h5 id = mostrar_post_padre class="text-muted">
 			Mostrar el post de {{post_padre.0.creador.usuario.username}}
@@ -103,7 +104,7 @@
 				<div class="panel panel-success">
 					<div class="panel-body">
 						<p class = "text truncate">
-						{{post_padre.0.texto}}
+						{{post_padre.3|safe}}
 						</p>
 						<br/>
 					</div>
@@ -144,8 +145,8 @@
 			
 		{% endif %}
 		</div> <!--post padre respuesta-->
-		
 {% endif %}
+</div> <!--row-->
 
 <!-- Si el post ha sido eliminado muestra un post eliminado -->
 {% if post.0.eliminado %}
@@ -232,8 +233,8 @@
 		<div class = "col-md-10">
 			<div class="panel panel-warning post_resaltado">
 				<div class="panel-body">
-					<p class = "text truncate">
-					{{post.0.texto}}
+					<p class = "truncate ">
+					{{post.3|safe}}
 					</p>
 					<br/>
 				</div>
@@ -277,8 +278,8 @@
 
 {% if user.is_authenticated %}
 <div class = "row clearfix">
-	<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta ">
-		<form id = "formulario" class = "form-horizontal" action = "{% url 'temas:respuesta' tema.0.slug post.0.id %}" method = "POST"/>
+	<div class = "col-md-10 col-md-offset-2 col-lg-offset-2">
+		<form id = "formulario" class = "form_respuesta form-horizontal" action = "{% url 'temas:respuesta' tema.0.slug post.0.id %}" method = "POST"/>
 			{% csrf_token %}
 			<fieldset>
 			<div class = "form-group">
@@ -336,7 +337,7 @@
 		<div class="panel panel-info">
 			<div class="panel-body">
 				<p class = "text truncate">
-				{{respuesta.0.texto|truncatewords:50}}
+				{{respuesta.3|safe}}
 				</p>
 				<br/>
 			</div>
@@ -374,7 +375,7 @@
 			</div>
 		</div>
 	</div> <!-- class md 10 -->
-	</div> <!--post -->
+</div> <!--post -->
 {% endfor %}
 </div>	<!-- row -->
 
@@ -401,8 +402,8 @@
 				 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>descripción </small> </a>
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
-				<div>
-					{{tema.2}}
+				<div class = "text">
+					{{tema.2|safe}}
 				</div>
 			</div>
 		</div>

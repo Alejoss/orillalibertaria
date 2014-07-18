@@ -36,6 +36,30 @@
 			{{form_crear_tema.imagen}}
 			<span class = "help-block"> URL a una imagen que le sirva de portada al tema </span>
 		</div>
+
+		<!-- bersuit vergarabat -->
+		<div class = "form-group vergarabat">
+			<label class = "control-label" for = "vergarabat">
+				Cuánto es cuatro mas cinco?
+			</label>
+			<input name = "vergarabat" id = "vergarabat" type = "text">
+			<span class = "help-block">Responde solo si no eres humano. </span>
+		</div>
+
+		<div class = "form-group">
+			<label class = "control-label" for = "bersuit">
+				¿Cuánto es {{lista_bersuit.0}} mas {{lista_bersuit.1}}?
+				<p id = "bv" class = "bv">{{lista_bersuit.2}}</p>
+			</label>
+			<br>
+			<input name = "bersuit" value = "m" type = "radio">1819
+			<input name = "bersuit" value = "cinco" type = "radio">5
+			<input name = "bersuit" value = "ocho" type = "radio">8
+			<span class = "help-block">Para asegurarnos que eres <i class = "fa fa-child"></i> y no 
+			<i class = "fa fa-bug"></i>. </span>
+		</div>
+		<!--bersuit vergarabat-->
+
 		</fieldset>
 
 		<input class = "btn pull-right" type = "submit" value = "Crear Tema"/>
@@ -79,6 +103,20 @@ $(document).ready(function(){
 	$('#wchar_min').wChar({
 		min: 150
 	});
+	/* bersuit vergarabat*/
+	  $.validator.addMethod("seleccion_correcta", function(value, element){
+	    var respuesta = $("#bv").text();
+	    if(value == respuesta){
+	      return true;
+	    }
+	    else{
+	      return false;
+	    }
+	  });
+	  $.validator.addMethod('empty', function(value, element){
+	    return (value === '');
+	  });
+ 	 /* bersuit vergarabat*/
 	$('#formulario').validate({
 		rules: {
 			texto: {
@@ -94,15 +132,28 @@ $(document).ready(function(){
 				required: true,
 				minlength: 15,
 				maxlength: 150
-			}
+			},
+
+		/* bersuit vergarabat */
+		    bersuit:{
+		        required: true,
+		        seleccion_correcta: true
+		      },
+		    vergarabat:{
+		        empty: true
+		      }
+	     /* bersuit vergarabat */
 		},
+
 		errorElement: "span",
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
 			texto: "*Escribe una descripción de mínimo 150 y máximo 1000 caracteres.",
 			nombre: "*El nombre del tema debe tener hasta 75 caracteres.",
-			imagen: "*Inserta una URL válida"
+			imagen: "*Inserta una URL válida",
+			bersuit: "¿Eres humano?",
+			vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."
 		}
 	});
 });

@@ -62,25 +62,25 @@
 			<div class="panel-group perfil_panel_sm" id="panel-131037">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						 <a class="panel-title" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-400081">Favoritos</a>
+						 <a id = "favoritos_dropdown" class="panel-title caret_up" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-400081">Favoritos <span class = "fa fa-sort-up"></span> </a>
 					</div>
 					<div id="panel-element-400081" class="panel-collapse collapse in">
 						<a href = "{% url 'imagenes:favoritas' usuario_fav %}">
 							<div class="panel-body">
 								<span class = "badge pull-right"> {{numero_imgfavoritas}} </span>
-								Imágenes favoritas
+								Imágenes
 							</div>
 						</a>
 						<a href = "{% url 'citas:favoritas' usuario_fav %}">
 							<div class="panel-body">
 								<span class = "badge pull-right"> {{num_frases_favoritas}} </span>
-								Frases favoritas
+								Frases
 							</div>
 						</a>
 						<a href = "{% url 'videos:videos_perfil' usuario_fav %}">
 							<div class="panel-body">
-								<span class = "badge pull-right"> 15 </span>
-								Videos favoritas
+								<span class = "badge pull-right"> {{num_videos_favoritos}} </span>
+								Videos
 							</div>
 						</a>
 					</div>
@@ -180,7 +180,7 @@
 			{% if num_frases_favoritas > 0 %}
 				<blockquote>
 					<p class = "cita_small">
-						"{{cita_favorita.0.texto}}"
+						"{{cita_favorita.3|safe}}"
 					</p> 
 					<small>{{cita_favorita.0.autor}} {% if cita_favorita.1 %}, {{cita_favorita.0.fuente}} 
 					{% endif %}</small>
@@ -260,6 +260,23 @@
 $(document).ready(function() {
     $('.pgwSlider').pgwSlider();
 });
+
+$('#favoritos_dropdown').on('click', fav_dropdown)
+function fav_dropdown(){
+	var caret_span = $(this).find('.fa');
+	if ($(this).hasClass('caret_up')){
+		caret_span.removeClass('fa-sort-up');
+		caret_span.addClass('fa-sort-down');
+		$(this).removeClass('caret_up');
+		$(this).addClass('caret_down');
+	}
+	else if ($(this).hasClass('caret_down')){
+		caret_span.removeClass('fa-sort-down');
+		caret_span.addClass('fa-sort-up');
+		$(this).removeClass('caret_down');
+		$(this).addClass('caret_up');
+	}
+}
 </script>
 {% endblock javascript %}
 

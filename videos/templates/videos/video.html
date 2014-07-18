@@ -36,8 +36,8 @@
 <hr/>
 {% if user.is_authenticated %}
 <div class = "row clearfix">
-	<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta">
-		<form id = "formulario" class = "form-horizontal" action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
+	<div class = "col-md-10 col-md-offset-2 col-lg-offset-2">
+		<form id = "formulario" class = "form-horizontal form_respuesta" action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
 			{% csrf_token %}
 			<fieldset>
 			<div class = "form-group">
@@ -93,7 +93,7 @@
 	<div class="panel panel-info">
 		<div class="panel-body">
 			<p class = "text truncate">
-			{{post.0.texto}}
+			{{post.3|safe}}
 			</p>
 			<br/>
 		</div>
@@ -162,7 +162,7 @@
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
 				<div>
-					{{tema.2}}
+					{{tema.2|safe}}
 				</div>
 			</div>
 		</div>

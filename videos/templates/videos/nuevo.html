@@ -1,10 +1,11 @@
 {% extends "base_forms.html" %}
+{% load staticfiles %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Nuevo video en <a href=" {% url 'temas:index_tema' tema.slug 'recientes' %} ">{{tema.nombre}}</a></h2>
 
-	<img style = "margin-right:20px" class = "barco_logo pull-right" src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src=" {% static '/static/img/barco_1.jpg' %} ">
 	<br/>
 </div>
 {% endblock arriba %}
@@ -41,6 +42,30 @@
 		<span class = "help-block"> Describe el video para Orilla Libertaria </span>
 	</div>
 
+
+		<!-- bersuit vergarabat -->
+		<div class = "form-group vergarabat">
+			<label class = "control-label" for = "vergarabat">
+				¿Cuánto es cuatro mas cinco?
+			</label>
+			<input name = "vergarabat" id = "vergarabat" type = "text">
+			<span class = "help-block">Responde solo si no eres humano. </span>
+		</div>
+
+		<div class = "form-group">
+			<label class = "control-label" for = "bersuit">
+				Cuánto es {{lista_bersuit.0}} mas {{lista_bersuit.1}}?
+				<p id = "bv" class = "bv">{{lista_bersuit.2}}</p>
+			</label>
+			<br>
+			<input name = "bersuit" value = "m" type = "radio">1819
+			<input name = "bersuit" value = "cinco" type = "radio">5
+			<input name = "bersuit" value = "ocho" type = "radio">8
+			<span class = "help-block">Para asegurarnos que eres <i class = "fa fa-child"></i> y no 
+			<i class = "fa fa-bug"></i>. </span>
+		</div>
+		<!--bersuit vergarabat-->
+
 	</fieldset>
 	<input class = "btn pull-right" type = "submit" value ="enviar"/>
 </form>
@@ -50,11 +75,27 @@
 {% block extra_javascript %}
 <script>
 $(document).ready(function(){
+
+	 /* bersuit vergarabat */
+	  $.validator.addMethod("seleccion_correcta", function(value, element){
+	    var respuesta = $("#bv").text();
+	    if(value == respuesta){
+	      return true;
+	    }
+	    else{
+	      return false;
+	    }
+	  });
+	  $.validator.addMethod('empty', function(value, element){
+	    return (value === '');
+	  });
+	  /* bersuit vergarabat */
+
 	$('#formulario').validate({
 		rules: {
 			titulo: {
 				required: true,
-				minlength: 15,
+				minlength: 5,
 				maxlength: 150,
 			},
 			url: {
@@ -66,15 +107,28 @@ $(document).ready(function(){
 				required: true,
 				minlength: 20,
 				maxlength: 1000,
-			}
+			},
+
+	    /* bersuit vergarabat*/
+		    bersuit:{
+		        required: true,
+		        seleccion_correcta: true
+		      },
+		    vergarabat:{
+		        empty: true
+		      }
+	    /*bersuit vergarabat*/
 		},
+
 		errorElement: "span",
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
-			titulo: "*El título debe tener mínimo 15 y máximo 150 caracteres.",
+			titulo: "*El título debe tener mínimo 5 y máximo 150 caracteres.",
 			url: "*Proporciona una url válida.",
-			descripcion: "*La descripción debe tener mínimo 20 y máximo 1000 caracteres:"
+			descripcion: "*La descripción debe tener mínimo 20 y máximo 1000 caracteres:",
+			bersuit: "¿Eres humano?",
+			vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."
 		}
 	});
 });

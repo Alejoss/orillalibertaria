@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+<link href="{% static 'css/post.css' %}" rel="stylesheet">
+<link href="{% static 'css/videos.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block content %}
 
 <div class="row clearfix">
 <div class="col-md-8 column">
+<div class = "row">
+	<a href=" {% url 'videos:video' video.id video.tema.slug 'recientes' %} ">  {{video.titulo}} <i class ="fa fa-level-up"></i> </a>
+	<hr>
+</div>
 
 {% include 'cuadro_video.html' %}
 
-<a href=" {% url 'videos:video' video.id video.tema.slug 'recientes' %} ">  {{video.titulo}} <i class ="fa fa-level-up"></i> </a>
 <hr>
 <div class = "row clearfix"> <!--cuadro para posts -->
 
@@ -18,6 +26,7 @@
 			Mostrar el post de {{post_padre.0.creador.usuario.username}}
 			<i class="fa fa-comments-o"></i>
 		</h5>
+
 		<div id = "post_hidden" class = "hidden"> <!--post padre respuesta -->
 		
 		{% if post_padre.0.eliminado %}
@@ -71,7 +80,7 @@
 
 		{% else %}
 
-			<div class = "col-md-1">
+			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 					{% if user.is_authenticated %}
@@ -99,11 +108,11 @@
 					</div>
 				</div>
 			</div>
-			<div class = "col-md-11">
+			<div class = "col-md-10 col-sm-10 col-xs-10">
 				<div class="panel panel-success">
 					<div class="panel-body">
 						<p class = "text truncate">
-						{{post_padre.0.texto}}
+						{{post_padre.3|safe}}
 						</p>
 						<br/>
 					</div>
@@ -195,9 +204,9 @@
 		</div> <!-- post eliminado -->
 {% else %}
 <!-- Post. -->
-	<div class = "row clearfix">
+	<div class = "row">
 		<br>
-		<div class = "col-md-1">
+		<div class = "col-md-2 col-sm-2 col-xs-2">
 			<div class = "control_votos">
 				<div class = "btn-group-vertical">
 					{% if user.is_authenticated %}
@@ -225,11 +234,11 @@
 				</div>
 			</div>
 		</div>
-		<div class = "col-md-11">
+		<div class = "col-md-10 col-sm-10 col-xs-10">
 			<div class="panel panel-warning post_resaltado">
 				<div class="panel-body">
 					<p class = "text truncate">
-					{{post.0.texto}}
+					{{post.3|safe}}
 					</p>
 					<br/>
 				</div>
@@ -271,9 +280,10 @@
 
 <hr/>
 {% if user.is_authenticated %}
-<div class = "row clearfix borde">
-<div class = "col-md-11 col-md-offset-1 col-lg-offset-1 form_respuesta">
-		<form id = "formulario" class = "form-horizontal" action = " {% url 'temas:respuesta' tema.0.slug post.0.id %} " method = "POST"/>
+<div class = "row clearfix">
+	<div class = "col-md-10 col-md-offset-2 col-lg-offset-2 ">
+		<form id = "formulario" class = "form-horizontal form_respuesta" action = " {% url 'temas:respuesta' tema.0.slug post.0.id %} " method = "POST"/>
+		{% csrf_token %}
 		<fieldset>
 		<div class = "form-group">
 			<label = class = "control-label" for = "texto"></label>
@@ -298,77 +308,73 @@
 
 <div class = "row">
 {% for respuesta in respuestas %}
-<div class = "post">
-	<div class = "col-md-1">
-		<div class = "control_votos">
-			<div class = "btn-group-vertical">
-				{% if user.is_authenticated %}
-				<p class = "vote-id hidden">{{respuesta.0.id}}</p>
-				<button type="button" class = "btn btn-default vote-up"> 
-					<span class="fa fa-chevron-up"></span>
+<div>
+<div class = "col-md-2 col-sm-2 col-xs-2">
+	<div class = "control_votos">
+		<div class = "btn-group-vertical">
+			{% if user.is_authenticated %}
+			<p class = "vote-id hidden">{{respuesta.0.id}}</p>
+			<button type="button" class = "btn btn-default vote-up"> 
+				<span class="fa fa-chevron-up"></span>
+			</button>
+			{% else %}
+			<button type="button" class = "btn btn-default disabled"> 
+				<span class="fa fa-chevron-up"></span>
+			</button>
+			{% endif %}
+			<button class = "btn puntaje"> 
+			<h2 class = "numero_puntaje {{respuesta.2}}"> {{respuesta.0.votos_total}} </h2>
+			</button>
+			{% if user.is_authenticated %}
+			<button type="button" class = "btn btn-default vote-down"> 
+				<span class="fa fa-chevron-down"></span>
+			</button>
+			{% else %}
+			<button type="button" class = "btn btn-default disabled"> 
+				<span class="fa fa-chevron-down"></span>
+			</button>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class = "col-md-10 col-sm-10 col-xs-10">
+	<div class="panel panel-info">
+		<div class="panel-body">
+			<p class = "text truncate">
+			{{respuesta.3|safe}}
+			</p>
+			<br/>
+		</div>
+		<div class="panel-footer">
+			{% if respuesta.0.creador.usuario == request.user %}
+			<div class = "eliminar_editar pull-left">
+				<div class = "btn-group dropup">
+				<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
 				</button>
-				{% else %}
-				<button type="button" class = "btn btn-default disabled"> 
-					<span class="fa fa-chevron-up"></span>
-				</button>
-				{% endif %}
-				<button class = "btn puntaje"> 
-				<h2 class = "numero_puntaje {{respuesta.2}}"> {{respuesta.0.votos_total}} </h2>
-				</button>
-				{% if user.is_authenticated %}
-				<button type="button" class = "btn btn-default vote-down"> 
-					<span class="fa fa-chevron-down"></span>
-				</button>
-				{% else %}
-				<button type="button" class = "btn btn-default disabled"> 
-					<span class="fa fa-chevron-down"></span>
-				</button>
-				{% endif %}
+				<ul class="dropdown-menu">
+					<li>
+						<a href="{% url 'temas:eliminar_propio_post' respuesta.0.id %}">Eliminar respuesta</a>
+					</li>
+					<li class = "divider"></li>
+					<li>
+						<a href="{% url 'temas:editar_post' respuesta.0.id %}">Editar</a> 
+					</li>
+				</ul>
+				</div>
+			</div>
+			{% endif %}
+			<div class = "nombre_fecha">
+				<p><a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario 'recientes' %}">
+					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
+				</p>
+			</div>
+			<div class = "footer_respuestas pull-right">
+				<a href = "{% url 'videos:post_video' video.id tema.0.slug respuesta.0.id 'recientes' %} ">{{respuesta.1}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right"></span></a>
 			</div>
 		</div>
 	</div>
-	<div class = "col-md-11">
-		<div class="panel panel-info">
-			<div class="panel-body">
-				<p class = "text truncate">
-				{{respuesta.0.texto|truncatewords:50}}
-				</p>
-				<br/>
-			</div>
-			<div class="panel-footer">
-				{% if respuesta.0.creador.usuario == request.user %}
-				<div class = "eliminar_editar pull-left">
-					<div class = "btn-group dropup">
-					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-						<span class="fa fa-cog"></span>
-					</button>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="{% url 'temas:eliminar_propio_post' respuesta.0.id %}">Eliminar Post</a>
-						</li>
-						<li class = "divider"></li>
-						<li>
-							<a href="{% url 'temas:editar_post' respuesta.0.id %}">Editar</a> <!-- -->
-						</li>
-					</ul>
-					</div>
-				</div>
-				{% endif %}
-				<div class = "nombre_fecha">
-				<p><a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
-					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
-				</p>
-				</div>
-				<div class = "footer_respuestas pull-right">
-		 			<a href = "{% url 'videos:post_video' video.id tema.0.slug respuesta.0.id 'recientes' %} ">
-		 				{{respuesta.1}}
-		 			<span class="fa fa-comments"></span>
-		 			<span class="fa fa-chevron-right">  </a>
-		 		</div>
-			</div>
-		</div>
-	</div> <!-- class md 10 -->
-	</div> <!--post -->
+</div> <!-- class md 10 -->
+</div> <!--respuesta -->
 {% endfor %}
 </div> <!--row-->
 </div><!--col 8 -->
@@ -392,7 +398,7 @@
 	
 			</p>
 			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} "> 
-				<i class = "fa fa-puzzle-piece"></i><small> Compartir un video en {{tema.0.nombre}} </small> </a>
+				<small> Compartir un video en {{tema.0.nombre}} </small> </a>
 		<div class="panel-link">
 			<div>
 				<br>
@@ -400,7 +406,7 @@
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
 				<div>
-					{{tema.2}}
+					{{tema.2|safe}}
 				</div>
 			</div>
 		</div>

@@ -13,6 +13,7 @@ from models import Imagen, Ifavoritas, Idenunciadas
 from forms import FormNuevaImagen
 from perfiles.models import Perfiles
 from notificaciones.models import Notificacion
+from olibertaria.utils import bersuit_vergarabat
 
 
 @page_template('index_page_imagenes.html')
@@ -97,11 +98,13 @@ def nueva(request):
             return HttpResponseRedirect(reverse('imagenes:index', args=[u'recientes']))
         else:
             form_nueva_imagen = FormNuevaImagen()
-            context = {'form_nueva_imagen': form_nueva_imagen}
+            lista_bersuit = bersuit_vergarabat()
+            context = {'form_nueva_imagen': form_nueva_imagen, 'lista_bersuit': lista_bersuit}
             return render(request, template, context)
     else:
+        lista_bersuit = bersuit_vergarabat()
         form_nueva_imagen = FormNuevaImagen()
-        context = {'form_nueva_imagen': form_nueva_imagen}
+        context = {'form_nueva_imagen': form_nueva_imagen, 'lista_bersuit': lista_bersuit}
         return render(request, template, context)
 
 

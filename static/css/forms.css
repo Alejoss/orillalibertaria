@@ -1,4 +1,11 @@
 /* css para los forms */
+.bv{
+	display: none;
+}
+.vergarabat{
+	display: none;
+}
+
 .apariencia_link{
 	color: #428BCA;
 }

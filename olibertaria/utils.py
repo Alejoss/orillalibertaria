@@ -1,10 +1,35 @@
 # -*- coding: utf-8 -*-
+import re
+from datetime import datetime
 
 from temas.models import Votos, Posts
 from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def bersuit_vergarabat():
+    dia = datetime.today().weekday()
+    if dia > 5:
+        numero1 = "cinco"
+        numero2 = "tres"
+        respuesta = "ocho"  # opciones: 5 y 8
+    elif dia < 5 and dia > 2:
+        numero1 = "dos"
+        numero2 = "tres"
+        respuesta = "cinco"
+    else:
+        numero1 = "seis"
+        numero2 = "dos"
+        respuesta = "ocho"
+
+    return [numero1, numero2, respuesta]
+
+
+def procesar_espacios(texto):
+    texto_final = re.sub('(?:\r\n|\r|\n)', '<br />', texto)
+    return texto_final
 
 
 def obtener_cita(cita):
@@ -14,7 +39,8 @@ def obtener_cita(cita):
     tiene_fuente = False
     if fuente is not None and len(fuente) > 0:
         tiene_fuente = True
-    return [cita, tiene_fuente, cita.fuente]
+    texto_procesado = procesar_espacios(cita.texto)
+    return [cita, tiene_fuente, cita.fuente, texto_procesado]
 
 
 def obtener_num_notificaciones(perfil):
