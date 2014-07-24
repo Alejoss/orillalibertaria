@@ -1,6 +1,10 @@
 /* css para el video.html */
+.regresar_video{
+	margin-left: 50px;
+	margin-bottom: 25px;
+}
 .fecha_video{
-margin-right: 15px;
+display: inline-block;
 }
 
 #denunciar_video{
@@ -12,6 +16,7 @@ margin-right: 15px;
 .div_video{
 	margin-left: 15px;
 	width: 415px;
+	height: 375px;
 }
 .div_descripcion_video{
 	margin-top: 20px;

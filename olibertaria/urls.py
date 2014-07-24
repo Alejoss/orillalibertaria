@@ -8,6 +8,7 @@ urlpatterns = patterns('',
                        # Examples:
                        # url(r'^$', 'olibertaria.views.home', name='home'),
                        # url(r'^blog/', include('blog.urls')),
+                       url('', include('social.apps.django_app.urls', namespace='social')),
                        url(r'^perfiles/',
                            include('perfiles.urls', namespace='perfiles')),
                        url(r'^temas/',

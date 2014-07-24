@@ -30,21 +30,19 @@
 			</div>
 			{% endif %}
 		</div>
-</div>
+	</div>
 </div>
 
 <hr/>
 {% if user.is_authenticated %}
 <div class = "row clearfix">
-	<div class = "col-md-10 col-md-offset-2 col-lg-offset-2">
+	<div class = "col-md-9 col-md-offset-3 col-lg-offset-3">
 		<form id = "formulario" class = "form-horizontal form_respuesta" action = " {% url 'videos:sumar_post_video' tema.0.slug video.id %} " method = "POST"/>
 			{% csrf_token %}
 			<fieldset>
 			<div class = "form-group">
 				<label = class = "control-label" for = "texto"></label>
-				<div class = "row textarea_form">
 				{{form_respuesta.texto}}
-				</div>
 			</div>
 			</fieldset>
 		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
@@ -115,14 +113,18 @@
 				</div>
 			</div>
 			{% endif %}
+			<div class = "perfil_pequena">
+				<img src = "{% static '/static/img/perfil5.jpeg' %}">
+			</div>
 			<div class = "nombre_fecha">
 				<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-					{{post.0.creador.usuario.username}}</a> <small> el {{post.0.fecha}} </small>
+					{{post.0.creador.usuario.username}}</a> 
+					<small class = "fecha_desde"> {{post.4}} </small>
 				</p>
 			</div>
 			<div class = "footer_respuestas pull-right">
 				<a href = "{% url 'videos:post_video' video.id tema.0.slug post.0.id 'recientes' %} ">{{post.1}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right"></span></a>
-				</div>
+			</div>
 		</div>
 	</div>
 </div> <!-- class md 10 -->
@@ -150,10 +152,10 @@
 			</p>
 			{% if user.is_authenticated %}
 			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} ">
-				<small> Compartir un video en {{tema.0.nombre}} </small> </a>
+				<small> Compartir un video sobre {{tema.0.nombre}} </small> </a>
 			{% else %}
 			<a href=" {% url 'perfiles:login' %} ">
-				<small> <span class = "fa fa-lock"></span> Compartir un video en {{tema.0.nombre}} </small> </a>
+				<small> <span class = "fa fa-lock"></span> Compartir un video sobre {{tema.0.nombre}} </small> </a>
 			{% endif %}
 		<div class="panel-link">
 			<div>

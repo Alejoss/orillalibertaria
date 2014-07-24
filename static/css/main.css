@@ -17,10 +17,9 @@
 
 .thumbnail_main_div > img {
   display: block;
+  min-height: 200px;
   height: auto;
-  max-width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
 }
 
 /* css para temas/main general */

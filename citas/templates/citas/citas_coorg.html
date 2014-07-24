@@ -51,7 +51,7 @@
 									<ul>
 										{% for c in x.1 %}
 										<li> <a href=" {% url 'perfiles:perfil' c.2 'recientes' %} ">
-											{{c.2}}</a>: {{c.1}} <br> El {{c.0}}. </li>
+											{{c.2}}</a>: {{c.1}} <br> <small class = "fecha_desde"> {{c.0}}.</small> </li>
 										{% endfor %}
 									</ul>
 								</td>

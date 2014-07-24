@@ -19,7 +19,8 @@ from models import Videos, VFavoritos, VDenunciados
 from temas.models import Temas, Tema_descripcion, Posts, Respuestas
 from citas.models import Cita
 from notificaciones.models import Notificacion
-from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios, bersuit_vergarabat
+from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
+    bersuit_vergarabat, tiempo_desde
 
 
 @login_required
@@ -147,7 +148,9 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
         num_respuestas_video = Posts.objects.filter(
             video=video, eliminado=False).count()
         descripcion_video = procesar_espacios(video.descripcion)
-        videos.append([video, imagen_video, es_favorito, num_respuestas_video, descripcion_video])
+        hora_procesada = tiempo_desde(video.fecha)
+        videos.append([video, imagen_video, es_favorito, num_respuestas_video,
+                       descripcion_video, hora_procesada])
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -240,6 +243,7 @@ def video(request, video_id, slug, queryset):
         elif "ted.com" in video.url:
             origen_no_youtube = "ted"
     descripcion_video = procesar_espacios(video.descripcion)
+    hora_procesada_video = tiempo_desde(video.fecha)
 
     # Tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -276,7 +280,8 @@ def video(request, video_id, slug, queryset):
         else:
             voted_status = "no-vote"
         texto_procesado = procesar_espacios(post.texto)
-        posts.append([post, num_respuestas, voted_status, texto_procesado])
+        hora_procesada = tiempo_desde(post.fecha)
+        posts.append([post, num_respuestas, voted_status, texto_procesado, hora_procesada])
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -288,7 +293,8 @@ def video(request, video_id, slug, queryset):
                'es_favorito': es_favorito, 'origen_no_youtube': origen_no_youtube,
                'num_respuestas_video': num_respuestas_video,
                'posts': posts, 'populares': populares, 'propio_video': propio_video,
-               'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta}
+               'recientes': recientes, 'cita': cita, 'form_respuesta': form_respuesta,
+               'hora_procesada_video': hora_procesada_video}
 
     return render(request, template, context)
 
@@ -433,6 +439,7 @@ def post_video(request, video_id, slug, post_id, queryset):
     num_respuestas_video = Posts.objects.filter(
         video=video, eliminado=False).count()
     descripcion_video = procesar_espacios(video.descripcion)
+    hora_procesada_video = tiempo_desde(video.fecha)
 
     # Tema
     tema_obj = Temas.objects.get(slug=slug)
@@ -457,7 +464,8 @@ def post_video(request, video_id, slug, post_id, queryset):
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
     texto_procesado = procesar_espacios(post_obj.texto)
-    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado]
+    hora_procesada = tiempo_desde(post_obj.fecha)
+    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado, hora_procesada]
 
     # post_padre
     post_padre = []
@@ -473,8 +481,10 @@ def post_video(request, video_id, slug, post_id, queryset):
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
         texto_procesado_pp = procesar_espacios(post_padre_obj.texto)
+        hora_procesada = tiempo_desde(post_padre_obj.fecha)
+
         post_padre = [post_padre_obj,
-                      post_padre_estado, post_padre_numrespuestas, texto_procesado_pp]
+                      post_padre_estado, post_padre_numrespuestas, texto_procesado_pp, hora_procesada]
 
     # respuestas
     recientes = ""
@@ -501,8 +511,10 @@ def post_video(request, video_id, slug, post_id, queryset):
             else:
                 respuesta_estado = "no-vote"
             texto_procesado_resp = procesar_espacios(r.post_respuesta.texto)
+            hora_procesada = tiempo_desde(post_respuesta.fecha)
             respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado, texto_procesado_resp])
+                [post_respuesta, respuesta_numrespuestas, respuesta_estado,
+                 texto_procesado_resp, hora_procesada])
 
     # form_respuestas
     form_respuesta = FormNuevoPost()
@@ -511,6 +523,7 @@ def post_video(request, video_id, slug, post_id, queryset):
                'es_favorito': es_favorito, 'post': post, 'post_padre': post_padre,
                'respuestas': respuestas, 'num_respuestas_video': num_respuestas_video,
                'post': post, 'primeras': primeras, 'recientes': recientes,
-               'form_respuesta': form_respuesta, 'propio_video': propio_video}
+               'form_respuesta': form_respuesta, 'propio_video': propio_video,
+               'hora_procesada_video': hora_procesada_video}
 
     return render(request, template, context)

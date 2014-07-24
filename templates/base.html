@@ -15,8 +15,7 @@
 	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
 	
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-	<link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> <!--font awesome -->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"><!--font awesome -->
 	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
 	<link href="{% static 'css/notificaciones.css' %}" rel="stylesheet">
 	<link href="{% static 'css/prueba.css' %}" rel="stylesheet">
@@ -51,11 +50,11 @@
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="navbar-header">
 				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> 
-				 <a class="display_inline_block navbar-brand" href=" {% url 'temas:main' 'activos' %} "> <img class = "logo" src = " {% static '/static/img/logo_small.jpg' %} "> Orilla Libertaria</a>
+				 <a class="display_inline_block navbar-brand" href=" {% url 'temas:main' 'activos' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<div class = "display_inline_block">
+				<div class = "cuadro_buscar display_inline_block">
 				<form class="navbar-form navbar-left" method = "get" role="search"
 				action = "{% url 'temas:buscar' %}" >
 					<div class="form-group">

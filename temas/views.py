@@ -21,7 +21,7 @@ from perfiles.models import Perfiles
 from citas.models import Cita
 from videos.models import Videos
 from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
-    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat
+    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde
 from utils import obtener_posts_populares
 
 # print "variable %s" %(variable) <--- para debug
@@ -325,7 +325,8 @@ def post(request, slug, post_id, queryset):
     post_numrespuestas = Respuestas.objects.filter(
         post_padre=post_obj, post_respuesta__eliminado=False).count()
     texto_procesado_post = procesar_espacios(post_obj.texto)
-    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado_post]
+    hora_procesada = tiempo_desde(post_obj.fecha)
+    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado_post, hora_procesada]
 
     # post_padre
     post_padre = []
@@ -341,7 +342,9 @@ def post(request, slug, post_id, queryset):
         post_padre_numrespuestas = Respuestas.objects.filter(
             post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
         texto_procesado_postpadre = procesar_espacios(post_padre_obj.texto)
-        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas, texto_procesado_postpadre]
+        hora_procesada = tiempo_desde(post_padre_obj.fecha)
+        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas,
+                      texto_procesado_postpadre, hora_procesada]
 
     # respuestas
     recientes = ""
@@ -368,8 +371,10 @@ def post(request, slug, post_id, queryset):
             else:
                 respuesta_estado = "no-vote"
             texto_procesado_resp = procesar_espacios(post_respuesta.texto)
+            hora_procesada = tiempo_desde(post_respuesta.fecha)
             respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado, texto_procesado_resp])
+                [post_respuesta, respuesta_numrespuestas, respuesta_estado,
+                 texto_procesado_resp, hora_procesada])
 
     # otros
     # utiliza el mismo form que los posts normales

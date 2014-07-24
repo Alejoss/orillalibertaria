@@ -42,9 +42,9 @@ TEMPLATE_DIRS = (
 SECRET_KEY = 'reyd@kps)!ab2z9nu0ok%*es6su51oa$%d3s450c$ksjc&rl1k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'imagenes',
     'videos',
     'notificaciones',
+    'social.apps.django_app.default',
     #'django_extensions',
     #'south',
     'endless_pagination',
@@ -84,6 +85,19 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
+#python social auth
+SOCIAL_AUTH_FACEBOOK_KEY = '313986378762096'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'bf9b90c17b7ca9dde309194a91f5411d'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

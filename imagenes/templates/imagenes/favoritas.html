@@ -42,9 +42,9 @@
             </div>
             <div class = "div_marcar_portada">
             {% if propio_usuario %}
+                <span class = "favoritos">{{i.0.favoritos_recibidos}}</span>
                 <p class = "hidden">{{i.0.id}}</p>
                 <span class="estrella marcar_favorito fa fa-star fa-lg es_favorita"></span>
-                <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
                 {% if i.1 == True %}
         		  <span rel = "tooltip" title = "Portada" class = "icono_portada fa fa-picture-o fa-lg"> </span>
 				{% else %}

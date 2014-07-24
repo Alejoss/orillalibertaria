@@ -13,6 +13,7 @@
 .textarea_form{
 	margin-left: 5px;
 }
+
 .info_editar_perfil_des{
 	margin-top: 20px;
 	margin-left: 10px;
@@ -27,7 +28,7 @@
 }
 .barco_logo{
   display: inline-block;
-  height: 150px;
+  height: 175px;
   max-width: 100%;
   padding: 4px;
   line-height: 1.428571429;

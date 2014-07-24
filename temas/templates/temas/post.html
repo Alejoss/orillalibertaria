@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tz %}
 
 {% block extra_css %}
 {% load staticfiles %}
@@ -32,7 +33,6 @@
 						{% else %}
 						 Post eliminado por usuario. 
 						{% endif %}
-
 					</p>
 					<br/>
 				</div>
@@ -54,10 +54,13 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<img src = "{% static '/static/img/perfil3.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 						{{post_padre.0.creador.usuario.username}}</a> 
-						<small> el {{post_padre.0.fecha}} </small>
+						<small class = "fecha_desde">{{post_padre.4}} </small>
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
@@ -127,10 +130,13 @@
 							</div>
 						</div>
 						{% endif %}
+					<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<img src = "{% static '/static/img/perfil3.jpeg' %}">
+					</div>
 						<div class = "nombre_fecha">
 						<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 							{{post_padre.0.creador.usuario.username}}</a> 
-							<small> el {{post_padre.0.fecha}} </small>
+							<small class = "fecha_desde"> {{post_padre.4}} </small>
 						</p>
 						</div>
 						<div class = "footer_respuestas pull-right">
@@ -183,9 +189,12 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<img src = "{% static '/static/img/perfil5.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-						{{post.0.creador.usuario.username}}</a> <small> el {{post.0.fecha}} </small>
+						{{post.0.creador.usuario.username}}</a> <small class = "fecha_desde">{{post.4}} </small>
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
@@ -257,6 +266,9 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<img src = "{% static '/static/img/perfil5.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p>
 					<a href ="{% url 'perfiles:perfil' post.0.creador.usuario.username 'recientes' %}">
@@ -267,14 +279,14 @@
 					{{post_padre.0.creador.usuario.username}}</a> 
 					</p>
 					{% endif %}
-						<small> el {{post.0.fecha}} </small>
+						<small class = "fecha_desde">{{post.4}} </small>
 					</div>
 				</div>
 			</div>
-		<hr/>
 		</div> <!-- class md 10 -->
 	</div> <!--post -->
 {% endif %}
+<hr/>
 
 {% if user.is_authenticated %}
 <div class = "row clearfix">
@@ -284,12 +296,9 @@
 			<fieldset>
 			<div class = "form-group">
 				<label = class = "control-label" for = "texto"></label>
-				<div class = "row textarea_form">
 				{{form_respuesta.texto}}
-				</div>
 			</div>
 			</fieldset>
-
 		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
 		</form>
 	</div>
@@ -360,10 +369,14 @@
 					</div>
 				</div>
 				{% endif %}
+				<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<img src = "{% static '/static/img/perfil4.jpeg' %}">
+					</div>
 				<div class = "nombre_fecha">
 				<p>
 				<a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
-					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
+					{{respuesta.0.creador.usuario.username}}</a> 
+					<small class = "fecha_desde">{{respuesta.4}} </small>
 				</p>
 				</div>
 				<div class = "footer_respuestas pull-right">
@@ -441,5 +454,4 @@ $(document).ready(function(){
 	});
 });
 </script>
-
 {% endblock javascript %}

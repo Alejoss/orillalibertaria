@@ -14,7 +14,7 @@ from endless_pagination.decorators import page_template
 
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
-from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios
+from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde
 from temas.models import Temas
 from temas.models import Posts, Respuestas
 from citas.models import Cfavoritas
@@ -248,10 +248,13 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
             post_en_video = True
 
         texto_procesado = procesar_espacios(p.texto)
+        hora_procesada = tiempo_desde(p.fecha)
+
         post.append(voted_status)
         post.append(num_respuestas)
         post.append(post_en_video)
         post.append(texto_procesado)
+        post.append(hora_procesada)
 
         #suma el post a la lista de posts
         posts.append(post)
@@ -264,7 +267,6 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
             perfil=usuario_perfil, eliminado=False)
         cita_favorita_obj = (random.choice(citas_favoritas_obj)).cita
         cita_favorita = obtener_cita(cita_favorita_obj)
-        
 
     # videos
     num_videos_favoritos = VFavoritos.objects.filter(

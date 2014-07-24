@@ -11,8 +11,9 @@
 <div class="row clearfix">
 <div class="col-md-8 column">
 <div class = "row">
-	<a href=" {% url 'videos:video' video.id video.tema.slug 'recientes' %} ">  {{video.titulo}} <i class ="fa fa-level-up"></i> </a>
-	<hr>
+	<a class = "regresar_video" href=" {% url 'videos:video' video.id video.tema.slug 'recientes' %} ">  {{video.titulo}} <i class ="fa fa-level-up"></i></a>
+	<br/>
+	<br>
 </div>
 
 {% include 'cuadro_video.html' %}
@@ -62,10 +63,13 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena">
+						<img src = "{% static '/static/img/perfil2.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 						{{post_padre.0.creador.usuario.username}}</a> 
-						<small> el {{post_padre.0.fecha}} </small>
+						<small class = "fecha_desde"> {{post_padre.4}} </small>
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
@@ -134,10 +138,13 @@
 							</div>
 						</div>
 						{% endif %}
+						<div class = "perfil_pequena">
+							<img src = "{% static '/static/img/perfil2.jpeg' %}">
+						</div>
 						<div class = "nombre_fecha">
 						<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 							{{post_padre.0.creador.usuario.username}}</a> 
-							<small> el {{post_padre.0.fecha}} </small>
+							<small class = "fecha_desde"> {{post_padre.4}} </small>
 						</p>
 						</div>
 						<div class = "footer_respuestas pull-right">
@@ -188,9 +195,12 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena">
+						<img src = "{% static '/static/img/perfil1.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-						{{post.0.creador.usuario.username}}</a> <small> el {{post.0.fecha}} </small>
+						{{post.0.creador.usuario.username}}</a> <small class = "fecha_desde"> {{post.4}} </small>
 					</p>
 					</div>
 					<div class = "footer_respuestas pull-right">
@@ -243,6 +253,9 @@
 					<br/>
 				</div>
 				<div class="panel-footer">
+					<div class = "perfil_pequena">
+						<img src = "{% static '/static/img/perfil1.jpeg' %}">
+					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
 						{{post.0.creador.usuario.username}}</a>
@@ -251,7 +264,7 @@
 						<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 						{{post_padre.0.creador.usuario.username}}</a> 
 						{% endif %}
-						<small> el {{post.0.fecha}} </small>
+						<small class = "fecha_desde">{{post.4}}</small>
 					</p>
 					</div>
 					{% if post.0.creador.usuario == request.user %}
@@ -278,7 +291,6 @@
 {% endif %}
 </div> <!--cuadro para posts -->
 
-<hr/>
 {% if user.is_authenticated %}
 <div class = "row clearfix">
 	<div class = "col-md-10 col-md-offset-2 col-lg-offset-2 ">
@@ -287,9 +299,7 @@
 		<fieldset>
 		<div class = "form-group">
 			<label = class = "control-label" for = "texto"></label>
-			<div class = "row textarea_form">
 			{{form_respuesta.texto}}
-			</div>
 		</div>
 		</fieldset>
 		<input id = "enviar_respuesta" class = "btn pull-right" type = "submit" value = "Enviar"/>
@@ -363,9 +373,12 @@
 				</div>
 			</div>
 			{% endif %}
+			<div class = "perfil_pequena">
+				<img src = "{% static '/static/img/perfil2.jpeg' %}">
+			</div>
 			<div class = "nombre_fecha">
 				<p><a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario 'recientes' %}">
-					{{respuesta.0.creador.usuario.username}}</a> <small> el {{respuesta.0.fecha}} </small>
+					{{respuesta.0.creador.usuario.username}}</a> <small class = "fecha_desde">{{respuesta.4}}</small>
 				</p>
 			</div>
 			<div class = "footer_respuestas pull-right">
@@ -397,8 +410,13 @@
 			<p>
 	
 			</p>
-			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} "> 
-				<small> Compartir un video en {{tema.0.nombre}} </small> </a>
+			{% if user.is_authenticated %}
+			<a href=" {% url 'videos:nuevo_video' tema.0.slug %} ">
+				<small> Compartir un video sobre {{tema.0.nombre}} </small> </a>
+			{% else %}
+			<a href=" {% url 'perfiles:login' %} ">
+				<small> <span class = "fa fa-lock"></span> Compartir un video sobre {{tema.0.nombre}} </small> </a>
+			{% endif %}
 		<div class="panel-link">
 			<div>
 				<br>

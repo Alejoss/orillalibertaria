@@ -16,4 +16,7 @@
 
 	</form>
 
+     <li>
+       <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+     </li>
 {% endblock content %}

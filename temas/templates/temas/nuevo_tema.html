@@ -1,10 +1,10 @@
 {% extends "base_forms.html" %}
+{% load staticfiles %}
 
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Nuevo Tema </h2>
-	<img class = "barco_logo pull-right" 
-	src="http://i269.photobucket.com/albums/jj43/comentarioshi5/dibujos-para-pintar/barco-pirata/06.gif">
+	<img style = "margin-right:20px" class = "barco_logo pull-right" src="{% static '/static/img/barco_espin.png' %}">
 	<br/>
 </div>
 {% endblock arriba %}

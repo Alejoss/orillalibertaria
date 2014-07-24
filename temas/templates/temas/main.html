@@ -35,7 +35,10 @@
 						{{posts_populares.0.texto|truncatewords:30}}
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
-						<h4>
+						<div class = "perfil_pequena">
+							<img src = "{% static '/static/img/perfil1.jpeg' %}">
+						</div>
+						<h4  class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.0.tema.slug 'recientes' %} ">
 							{{posts_populares.0.tema.nombre}}</a></small>
@@ -54,7 +57,10 @@
 						{{posts_populares.1.texto|truncatewords:30}} 
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
-						<h4>
+						<div class = "perfil_pequena">
+							<img src = "{% static '/static/img/perfil2.jpeg' %}">
+						</div>
+						<h4  class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.1.tema.slug 'recientes' %} ">
 							{{posts_populares.1.tema.nombre}}</a></small>
@@ -73,7 +79,10 @@
 						{{posts_populares.2.texto|truncatewords:30}} 
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
-						<h4>
+						<div class = "perfil_pequena">
+							<img src = "{% static '/static/img/perfil3.jpeg' %}">
+						</div>
+						<h4 class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.usuario.username}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.2.tema.slug 'recientes' %} ">
 							{{posts_populares.2.tema.nombre}}</a></small>

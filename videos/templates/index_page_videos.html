@@ -1,4 +1,5 @@
 {% load endless %}
+{% load staticfiles %}
 {% paginate videos %}
 
 <div class = "row">
@@ -36,9 +37,13 @@
 				<br/>
 			</div>
 			<div class="panel-footer">
+				<div class = "perfil_pequena">
+					<img src = "{% static '/static/img/perfil1.jpeg' %}">
+				</div>
 				<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' video.0.perfil.usuario.username 'recientes' %}">
-						{{video.0.perfil.usuario.username}}</a> <small> el {{video.0.fecha}} </small>
+						{{video.0.perfil.usuario.username}}</a> 
+						<small class = "fecha_desde"> {{video.5}} </small>
 					</p>
 				</div>
 				<div class = "footer_respuestas pull-right">

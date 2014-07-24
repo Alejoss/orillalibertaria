@@ -22,6 +22,9 @@
 {% block content %}
 <div class="row clearfix">
 	<div class="col-md-7 column">
+        <div class = "perfil_pequena titulo_top pull-right">
+			<img src = "{% static '/static/img/perfil2.jpeg' %}">
+		</div>
 		{% if propio_usuario %}
 		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas </small></h2>
         {% else%}
@@ -52,7 +55,7 @@
 						{% endif %}
 						<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
 						</div>
-						<p><small> favorito desde {{c.2|date:"F/d"}} </small></p>
+						<p><small class = "fecha_desde"> favorito desde {{c.2|date:"F/d"}} </small></p>
 					</div>
 				</div>
 			</div>
@@ -103,7 +106,10 @@
 	      navigation : false, // Show next and prev buttons
 	      slideSpeed : 300,
 	      paginationSpeed : 400,
-	      singleItem:true
+	      singleItem:true,
+	   	  pagination: false,
+	      autoPlay: 10000,
+	      stopOnHover: true
 	 
 	      // "singleItem:true" is a shortcut for:
 	      // items : 1, 

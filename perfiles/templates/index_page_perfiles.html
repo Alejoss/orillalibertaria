@@ -52,18 +52,20 @@
 							</div>
 						</div>
 						{% endif %}
-						{% if post.1 %}
+
 						<div class = "nombre_fecha">
-						<p><small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} "> {{post.2}}</a> 
-							sobre <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}} </a> el {{post.0.fecha|date:"D d M"}}. </small>
-						</p>
+							<p>
+							{% if post.1 %}
+							<small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} ">{{post.2}}</a> 
+							sobre <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}} </a> </small>
+							
+							{% else %}
+							<small> En <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}}</a> </small>
+							{% endif %}
+							<small class = "fecha_desde"> - {{post.7}}</small>
+							</p>
 						</div>
-						{% else %}
-						<div class = "nombre_fecha">
-						<p><small>{{post.0.fecha|date:"D d M"}} </small> en <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}}</a>
-						</p>
-						</div>
-						{% endif %}
+
 
 						<div class = "footer_respuestas pull-right">
 						{% if post.5 %}

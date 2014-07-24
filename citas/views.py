@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
-from olibertaria.utils import obtener_imagenes_display, obtener_cita, bersuit_vergarabat
+from olibertaria.utils import obtener_imagenes_display, obtener_cita, bersuit_vergarabat, tiempo_desde
 from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
@@ -239,7 +239,7 @@ def colaborar_organizar(request):
         if Ceditadas.objects.filter(cita=cita).exists():
             correcciones_objects = Ceditadas.objects.filter(cita=cita)
             for c in correcciones_objects:
-                fecha = c.fecha
+                fecha = tiempo_desde(c.fecha)
                 razon = c.razon
                 perfil = c.perfil.usuario.username
                 correccion = [fecha, razon, perfil]

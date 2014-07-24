@@ -1,3 +1,4 @@
+{% load staticfiles %}
 
 <div class = "row clearfix">
 {% if video.es_youtube %}
@@ -13,7 +14,6 @@
 			<span class = "fa fa-star pull-left"> </span>
 			{% endif %}
 			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>
-			<p class = "fecha_video"> <small> farseer el 14 de Marzo {{propio_video}}  </small> </p>
 			{% if propio_video %}
 			<div class = "eliminar_editar pull-right">
 				<div class = "btn-group dropup">
@@ -40,6 +40,16 @@
 	</div>
 </div>
 <div class = "col-md-5">
+<div> <!-- foto perfil fecha -->
+<div class = "perfil_pequena">
+	<img src = "{% static '/static/img/perfil2.jpeg' %}">
+</div>
+<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.usuario.username}}</a>
+<small class = "fecha_desde">
+{{hora_procesada_video}}</small>
+</p>
+<hr>
+</div> <!-- foto perfil fecha -->
 <div class = "div_descripcion_video">
 	<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
 		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
@@ -69,10 +79,9 @@
 			<p class = "hidden">{{video.id}}</p>
 			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span>
 			{% else %}
-			<span class = "fa fa-star pull-left"> </span>
+			<span class = "fa fa-star pull-left"></span>
 			{% endif %}
-			<h4 class = "pull-left favoritos_recibidos"> {{video.favoritos_recibidos}} </h4>
-			<p class = "fecha_video"> <small> farseer el 14 de Marzo </small> </p>
+			<h4 class = "pull-left favoritos_recibidos">{{video.favoritos_recibidos}}</h4>
 			{% if propio_video %}
 			<div class = "eliminar_editar pull-right">
 				<div class = "btn-group dropup">
@@ -99,6 +108,18 @@
 	</div>
 </div>
 <div class = "col-md-5">
+
+<div> <!-- foto perfil fecha -->
+	<div class = "perfil_pequena">
+		<img src = "{% static '/static/img/perfil2.jpeg' %}">
+	</div>
+	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.usuario.username}}</a>
+	<small class = "fecha_desde">
+	{{hora_procesada_video}}</small>
+	</p>
+	<hr>
+</div> <!-- foto perfil fecha -->
+
 	<div class = "div_descripcion_video">
 		<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
 		</p>

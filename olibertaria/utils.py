@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import pytz
 from datetime import datetime
 
 from temas.models import Votos, Posts
@@ -7,6 +8,73 @@ from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def tiempo_desde(hora_object):
+    unaware = datetime.today()
+    ahora = unaware.replace(tzinfo=pytz.UTC)
+    dif_segundos = (ahora-hora_object).total_seconds()
+    dif_minutos = dif_segundos/60
+    mensaje = ""
+    dif_dias = (ahora-hora_object).days
+    diasdelasemana = {0: "Lunes", 1: "Martes", 2: "Miercoles", 3: "Jueves",
+                      4: "Viernes", 5: "Sabado", 6: "Domingo"}
+    meses = {1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio",
+             7: "Julio", 8: "Agosto", 9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"}
+    if dif_dias > 1:  # braket para mas de un dia
+        if dif_dias < 6:
+            x = hora_object.weekday()
+            dia_nombre = diasdelasemana[x]
+            mensaje = "el %s" % (dia_nombre)
+        elif dif_dias < 300:
+            mes = meses[hora_object.month]
+            mensaje = "el %s de %s" % (hora_object.day, mes)
+        else:
+            ano = hora_object.year
+            mes = meses[hora_object.month]
+            mensaje = "%s del %s" % (mes, ano)
+    else:
+        if dif_minutos < 60:  # braket para menos de una hora
+            if dif_minutos < 30:
+                if dif_minutos < 15:
+                    if dif_minutos < 5:
+                        mensaje = "hace unos minutos"
+                    elif dif_minutos < 8 and dif_minutos > 5:
+                        mensaje = "hace cinco minutos"
+                    else:
+                        mensaje = "hace diez minutos"
+                else:
+                    if dif_minutos < 19:
+                        mensaje = "hace quince minutos"
+                    else:
+                        mensaje = "hace veinte minutos"
+            else:
+                if dif_minutos < 40:
+                    mensaje = "hace media hora"
+                else:
+                    mensaje = "hace cuarenta minutos"
+        else:  # braket para mas de una hora
+            if dif_minutos < 180:
+                if dif_minutos < 120:
+                    mensaje = "hace una hora"
+                else:
+                    mensaje = "hace dos horas"
+            else:
+                if dif_minutos < 480:
+                    if dif_minutos < 240:
+                        mensaje = "hace tres horas"
+                    elif dif_minutos < 300:
+                        mensaje = "hace cuatro horas"
+                    elif dif_minutos < 360:
+                        mensaje = "hace cinco horas"
+                    else:
+                        mensaje = "hace unas horas"
+                else:
+                    if dif_dias == 0:
+                        mensaje = "hace varias horas"
+                    else:
+                        mensaje = "Ayer"
+    return mensaje
 
 
 def bersuit_vergarabat():
