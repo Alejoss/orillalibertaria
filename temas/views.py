@@ -12,7 +12,6 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 from forms import FormCrearTema, FormNuevoPost, FormEditarTema, FormEditarPost
 from models import Temas, Posts, Respuestas, Votos, Tema_descripcion
@@ -27,12 +26,15 @@ from utils import obtener_posts_populares
 # print "variable %s" %(variable) <--- para debug
 
 
-@ensure_csrf_cookie
 def prueba(request):
     template = "temas/prueba.html"
     context = {}
 
     return render(request, template, context)
+
+
+def redirect_main(request):
+    return redirect('temas:main', queryset=u'recientes')
 
 
 def prueba_ajax(request):

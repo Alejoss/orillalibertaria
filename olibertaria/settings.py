@@ -66,7 +66,7 @@ INSTALLED_APPS = (
     'notificaciones',
     'social.apps.django_app.default',
     #'django_extensions',
-    #'south',
+    'south',
     'endless_pagination',
     #'debug_toolbar',
     'gunicorn',
@@ -97,6 +97,19 @@ AUTHENTICATION_BACKENDS = (
 TEMPLATE_CONTEXT_PROCESSORS += (
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
+)
+
+SOCIAL_AUTH_PIPELINE = (
+'social.pipeline.social_auth.social_details',
+'social.pipeline.social_auth.social_uid',
+'social.pipeline.social_auth.auth_allowed',
+'social.pipeline.social_auth.social_user',
+'social.pipeline.user.get_username',
+'social.pipeline.user.create_user',
+'social.pipeline.social_auth.associate_user',
+'social.pipeline.social_auth.load_extra_data',
+'social.pipeline.user.user_details',
+'olibertaria.utils.crear_perfil'
 )
 
 # Database

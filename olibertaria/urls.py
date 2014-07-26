@@ -1,13 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
-from django.contrib import admin
 from django.conf.urls.static import static
-admin.autodiscover()
+from temas import views
 
 urlpatterns = patterns('',
                        # Examples:
                        # url(r'^$', 'olibertaria.views.home', name='home'),
                        # url(r'^blog/', include('blog.urls')),
+                       url(r'^$', views.redirect_main, name='redirect_main'),
                        url('', include('social.apps.django_app.urls', namespace='social')),
                        url(r'^perfiles/',
                            include('perfiles.urls', namespace='perfiles')),
@@ -21,5 +21,4 @@ urlpatterns = patterns('',
                            include('videos.urls', namespace='videos')),
                        url(r'^notificaciones/',
                            include('notificaciones.urls', namespace='notificaciones')),
-                       url(r'^admin/', include(admin.site.urls)),
                        ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

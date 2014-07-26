@@ -3,11 +3,25 @@ import re
 import pytz
 from datetime import datetime
 
+from django.contrib.auth.models import User
+
+from perfiles.models import Perfiles
 from temas.models import Votos, Posts
 from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def crear_perfil(strategy, details, response, user, *args, **kwargs):
+    username = kwargs['details']['username']
+    user_object = User.objects.get(username=username)
+    if Perfiles.ojects.filter(usuario=user_object).exists():
+        pass
+    else:
+        nuevo_perfil = Perfiles(usuario=user_object)
+        nuevo_perfil.save()
+    return kwargs
 
 
 def tiempo_desde(hora_object):
