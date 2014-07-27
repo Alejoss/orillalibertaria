@@ -42,9 +42,9 @@ TEMPLATE_DIRS = (
 SECRET_KEY = 'reyd@kps)!ab2z9nu0ok%*es6su51oa$%d3s450c$ksjc&rl1k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -66,7 +66,7 @@ INSTALLED_APPS = (
     'notificaciones',
     'social.apps.django_app.default',
     #'django_extensions',
-    'south',
+    # 'south',
     'endless_pagination',
     #'debug_toolbar',
     'gunicorn',
@@ -100,16 +100,16 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 )
 
 SOCIAL_AUTH_PIPELINE = (
-'social.pipeline.social_auth.social_details',
-'social.pipeline.social_auth.social_uid',
-'social.pipeline.social_auth.auth_allowed',
-'social.pipeline.social_auth.social_user',
-'social.pipeline.user.get_username',
-'social.pipeline.user.create_user',
-'social.pipeline.social_auth.associate_user',
-'social.pipeline.social_auth.load_extra_data',
-'social.pipeline.user.user_details',
-'olibertaria.utils.crear_perfil'
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'olibertaria.utils.crear_perfil'
 )
 
 # Database
