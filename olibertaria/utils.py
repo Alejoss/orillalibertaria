@@ -3,8 +3,6 @@ import re
 import pytz
 from datetime import datetime
 
-from django.contrib.auth.models import User
-
 from perfiles.models import Perfiles
 from temas.models import Votos, Posts
 from notificaciones.models import Notificacion
@@ -16,11 +14,11 @@ from imagenes.models import Imagen
 def crear_perfil(strategy, details, response, user, *args, **kwargs):
     username = details['username']
     print "username: %s" % (username)
-    user_object = User.objects.get(username=username)
-    if Perfiles.ojects.filter(usuario=user_object).exists():
+    print "user: %s" % (user)
+    if Perfiles.ojects.filter(usuario=user).exists():
         pass
     else:
-        nuevo_perfil = Perfiles(usuario=user_object)
+        nuevo_perfil = Perfiles(usuario=user)
         nuevo_perfil.save()
     return kwargs
 
