@@ -20,7 +20,7 @@
 		<div class = "form-group">
 			<label class = "control-label" for = "nombre"> Nombre </label>
 			{{form_crear_tema.nombre}}
-			<span class = "help-block">Dale un título al tema</span>
+			<span class = "help-block">Dale un título al tema.</span>
 		</div>
 
 		<div class = "form-group">
@@ -28,13 +28,13 @@
 			<div class = "row textarea_form">
 			{{form_crear_tema.texto}}
 			</div>
-			<span class = "help-block"> Añádele una descripción al tema </span>
+			<span class = "help-block"> Añádele una descripción. </span>
 		</div>
 
 		<div class = "form-group">
 			<label class = "control-label" for = "imagen"> Imagen </label>
 			{{form_crear_tema.imagen}}
-			<span class = "help-block"> URL a una imagen que le sirva de portada al tema </span>
+			<span class = "help-block"> Pega una URL a una imagen que le sirva de portada. </span>
 		</div>
 
 		<!-- bersuit vergarabat -->
@@ -73,7 +73,7 @@
 {% block description %}
 <div class="alert alert-dismissable alert-warning">
 	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	 Evita crear temas repetidos. Si no estás seguro, revisa la <a class = "link_alert" href=" {% url 'temas:main' 'todos' %} "> lista</a> de temas o búscalo utilizando la barra de navegación. Pueden existir temas con nombres similares siempre y cuando se refieran a conceptos distintos.
+	 <strong> Evita crear temas repetidos </strong>. Si no estás seguro, revisa la <a class = "link_alert" href=" {% url 'temas:main' 'todos' %} "> lista</a> de temas o búscalo utilizando la barra de navegación. Pueden existir temas con nombres similares siempre y cuando se refieran a conceptos distintos.
 </div>
 <div>
 	<dt>
