@@ -15,6 +15,7 @@ from imagenes.models import Imagen
 
 def crear_perfil(strategy, details, response, user, *args, **kwargs):
     username = details['username']
+    print "username: %s" % (username)
     user_object = User.objects.get(username=username)
     if Perfiles.ojects.filter(usuario=user_object).exists():
         pass
