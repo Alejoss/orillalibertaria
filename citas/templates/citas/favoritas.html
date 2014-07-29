@@ -73,9 +73,10 @@
 			<button type="button" class="btn btn-default btn_sidebar visible-sm" 
 			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
 			</button>
-			<div class = "link_coorg_citas">
-				<a href="{% url 'citas:colaborar_organizar' %}">Ayúdanos a organizar <br> este Banco de Frases</a>
-			</div>
+			<br/>
+			<button type="button" class="btn btn-link btn_sidebar" 
+			onclick="location.href='{% url 'citas:colaborar_organizar' %}';"><i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
+			</button>
 			<hr>
 		</div>
 		<div class = "hidden-sm div_carrusel">

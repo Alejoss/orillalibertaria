@@ -1,11 +1,4 @@
 /* css para los forms */
-.bv{
-	display: none;
-}
-.vergarabat{
-	display: none;
-}
-
 .apariencia_link{
 	color: #428BCA;
 }
@@ -81,4 +74,12 @@ padding: 5px
 margin-top:5px;
 margin-left: 5px;
 display: inline-block;
+}
+
+/* honeypot */
+.bv{
+	display: none;
+}
+.vergarabat{
+	display: none;
 }

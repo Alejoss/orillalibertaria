@@ -67,11 +67,19 @@
 {% endblock form %}
 
 {% block description %}
-<dt>Para compartir una imagen:</dt>
-Pega el url de una imagen. <br>
-Revisa que el url que elegiste termine en ".jpg", o ".png" ".gif".<br>
-Se recomienda imágenes de tamaño mediano: menores a 800x600px. <br>
-Por ahora no hay como subir imágenes directamentes a OrillaLibertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano de blogs, noticias, videos e imágenes que es el Internet. <br>
+
+<div class="alert alert-dismissable alert-warning">
+	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+	 <i class = "fa fa-check"></i> </button>
+	 <strong> Revisa que el URL que elegiste termine en ".jpg", ".png" o ".gif". </strong><br> Prueba dando click en la imagen y buscando la opcion "ver imagen". Se recomienda imágenes de tamaño mediano: menores a 800x600px.
+</div>
+
+<div class="alert alert-dismissable alert-info">
+	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+	 <i class = "fa fa-check"></i> </button>
+	 Por ahora no hay como subir imágenes directamentes a Orilla Libertaria, piénsalo como una isla a la que llegan barcos con el contenido que han podido recolectar en el océano del internet.
+</div>
+
 {% endblock description %}
 
 {% block extra_javascript %}

@@ -13,7 +13,10 @@
                 <h3> Imágenes favoritas de <a href="{%url 'perfiles:perfil' username 'recientes' %}">{{username}} </a></h3>
                 {% endif %}
                 <br>
-                <p><a href=" {% url 'imagenes:nueva' %} " class="btn">Añadir Imagen &rarr;</a></p>
+                <button class="btn btn-warning" 
+                type="button" onclick="location.href='{% url 'imagenes:nueva' %}';">
+                <span class="fa fa-puzzle-piece"> </span> Añadir una nueva imagen.
+                </button> 
             </div>
             <ul class="nav nav-tabs nav-stacked">
             <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">
@@ -29,7 +32,7 @@
             <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="fa fa-home"></i> Orilla Libertaria </a></li>
             {% if user.is_authenticated %}
             <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{user.username}} </a></li>
-            <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-puzzle-piece"></i> Ayúdanos a revisar la Galería </a></li> 
+            <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-wrench"></i> Ayúdanos a revisar la Galería </a></li> 
             {% else %}
             <li><a href="url 'perfiles:login'"><i class="fa fa-user"></i> Login </a></li>
             {% endif %}

@@ -91,12 +91,18 @@
 {% endblock form %}
 
 {% block description %}
-	<dt>
-		Para añadir una frase:
-	</dt>
-	<dd>
-		Asegúrate que la frase no exista en el <a href=" {% url 'citas:index' 'autor' %} ">banco de frases</a>. También, para mantener el banco de frases ordenado, revisa la lista de autores y trata de usar los nombres de la manera en que ya están escritos. El objetivo es no existan tres autores "F.Hayek", "Friedrich Hayek" y "Friedrich August von Hayek", sino solamente uno: Friedrich Hayek.
-	</dd>
+
+<div class="alert alert-dismissable alert-warning">
+	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+	 <i class = "fa fa-check"></i> </button>
+	 <strong> Para añadir una frase: </strong> Asegúrate que la frase no exista en el <a class = "link_alert" href=" {% url 'citas:index' 'autor' %} ">banco de frases</a>.
+</div>
+
+<div class="alert alert-dismissable alert-info">
+	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+	 <i class = "fa fa-check"></i> </button>
+	 <strong> Revisa la lista de autores </strong> y trata de usar los nombres de la manera en que ya están escritos. El objetivo es no existan tres autores "F.Hayek", "Friedrich Hayek" y "Friedrich August von Hayek", sino solamente uno: Friedrich Hayek.
+</div>
 
 <div>
 	<br><br><br>
