@@ -12,8 +12,8 @@ class Migration(SchemaMigration):
         db.create_table(u'citas_cita', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('texto', self.gf('django.db.models.fields.CharField')(max_length=500, null=True)),
-            ('autor', self.gf('django.db.models.fields.CharField')(max_length=150, null=True)),
-            ('fuente', self.gf('django.db.models.fields.CharField')(max_length=150, null=True)),
+            ('autor', self.gf('django.db.models.fields.CharField')(max_length=75, null=True)),
+            ('fuente', self.gf('django.db.models.fields.CharField')(max_length=75, null=True)),
             ('favoritos_recibidos', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
             ('creador', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
             ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True)),
@@ -125,14 +125,14 @@ class Migration(SchemaMigration):
         },
         u'citas.cita': {
             'Meta': {'object_name': 'Cita'},
-            'autor': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True'}),
+            'autor': ('django.db.models.fields.CharField', [], {'max_length': '75', 'null': 'True'}),
             'correcta': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'creador': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
             'denunciada': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'eliminada': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'favoritos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
-            'fuente': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True'}),
+            'fuente': ('django.db.models.fields.CharField', [], {'max_length': '75', 'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'removidatotalmente': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'texto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True'})

@@ -12,9 +12,7 @@ from imagenes.models import Imagen
 
 
 def crear_perfil(strategy, details, response, user, *args, **kwargs):
-    username = details['username']
-    print "username: %s" % (username)
-    print "user: %s" % (user)
+
     if Perfiles.objects.filter(usuario=user).exists():
         pass
     else:

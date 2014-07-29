@@ -21,14 +21,40 @@ class Migration(SchemaMigration):
             ('descripcion', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True)),
             ('url', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('es_youtube', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('youtube_id', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('youtube_id', self.gf('django.db.models.fields.CharField')(default='', max_length=100)),
         ))
         db.send_create_signal(u'videos', ['Videos'])
+
+        # Adding model 'VFavoritos'
+        db.create_table(u'videos_vfavoritos', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Videos'], null=True)),
+            ('perfil', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'videos', ['VFavoritos'])
+
+        # Adding model 'VDenunciados'
+        db.create_table(u'videos_vdenunciados', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Videos'], null=True)),
+            ('perfil', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
+            ('fecha', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'videos', ['VDenunciados'])
 
 
     def backwards(self, orm):
         # Deleting model 'Videos'
         db.delete_table(u'videos_videos')
+
+        # Deleting model 'VFavoritos'
+        db.delete_table(u'videos_vfavoritos')
+
+        # Deleting model 'VDenunciados'
+        db.delete_table(u'videos_vdenunciados')
 
 
     models = {
@@ -93,6 +119,22 @@ class Migration(SchemaMigration):
             'nombre': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '100', 'null': 'True'})
         },
+        u'videos.vdenunciados': {
+            'Meta': {'object_name': 'VDenunciados'},
+            'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Videos']", 'null': 'True'})
+        },
+        u'videos.vfavoritos': {
+            'Meta': {'object_name': 'VFavoritos'},
+            'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Videos']", 'null': 'True'})
+        },
         u'videos.videos': {
             'Meta': {'object_name': 'Videos'},
             'denunciado': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
@@ -106,7 +148,7 @@ class Migration(SchemaMigration):
             'tema': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['temas.Temas']", 'null': 'True'}),
             'titulo': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-            'youtube_id': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+            'youtube_id': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'})
         }
     }
 

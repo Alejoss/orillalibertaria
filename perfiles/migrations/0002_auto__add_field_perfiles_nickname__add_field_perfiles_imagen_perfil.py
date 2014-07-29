@@ -8,15 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Perfiles.slug'
-        db.add_column(u'perfiles_perfiles', 'slug',
-                      self.gf('django.db.models.fields.SlugField')(max_length=100, null=True),
+        # Adding field 'Perfiles.nickname'
+        db.add_column(u'perfiles_perfiles', 'nickname',
+                      self.gf('django.db.models.fields.CharField')(max_length=75, null=True),
+                      keep_default=False)
+
+        # Adding field 'Perfiles.imagen_perfil'
+        db.add_column(u'perfiles_perfiles', 'imagen_perfil',
+                      self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'Perfiles.slug'
-        db.delete_column(u'perfiles_perfiles', 'slug')
+        # Deleting field 'Perfiles.nickname'
+        db.delete_column(u'perfiles_perfiles', 'nickname')
+
+        # Deleting field 'Perfiles.imagen_perfil'
+        db.delete_column(u'perfiles_perfiles', 'imagen_perfil')
 
 
     models = {
@@ -60,18 +68,14 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Perfiles'},
             'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'imagen_perfil': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'}),
             'link1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link10': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link4': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link5': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link6': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link7': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link8': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'link9': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'nickname': ('django.db.models.fields.CharField', [], {'max_length': '75', 'null': 'True'}),
             'numero_de_posts': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '100', 'null': 'True'}),
             'usuario': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True'}),
             'votos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'})
         }

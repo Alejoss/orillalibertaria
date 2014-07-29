@@ -32,6 +32,7 @@ class Migration(SchemaMigration):
             ('votos_negativos', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
             ('creador', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['perfiles.Perfiles'], null=True)),
             ('tema', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['temas.Temas'], null=True)),
+            ('video', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['videos.Videos'], null=True)),
             ('eliminado', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('votos_total', self.gf('django.db.models.fields.SmallIntegerField')(null=True, blank=True)),
             ('editado', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -200,6 +201,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'tema': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['temas.Temas']", 'null': 'True'}),
             'texto': ('django.db.models.fields.TextField', [], {'max_length': '10000', 'null': 'True'}),
+            'video': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['videos.Videos']", 'null': 'True'}),
             'votos_negativos': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'votos_positivos': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'votos_total': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'})
@@ -239,6 +241,21 @@ class Migration(SchemaMigration):
             'tipo': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'usuario_votado': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'votado'", 'null': 'True', 'to': u"orm['perfiles.Perfiles']"}),
             'usuario_votante': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'votante'", 'null': 'True', 'to': u"orm['perfiles.Perfiles']"})
+        },
+        u'videos.videos': {
+            'Meta': {'object_name': 'Videos'},
+            'denunciado': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True'}),
+            'eliminado': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'es_youtube': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'favoritos_recibidos': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'fecha': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'perfil': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['perfiles.Perfiles']", 'null': 'True'}),
+            'tema': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['temas.Temas']", 'null': 'True'}),
+            'titulo': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            'youtube_id': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'})
         }
     }
 
