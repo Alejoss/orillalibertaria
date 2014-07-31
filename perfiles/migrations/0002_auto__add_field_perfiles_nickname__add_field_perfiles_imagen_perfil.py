@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Perfiles.imagen_perfil'
         db.add_column(u'perfiles_perfiles', 'imagen_perfil',
-                      self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True),
+                      self.gf('django.db.models.fields.CharField')(max_length=75, null=True),
                       keep_default=False)
 
 
@@ -68,7 +68,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Perfiles'},
             'descripcion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imagen_perfil': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'}),
+            'imagen_perfil': ('django.db.models.fields.CharField', [], {'max_length': '75', 'null': 'True'}),
             'link1': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link2': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'link3': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),

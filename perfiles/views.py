@@ -203,7 +203,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     creo_temas = False
     temas_usuario = []
     if num_temas > 0:
-        temas_usuario = Temas.objects.filter(creador=usuario_perfil)
+        temas_usuario = Temas.objects.filter(creador=usuario_perfil).order_by('nombre')
         creo_temas = True
     num_frases_favoritas = Cfavoritas.objects.filter(
         perfil=usuario_perfil).count()

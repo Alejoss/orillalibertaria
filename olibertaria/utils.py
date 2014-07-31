@@ -11,8 +11,20 @@ from citas.models import Cita
 from imagenes.models import Imagen
 
 
-def crear_perfil(strategy, details, response, user, *args, **kwargs):
+def obtener_avatar(strategy, details, response, user, *args, **kwargs):
+    #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
+    url = None
+    if strategy.backend.name == 'facebook':
+        url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
 
+    perfil_usuario = Perfiles.objects.get_or_create(usuario=user)
+    perfil_usuario.imagen_perfil = url
+
+    return kwargs
+
+
+def crear_perfil(strategy, details, response, user, *args, **kwargs):
+    #pipeline para python social auth. Crea la tabla de Perfil del usuario
     if Perfiles.objects.filter(usuario=user).exists():
         pass
     else:
