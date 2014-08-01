@@ -20,6 +20,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
 
     perfil_usuario.imagen_perfil = url
+    perfil_usuario.save()
 
     return kwargs
 

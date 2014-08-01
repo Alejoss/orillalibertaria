@@ -196,6 +196,8 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
     # Datos del usuario
+    avatar = usuario_perfil.imagen_perfil
+    avatar_large = "%s?type=large" % (avatar)
     nombre_completo = usuario_user.get_full_name()
     puntos_recibidos = usuario_perfil.votos_recibidos
     num_posts = Posts.objects.filter(creador=usuario_perfil).count()
@@ -302,7 +304,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     links = obtener_links_perfil(usuario_perfil)
 
     context = {
-        'portada': portada, 'usuario_user': usuario_user, 'usuario': usuario_perfil,
+        'portada': portada, 'usuario_user': usuario_user, 'avatar_large': avatar_large, 'avatar': avatar,
         'nombre_completo': nombre_completo, 'links': links, 'descripcion': descripcion,
         'posts': posts, 'cita_favorita': cita_favorita, 'imagenes_favoritas': imagenes_favoritas,
         'usuario_fav': usuario_fav, 'tiene_imagenesfav': tiene_imagenesfav, 'recientes': recientes,
