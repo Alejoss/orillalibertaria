@@ -94,9 +94,13 @@ padding: 5px
 	display: block;
 }
 .btn_sidebar{
+	text-decoration: none;
 	display: block;
 	margin-top: 5px;
 	margin-left: 40px;
+}
+.btn_sidebar:hover {
+	text-decoration: none !important;
 }
 
 #owl-demo .item img{

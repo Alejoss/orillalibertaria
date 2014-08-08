@@ -1,6 +1,10 @@
 {% extends "base_forms.html" %}
 {% load staticfiles %}
 
+{% block form_specific_css %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+{% endblock form_specific_css %}
+
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Añade una frase </h2>
@@ -95,7 +99,7 @@
 <div class="alert alert-dismissable alert-warning">
 	 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
 	 <i class = "fa fa-check"></i> </button>
-	 <strong> Para añadir una frase: </strong> Asegúrate que la frase no exista en el <a class = "link_alert" href=" {% url 'citas:index' 'autor' %} ">banco de frases</a>.
+	 <strong> Para añadir una frase: </strong> Asegúrate que la frase no exista en el <a class = "link_alert" href=" {% url 'citas:index' 'autor' %} ">banco de frases</a>. Una vez enviada la frase, no podrás editarla, será un "wiki" de la comunidad.
 </div>
 
 <div class="alert alert-dismissable alert-info">
@@ -121,7 +125,7 @@
 {% block extra_javascript %}
 <script>
 $(document).ready(function(){
-
+	
   /* bersuit vergarabat*/
   $.validator.addMethod("seleccion_correcta", function(value, element){
     var respuesta = $("#bv").text();
@@ -173,5 +177,10 @@ $(document).ready(function(){
 		}
 	});
 });
+var autores_json = JSON.parse('{{lista_de_autores_json|safe}}');
+$("#autor").autocomplete({
+	source: autores_json
+});
+
 </script>
 {% endblock extra_javascript %}

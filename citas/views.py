@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from math import sqrt
 from datetime import datetime
+import json
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
@@ -117,12 +118,13 @@ def nueva(request):
     for x in lista_de_autores_obj:
         if x['autor'] not in lista_de_autores:
             lista_de_autores.append(x['autor'])
+    lista_de_autores_json = json.dumps(lista_de_autores)
 
     form = FormNuevaCita()
     lista_bersuit = bersuit_vergarabat()
 
     context = {'FormNuevaCita': FormNuevaCita, 'lista_bersuit': lista_bersuit,
-               'lista_de_autores': lista_de_autores}
+               'lista_de_autores': lista_de_autores, 'lista_de_autores_json': lista_de_autores_json}
     return render(request, template, context)
 
 

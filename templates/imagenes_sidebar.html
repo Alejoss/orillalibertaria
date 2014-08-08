@@ -1,6 +1,10 @@
 
 <div class = "hidden-sm">
 	<div class = " visible-lg visible-md div_carrusel">
+	<a href="{% url 'imagenes:index' 'recientes' %}">
+	<button type="button" class="btn btn-xs btn-info btn_galeria">
+		Galería de Imágenes</button>
+	</a>
 		<div id="owl-demo" class="owl-carousel owl-theme cuadro_carrusel tema_slide_imagenes">
 			{% for i in imagenes_display %}
 			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
@@ -8,7 +12,4 @@
 		</div>
 		<hr class = "margin_sidebar">
 	</div>
-	<button type="button" class="btn btn-xs btn-info btn_galeria"
-	onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
-		Ver galería de imágenes</button>
 </div>

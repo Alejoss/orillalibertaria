@@ -1,22 +1,250 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'css/forms.css' %}" rel="stylesheet">
+<link href="{% static 'css/main.css' %}" rel="stylesheet">
+<link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-social.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block content %}
-
-	{% if form.errors %}
-	<p class = "error"> Usuario o contraseña inválidos</p>
-	{% endif %}
-	<div class = "col-md-10 col-md-offset-2">
-	<form action = "{% url 'perfiles:authcheck' %}" method = "post">
-		{% csrf_token %}
-		<label for = "username"> Usuario: </label>
-		<input type = "text" name = "username" value = "" id = "username">
-		<label for = "password"> Password: </label>
-		<input type = "password" name = "password" value ="" id = "password">
-		<input type = "submit" value = "login"/>
-
+<div class = "row">
+<div class = "col-md-4">
+	<div class = "beta_form">
+	<form id = "beta_form" class = "form-horizontal">
+		<label for="beta_password" class = "control-label"> Orilla Libertaria está en versión Beta, si conoces la clave, escríbela aquí y luego podrás iniciar sesión con Facebook o con Twitter: 
+		</label>
+		<input id = "beta_password" name = "beta_password" type = "text" class = "form-control">
 	</form>
+	</div>
+	<div class = "form_usuario_password">
+		<form class = "hidden" action = "{% url 'perfiles:authcheck' %}" method = "post">
+			{% csrf_token %}
+			<label for = "username"> Usuario: </label>
+			<input type = "text" name = "username" value = "" id = "username">
+			<label for = "password"> Password: </label>
+			<input type = "password" name = "password" value ="" id = "password">
+			<input type = "submit" value = "login"/>
+		</form>
+	</div>
+	<div id = "facebook_twitter" class= "hidden">
+	  <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}" class="btn btn-block btn-social btn-facebook">
+	    <i class="fa fa-facebook"></i> Inicia sesión con Facebook
+	  </a>
+	  <a class="btn btn-block btn-social btn-twitter">
+	    <i class="fa fa-twitter"></i> Sign in with Twitter
+	  </a>
+	</div>
+</div>
+<div class = "col-md-8">
+	<div class = "col-md-8 ">
+		<ul class = "list-group">
+			<li class = "list-group-item list-group-item-info"> Participa con posts y videos en los diferentes temas </li>
+		</ul>
+		<ul class = "list-group">
+			<li class = "list-group-item list-group-item-warning"> Colabora con la comunidad compartiendo imágenes y frases </li>
+		</ul>
+		<ul class = "list-group">
+			<li class = "list-group-item list-group-item-info"> Guarda tus imágenes y frases favoritas </li>
+		</ul>
+	</div>
+	<div class = "col-md-4 ">
+		<img style = "margin-right:20px" class = "barco_logo pull-right" src="{% static '/static/img/barco_espin.png' %}">
+	</div>
+</div>
+</div>
+<div class = "row">
+	<hr>
+	<div class = "col-md-8">
+		<h2> En Orilla Libertaria: </h2>
+	</div>
+</div>
+<div class = "row">
+<div class = "col-md-4">
+	<div>
+	<i id = "puzzle_posts" class = "fa fa-puzzle-piece fa-lg pull-right puzzle_change"></i>
+	<p id = "posts_num" class = "hidden">0</p>
+	<h3 class = "display_inline_block"> Posts </h3>
+	</div>
+	<div id = "div_posts" class="thumbnail">
+		<div class = "thumbnail_main_div hidden-sm hidden-xs">
+			<img id = "imagen_post" alt="300x200" src="{{imagenes_posts_populares.0}}"/>
+		</div>
+		<div class="caption thumbnail_main_post">
+			<p id = "text_post" class = "text">
+			{{posts_populares.0.texto|truncatewords:50}}
+			</p>
+			<div class = "perfil_pequena">
+				<img id = "imagen_perfil_post" src = "{{posts_populares.0.creador.imagen_perfil}}">
+			</div>
+			<h4  class = "display_inline_block">
+				<small id = "perfil_tema_post" > {{posts_populares.0.creador.usuario.username}} en
+				{{posts_populares.0.tema.nombre}}</small>
+			</h4>
+		</div>
+	</div>
+</div>
+<div class = "col-md-4">
+	<div>
+	<i id = "puzzle_frases" class = "fa fa-puzzle-piece fa-lg pull-right puzzle_change"></i>
+	<p id = "frases_num" class = "hidden">0</p>
+	<h3 class = "display_inline_block"> Frases </h3>
+	</div>
+	<blockquote>
+		<p id = "text_frase_1" class = "cita_small">
+			"{{citas.0.3|safe}}"
+		</p> 
+		<small id = "descripcion_frase_1">{{citas.0.0.autor}}</small>
+	</blockquote>
+	<blockquote>
+		<p id = "text_frase_2" class = "cita_small">
+			"{{citas.1.3|safe}}"
+		</p> 
+		<small id = "descripcion_frase_2">{{citas.1.0.autor}}</small>
+	</blockquote>
+</div>
+<div class = "col-md-4">
+	<i id = "puzzle_imagenes" class = "fa fa-puzzle-piece fa-lg pull-right puzzle_change"></i>
+	<h3 class = "display_inline_block"> Imágenes </h3>
 
-     <li>
-       <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
-     </li>
+	<div class = "visible-lg visible-md div_carrusel">
+		<div id="owl-demo" class="owl-carousel owl-theme cuadro_carrusel tema_slide_imagenes">
+			{% for i in imagenes_display %}
+			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
+			{% endfor %}
+		</div>
+		<hr class = "margin_sidebar">
+	</div>
+</div>
+
+
+
 {% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/owl.carousel.min.js' %} "></script>
+<script>
+$(document).ready(function() {
+  
+  $("#owl-demo").owlCarousel({
+      navigation : false, // Show next and prev buttons
+      slideSpeed : 600,
+      paginationSpeed : 800,
+      singleItem:true,
+      pagination: false,
+      autoPlay: false,
+      stopOnHover: true	 
+      // "singleItem:true" is a shortcut for:
+      // items : 1, 
+      // itemsDesktop : false,
+      // itemsDesktopSmall : false,
+      // itemsTablet: false,
+      // itemsMobile : false
+  });
+
+$("#beta_password").keyup(function(){
+	if ($(this).val() === 'bastiat'){
+		$("#beta_form").fadeOut(function(){$(this).addClass("hidden")});
+		$("#facebook_twitter").removeClass("hidden");
+	}
+});
+  
+
+});
+
+$("#puzzle_posts").on('click', cambiar_post);
+$("#puzzle_frases").on('click', cambiar_frases);
+$("#puzzle_imagenes").on('click', cambiar_imagenes);
+
+function girar_puzzlepiece(puzzle_piece){
+	$(puzzle_piece).fadeOut(function(){
+	if ($(puzzle_piece).hasClass("fa-rotate-90")){
+		$(puzzle_piece).addClass("fa-rotate-180");		
+		$(puzzle_piece).removeClass("fa-rotate-90");
+	}
+	else if ($(puzzle_piece).hasClass("fa-rotate-180")){
+		$(puzzle_piece).addClass("fa-rotate-270");		
+		$(puzzle_piece).removeClass("fa-rotate-180");
+	}
+	else if ($(puzzle_piece).hasClass("fa-rotate-270")){
+		$(puzzle_piece).removeClass("fa-rotate-270");
+	}
+	else {
+		$(puzzle_piece).addClass("fa-rotate-90");
+	}
+	}).delay(500);
+	$(puzzle_piece).fadeIn();
+}
+function cambiar_imagenes(){
+	var owl = $("#owl-demo");
+	owl.trigger('owl.next');
+	girar_puzzlepiece($("#puzzle_imagenes"))
+}
+function cambiar_post(){
+	var posts_num = $("#posts_num").html();
+
+	if (posts_num == 0){
+		nueva_img_src = "{{imagenes_posts_populares.1|safe}}";
+		nuevo_text_post = "{{posts_populares.1.texto|truncatewords:50|safe}}";
+		nueva_imagen_perfil_post = "{{posts_populares.1.creador.imagen_perfil|safe}}";
+		nuevo_perfil_tema_post = "{{posts_populares.1.creador.usuario.username|safe}}"+" en "+
+		"{{posts_populares.1.tema.nombre|safe}}";
+		$("#posts_num").text("1");
+	}
+	else if (posts_num == 1){
+		nueva_img_src = "{{imagenes_posts_populares.2|safe}}";
+		nuevo_text_post = "{{posts_populares.2.texto|truncatewords:50|safe}}"
+		nueva_imagen_perfil_post = "{{posts_populares.2.creador.imagen_perfil|safe}}";
+		nuevo_perfil_tema_post = "{{posts_populares.2.creador.usuario.username|safe}}"+" en "+
+		"{{posts_populares.2.tema.nombre|safe}}";
+		$("#posts_num").text("2");
+	}
+	else if (posts_num == 2){
+		nueva_img_src = "{{imagenes_posts_populares.0|safe}}";
+		nuevo_text_post = "{{posts_populares.0.texto|truncatewords:50|safe}}";
+		nueva_imagen_perfil_post = "{{posts_populares.0.creador.imagen_perfil|safe}}";
+		nuevo_perfil_tema_post = "{{posts_populares.0.creador.usuario.username|safe}}"+" en "+
+				"{{posts_populares.0.tema.nombre|safe}}";
+		$("#posts_num").text("0");
+	}
+
+	$("#imagen_post").attr("src", nueva_img_src);
+	$("#text_post").text(nuevo_text_post);
+	$("#imagen_perfil_post").attr("src", nueva_imagen_perfil_post);
+	$("#perfil_tema_post").text(nuevo_perfil_tema_post);
+	
+	girar_puzzlepiece($("#puzzle_posts"))
+}
+function cambiar_frases(){
+	var frases_num = $("#frases_num").text();
+	if (frases_num == 0){
+		nueva_frase_1 = "{{citas.2.3|safe}}"
+		nueva_descripcion_1 = "{{citas.2.0.autor}}"
+		nueva_frase_2 = "{{citas.3.3|safe}}"
+		nueva_descripcion_2 = "{{citas.3.0.autor}}"
+		$("#frases_num").text("1");
+	}
+	else if (frases_num == 1){
+		nueva_frase_1 = "{{citas.4.3|safe}}"
+		nueva_descripcion_1 = "{{citas.4.0.autor}}"
+		nueva_frase_2 = "{{citas.5.3|safe}}"
+		nueva_descripcion_2 = "{{citas.5.0.autor}}"
+		$("#frases_num").text("2");
+	}
+	else if (frases_num == 2){
+		nueva_frase_1 = "{{citas.0.3|safe}}"
+		nueva_descripcion_1 = "{{citas.0.0.autor}}"
+		nueva_frase_2 = "{{citas.1.3|safe}}"
+		nueva_descripcion_2 = "{{citas.1.0.autor}}"
+		$("#frases_num").text("0");
+	}
+	$("#text_frase_1").text(nueva_frase_1);
+	$("#descripcion_frase_1").text(nueva_descripcion_1);
+	$("#text_frase_2").text(nueva_frase_2);
+	$("#descripcion_frase_2").text(nueva_descripcion_2);
+
+	girar_puzzlepiece($("#puzzle_frases"))
+}
+</script>
+{% endblock javascript %}

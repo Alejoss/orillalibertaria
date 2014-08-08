@@ -36,7 +36,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<div class = "perfil_pequena">
-							<img src = "{% static '/static/img/perfil1.jpeg' %}">
+							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4  class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.usuario.username}} </a> en
@@ -58,7 +58,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<div class = "perfil_pequena">
-							<img src = "{% static '/static/img/perfil2.jpeg' %}">
+							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4  class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.usuario.username}} </a> en
@@ -80,7 +80,7 @@
 						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 						</p>
 						<div class = "perfil_pequena">
-							<img src = "{% static '/static/img/perfil3.jpeg' %}">
+							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4 class = "display_inline_block">
 							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.usuario.username}} </a> en
@@ -135,15 +135,13 @@
 {% endblock botones_control %}
 
 {% block tab_content %}
-<div class="col-md-8 col-sm-7 column ">
-	<div class="row clearfix">
+<div class="col-md-8 col-sm-7">
 		{% include page_template %}
-	</div>
 </div>
 {% endblock tab_content %}
 
 {% block sidebar %}
-<div class="col-md-4 col-sm-3 column ">
+<div class="col-md-4 col-sm-3">
 	<div class = "sidebar_cita">
 		<blockquote>
 			<p>
@@ -151,9 +149,10 @@
 			</p> <small> {{cita.0.autor}} {% if cita.1 %}, {{cita.2}} {% endif %} </small>
 		</blockquote> 
 		<div>
-			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'citas:index' 'recientes' %}';">
+		<a href="{% url 'citas:index' 'recientes' %}">
+			<button type="button" class="btn btn-xs btn-info btn_galeria">
 			Ver banco de frases</button>
+		</a>
 		</div>
 	<hr/>
 	</div>
@@ -161,18 +160,23 @@
 		<div class="row clearfix">
 			<div class="col-md-12 column">
 			<div class = "btn">
-				<button type="button" class="btn btn-default" 
-				onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+				<a href="{% url 'imagenes:index' 'recientes' %}">
+				<button type="button" class="btn btn-default" >Galería de Imágenes
 				</button>
+				</a>
 			</div>
 			<div class = "btn">
 				{% if user.is_authenticated %}
-				 <button type="button" class="btn btn-default" onclick="location.href='{% url 'temas:nuevo_tema'%}';"> Crear un tema nuevo
+				<a href="{% url 'temas:nuevo_tema'%}">
+				 <button type="button" class="btn btn-default"> Crear un tema nuevo
 				 </button>
+				</a>
 				 {% else %}
-				 <button type="button" class="btn btn-default" onclick="location.href='{% url 'perfiles:login'%}';"> 
+				<a href="{% url 'perfiles:login'%}">
+				 <button type="button" class="btn btn-default"> 
 				 <span class = "fa fa-lock"> </span> Login - Crear un tema nuevo
 				 </button>
+				</a>
 				 {% endif %}
 			</div>
 			</div>

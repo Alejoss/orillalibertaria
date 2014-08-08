@@ -7,10 +7,12 @@
             <div class="nav-headers">
                 <h3>Galería de Imágenes de Orilla Libertaria.</h3>
                 <br>
+                <a href="{% url 'imagenes:nueva' %}">
                 <button class="btn btn-warning" 
-                type="button" onclick="location.href='{% url 'imagenes:nueva' %}';">
+                type="button">
                 <span class="fa fa-puzzle-piece"> </span> Añadir una nueva imagen.
-                </button> 
+                </button>
+                </a>
             </div>
             <ul class="nav nav-tabs nav-stacked">
             <li class="{{recientes}}"><a href="{% url 'imagenes:index' 'recientes' %}">

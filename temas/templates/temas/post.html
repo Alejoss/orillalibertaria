@@ -55,7 +55,7 @@
 					</div>
 					{% endif %}
 					<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{% static '/static/img/perfil3.jpeg' %}">
+						<img src = "{{post_padre.0.creador.imagen_perfil}}">
 					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
@@ -130,9 +130,9 @@
 							</div>
 						</div>
 						{% endif %}
-					<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{% static '/static/img/perfil3.jpeg' %}">
-					</div>
+						<div class = "perfil_pequena"> <!-- perfil pequeña -->
+							<img src = "{{post_padre.0.creador.imagen_perfil}}">
+						</div>
 						<div class = "nombre_fecha">
 						<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
 							{{post_padre.0.creador.usuario.username}}</a> 
@@ -145,10 +145,9 @@
 			 				<span class="fa fa-comments"></span>
 			 				<span class="fa fa-chevron-right"></span> </a>
 				 		</div>
-					</div>
-				</div>
-			</div> <!-- class md 11 -->
-			
+					</div> <!--panel footer -->
+				</div> <!-- panel success -->
+			</div> <!-- class md 10 -->
 		{% endif %}
 		</div> <!--post padre respuesta-->
 {% endif %}
@@ -156,57 +155,59 @@
 
 <!-- Si el post ha sido eliminado muestra un post eliminado -->
 {% if post.0.eliminado %}
+<div class = "row"> <!--post eliminado -->
 	<div class = "col-md-11 col-md-offset-1">
-			<div class="panel panel-danger">
-				<div class="panel-body">
-					<p class = "text">
-						<i class = "fa fa-exclamation-triangle"></i>
-						{% if post.0.creador.usuario == request.user %}
-						Eliminaste este post. Si deseas restaurarlo has click aquí:
-						 <a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
-						{% else %}
-						 Post eliminado por usuario. 
-						{% endif %}
-					</p>
-					<br/>
-				</div>
-				<div class="panel-footer">
+		<div class="panel panel-danger">
+			<div class="panel-body">
+				<p class = "text">
+					<i class = "fa fa-exclamation-triangle"></i>
 					{% if post.0.creador.usuario == request.user %}
-					<div class = "eliminar_editar pull-left">
-						<div class = "btn-group dropup">
-						<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-						<span class="fa fa-cog"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
-							</li>
-							<li class = "divider"></li>
-							<li class = "disabled">
-								<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> 
-							</li>
-						</ul>
-						</div>
-					</div>
+					Eliminaste este post. Si deseas restaurarlo has click aquí:
+					 <a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
+					{% else %}
+					 Post eliminado por usuario. 
 					{% endif %}
-					<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{% static '/static/img/perfil5.jpeg' %}">
-					</div>
-					<div class = "nombre_fecha">
-					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-						{{post.0.creador.usuario.username}}</a> <small class = "fecha_desde">{{post.4}} </small>
-					</p>
-					</div>
-					<div class = "footer_respuestas pull-right">
-			 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
-			 				{{post.2}}
-			 			<span class="fa fa-comments"></span>
-			 			<span class="fa fa-chevron-right"></span> 
-			 			</a>
-			 		</div>
-				</div>
+				</p>
+				<br/>
 			</div>
-		</div><!-- post eliminado -->
+			<div class="panel-footer">
+				{% if post.0.creador.usuario == request.user %}
+				<div class = "eliminar_editar pull-left">
+					<div class = "btn-group dropup">
+					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+					<span class="fa fa-cog"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Restaurar Post</a>
+						</li>
+						<li class = "divider"></li>
+						<li class = "disabled">
+							<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> 
+						</li>
+					</ul>
+					</div>
+				</div>
+				{% endif %}
+				<div class = "perfil_pequena"> <!-- perfil pequeña -->
+					<img src = "{{post.0.creador.imagen_perfil}}">
+				</div>
+				</div>
+				<div class = "nombre_fecha">
+				<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
+					{{post.0.creador.usuario.username}}</a> <small class = "fecha_desde">{{post.4}} </small>
+				</p>
+				</div>
+				<div class = "footer_respuestas pull-right">
+		 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
+		 				{{post.2}}
+		 			<span class="fa fa-comments"></span>
+		 			<span class="fa fa-chevron-right"></span> 
+		 			</a>
+		 		</div>
+		</div> <!--panel danger -->
+    </div> <!-- col md 11 -->
+</div><!-- post eliminado -->
 {% else %}
 <!-- Post. -->
 	<div class = "row">
@@ -267,7 +268,7 @@
 					</div>
 					{% endif %}
 					<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{% static '/static/img/perfil5.jpeg' %}">
+						<img src = "{{post.0.creador.imagen_perfil}}">
 					</div>
 					<div class = "nombre_fecha">
 					<p>
@@ -370,7 +371,7 @@
 				</div>
 				{% endif %}
 				<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{% static '/static/img/perfil4.jpeg' %}">
+						<img src = "{{respuesta.0.creador.imagen_perfil}}">
 					</div>
 				<div class = "nombre_fecha">
 				<p>
@@ -412,7 +413,8 @@
 				<small> Nuevo Post en {{tema.0.nombre}} </small> </a>
 		<div class="panel-link">
 			<div>
-				 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>descripción </small> </a>
+				 <a class="panel-title triangulo abajo collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>descripción </small> 
+				 <span class = "fa fa-angle-down"></span> </a>
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
 				<div class = "text">
@@ -434,6 +436,7 @@
 <script src="{% static 'js/validation-core.js' %} "></script>
 <script src="{% static 'js/validation-ajax.js' %} "></script>
 <script src="{% static 'js/validation-delegate.js' %} "></script>
+<script src="{% static 'js/cambiar_caret.js' %} "></script>
 
 <script>
 $(document).ready(function(){

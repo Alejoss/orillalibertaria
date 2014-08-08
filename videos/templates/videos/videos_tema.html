@@ -85,22 +85,28 @@
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 		{% if user.is_authenticated %}
-		<button type="button" class="btn btn-warning btn_sidebar" 
-		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
+		<a class = "btn_sidebar" href="{% url 'videos:nuevo_video' tema.0.slug %}">
+		<button type="button" class="btn btn-warning">
 		Nuevo Video en {{tema.0.nombre}}</button>
+		</a>
 		{% else %}
-		<button type="button" class="btn btn-warning btn_sidebar" 
-		onclick = "location.href='{% url 'perfiles:login' %}';">
+		<a class = "btn_sidebar" href="{% url 'perfiles:login' %}">
+		<button type="button" class="btn btn-warning">
 		<span class = "fa fa-lock"></span> Nuevo Video en {{tema.0.nombre}}</button>
+		</a>
 		{% endif %}
-		<button type="button" class="btn btn_sidebar btn-default " 
-		onclick = "location.href='{% url 'temas:index_tema' tema.0.slug 'recientes' %}';">
-		<i class= "fa fa-pencil-square-o fa-lg"> </i>
+		<a class = "btn_sidebar" href="{% url 'temas:index_tema' tema.0.slug 'recientes' %}">
+		<button type="button" class="btn btn-default">
+		<i class= "fa fa-pencil-square-o fa-lg"></i>
 		Posts en {{tema.0.nombre}}</button>
-		<button type="button" class="btn btn-default btn_sidebar" 
-		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+		</a>
+		<a class = "btn_sidebar" href="{% url 'imagenes:index' 'recientes' %}">
+		<button type="button" class="btn btn-default">Galería de Imágenes
 		</button>
-		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
+		</a>
+		<a class = "btn_sidebar" href="{% url 'citas:index' 'recientes' %}">
+		<button type="button" class="btn btn-default">Banco de Frases</button>
+		</a>
 		</div>
 	</div>
 	<hr>

@@ -63,7 +63,7 @@
 						</div>
 						{% endif %}
 						<div class = "perfil_pequena">
-							<img src = "{% static '/static/img/perfil2.jpeg' %}">
+							<img src = "{{post.0.creador.imagen_perfil}}">
 						</div>
 						<div class = "nombre_fecha">
 							<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">

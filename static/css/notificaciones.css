@@ -1,4 +1,8 @@
 /* css para el cuadro de notificaciones */
+.ver_todas_link{
+	margin-left: 10px;
+}
+
 .btn_marcar_leidas{
 	margin-left: 30px;
 }

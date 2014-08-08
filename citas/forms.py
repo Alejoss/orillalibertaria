@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import bleach
+
 from models import Cita
 from django import forms
 from django.forms import ModelForm, Textarea, TextInput
@@ -20,13 +22,14 @@ class FormNuevaCita(forms.ModelForm):
             'texto': Textarea(attrs={'rows': 3, 'data-maxlength': 1000,
                                      'class': 'form-control',
                                      'id': 'wchar'}),
-            'autor': TextInput(attrs={'class': 'form-control'}),
+            'autor': TextInput(attrs={'id': 'autor', 'class': 'form-control'}),
             'fuente': TextInput(attrs={'class': 'form-control'})
         }
 
     def clean_texto(self):
         texto = self.cleaned_data['texto']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
 
 
@@ -39,5 +42,6 @@ class FormEditarCita(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['texto']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio

@@ -98,40 +98,29 @@
 <div class="hidden-xs col-md-4 col-sm-4 column">
 		<div>
 			<br>
-			<button type="button" class="btn btn-warning btn_sidebar" 
-			onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
+			<a class = "btn_sidebar" href="{% url 'citas:nueva' %}">
+			<button type="button" class="btn btn-warning"> Añade una frase
 			</button>
+			</a>
 			{% if user.is_authenticated %}
-			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'citas:favoritas' request.user %}';"> Tus frases favoritas
+			<a class = "btn_sidebar" href="{% url 'citas:favoritas' request.user %}">
+			<button type="button" class="btn btn-default"> Tus frases favoritas </button>
+			</a>
 			{% else %}
-			<button type="button" class="btn btn-default btn_sidebar" onclick="location.href='{% url 'perfiles:login'  %}';">	
+			<a class = "btn_sidebar" href="{% url 'perfiles:login'  %}">
+			<button type="button" class="btn btn-default">	
 				<span class = "fa fa-lock"></span> Login - Favoritas
+			</button>
+			</a>
 			{% endif %}
-			</button>
-			<button type="button" class="btn btn-default btn_sidebar" 
-			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
-			</button>
 			<br>
-			<button type="button" class="btn btn-link btn_sidebar" 
-			onclick="location.href='{% url 'citas:colaborar_organizar' %}';"><i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
+			<a class = "btn_sidebar" href="{% url 'citas:colaborar_organizar' %}">
+			<button type="button" class="btn btn-link"><i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
 			</button>
-			<hr class = "sidebar_cita">
+			</a>
+			<hr class = "btn_sidebar">
 		</div>
-	<div class = "hidden-sm">
-		<div class = " visible-lg visible-md div_carrusel">
-		<div id="owl-demo" class="owl-carousel owl-theme cuadro_carrusel tema_slide_imagenes">
-			{% for i in imagenes_display %}
-			<div class="item"><img src="{{i}}" alt="404 imagen libertaria"></div>
-			{% endfor %}
-		</div>
-		</div>
-		<hr class = "sidebar_cita">
-		<button type="button" class="btn btn-xs btn-info btn_galeria"
-		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
-			Ver galería de imágenes</button>
-	</div> <!--div carrousel -->
-		<br>
-	
+	{% include "imagenes_sidebar.html" %}
 	</div> <!--column 4-->
 {% endblock sidebar %}
 

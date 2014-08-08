@@ -3,20 +3,16 @@
 
 {% block content %}
 
-<div class="row clearfix">
+<div class="row">
 {% block arriba %}
 {% endblock arriba %}
 </div>
 
-<div class="row clearfix">
-	<div class="col-md-12 column">
-			{% block botones_control %}
-			{% endblock botones_control %}
-			{% block tab_content %}
-			{% endblock tab_content %}
-	</div>
-
-	<div class="row clearfix">
+<div class="row">
+	{% block botones_control %}
+	{% endblock botones_control %}
+	{% block tab_content %}
+	{% endblock tab_content %}
 	<div class = "visible-lg visible-md visible-sm">
 	{% block sidebar %}
 	{% endblock sidebar %}	

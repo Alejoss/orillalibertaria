@@ -79,7 +79,8 @@
 	<dd>
 	<div class="panel-link">
 		<div>
-			 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-72" href="#panel-element-8007"> <small> Mostrar descripción original del tema </small> </a>
+			 <a class="panel-title triangulo abajo collapsed" data-toggle="collapse" data-parent="#panel-72" href="#panel-element-8007"> <small> Mostrar descripción original del tema </small>
+			 <span class = "fa fa-angle-down"></span></a>
 		</div>
 		<div id="panel-element-8007" class="panel-collapse collapse">
 			<div>
@@ -122,6 +123,8 @@
 {% endblock description %}
 
 {% block extra_javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/cambiar_caret.js' %} "></script>
 <script>
 $(document).ready(function(){
 	$('#wchar_min').wChar({

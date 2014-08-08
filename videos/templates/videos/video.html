@@ -114,7 +114,7 @@
 			</div>
 			{% endif %}
 			<div class = "perfil_pequena">
-				<img src = "{% static '/static/img/perfil5.jpeg' %}">
+				<img src = "{{post.0.creador.imagen_perfil}}">
 			</div>
 			<div class = "nombre_fecha">
 				<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
@@ -160,7 +160,8 @@
 		<div class="panel-link">
 			<div>
 				<br>
-				 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>Descripción </small> <i class = "fa fa-caret-down"></i> </a>
+				 <a class="panel-title triangulo abajo collapsed" data-toggle="collapse" data-parent="#panel-737882" href="#panel-element-898967"> <small>Descripción </small> 
+				 <span class = "fa fa-angle-down"></span> </a>
 			</div>
 			<div id="panel-element-898967" class="panel-collapse collapse">
 				<div>
@@ -184,6 +185,8 @@
 <script src="{% static 'js/validation-core.js' %} "></script>
 <script src="{% static 'js/validation-ajax.js' %} "></script>
 <script src="{% static 'js/validation-delegate.js' %} "></script>
+
+<script src="{% static 'js/cambiar_caret.js' %} "></script>
 
 <script>
 $(document).ready(function(){

@@ -1,4 +1,8 @@
 /* css para los forms */
+.ui-corner-all{
+	font-style: sans-serif;
+}
+
 .apariencia_link{
 	color: #428BCA;
 }
@@ -82,4 +86,10 @@ display: inline-block;
 }
 .vergarabat{
 	display: none;
+}
+
+/* login form */
+.puzzle_change{
+	margin-top: 25px;
+	cursor: pointer;
 }

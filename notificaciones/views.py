@@ -38,6 +38,7 @@ def notificaciones_index(request, template='notificaciones/notificaciones_index.
     #muestra todas las notificaciones.
     # Datos del usuario
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    avatar_large = "%s?type=large" % (perfil_usuario.imagen_perfil)
     puntos_recibidos = perfil_usuario.votos_recibidos
     num_posts = Posts.objects.filter(creador=perfil_usuario).count()
     num_temas = Temas.objects.filter(creador=perfil_usuario).count()
@@ -58,7 +59,7 @@ def notificaciones_index(request, template='notificaciones/notificaciones_index.
 
     context = {'num_notificaciones': num_notificaciones, 'lista_notificaciones': lista_notificaciones,
                'puntos_recibidos': puntos_recibidos, 'num_posts': num_posts, 'num_temas': num_temas,
-               'creo_temas': creo_temas, 'temas_usuario': temas_usuario}
+               'creo_temas': creo_temas, 'temas_usuario': temas_usuario, 'avatar_large': avatar_large}
 
     if extra_context is not None:
         context.update(extra_context)

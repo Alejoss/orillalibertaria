@@ -224,7 +224,7 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
         q = "-id"
         recientes = "active"
     posts_obj = Posts.objects.filter(
-        tema=tema, eliminado=False, es_respuesta=False).order_by(q)
+        tema=tema, eliminado=False, es_respuesta=False, video=None).order_by(q)
     posts = []
     for post in posts_obj:
         # lista de posts con respuestas y con voted status incluido

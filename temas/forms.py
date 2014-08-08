@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import bleach
+
 from models import Posts
 from django import forms
 from django.forms import Textarea, TextInput
@@ -22,7 +24,9 @@ class FormCrearTema(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['texto']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
+
         return texto_limpio
 
 
@@ -45,7 +49,8 @@ class FormNuevoPost(forms.ModelForm):
 
     def clean_texto(self):
         texto = self.cleaned_data['texto']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
 
 
@@ -63,7 +68,8 @@ class FormEditarTema(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['descripcion']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
 
 
@@ -77,5 +83,6 @@ class FormEditarPost(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['texto']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio

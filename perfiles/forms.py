@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import bleach
+
 from django.forms import ModelForm, Textarea, TextInput
 from django import forms
 from django.contrib.auth.models import User
@@ -50,7 +52,8 @@ class PerfilesForm(forms.Form):
 
     def clean_descripcion(self):
         texto = self.cleaned_data['descripcion']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
 
 

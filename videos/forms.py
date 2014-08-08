@@ -1,3 +1,5 @@
+import bleach
+
 from django import forms
 from django.forms import Textarea, TextInput
 from django.utils import html
@@ -16,7 +18,9 @@ class FormNuevoVideo(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['descripcion']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
+
         return texto_limpio
 
 
@@ -29,5 +33,7 @@ class FormEditarVideo(forms.Form):
 
     def clean_texto(self):
         texto = self.cleaned_data['descripcion']
-        texto_limpio = html.strip_tags(texto)
+        texto_limpio_parcial = html.strip_tags(texto)
+        texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
+
         return texto_limpio

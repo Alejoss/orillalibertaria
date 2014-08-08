@@ -14,12 +14,14 @@ from endless_pagination.decorators import page_template
 
 from forms import FormRegistroUsuario, PerfilesForm, UserForm
 from models import Perfiles
-from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde
+from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde, \
+    obtener_imagen_tema
+from temas.utils import obtener_posts_populares
 from temas.models import Temas
 from temas.models import Posts, Respuestas
-from citas.models import Cfavoritas
+from citas.models import Cfavoritas, Cita
 from videos.models import VFavoritos
-from imagenes.models import Ifavoritas
+from imagenes.models import Ifavoritas, Imagen
 from utils import obtener_links_perfil
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
@@ -27,9 +29,33 @@ from utils import obtener_links_perfil
 
 
 def login_page(request):
+    # Custom login. Facebook + Twitter.
     template = 'perfiles/login.html'
-    # Custom login. No es el login normal de Django.
-    return render(request, template)
+
+    #temas - posts populares
+    posts_populares = obtener_posts_populares()
+    imagenes_posts_populares = []
+    for post in posts_populares:
+        imagen = obtener_imagen_tema(post.tema)
+        imagenes_posts_populares.append(imagen)
+
+    #cita
+    citas_obj = Cita.objects.filter(eliminada=False).order_by('-favoritos_recibidos')[:6]
+    citas = []
+    for c in citas_obj:
+        cita = obtener_cita(c)
+        citas.append(cita)
+
+    #imagenes
+    imagenes_display_obj = Imagen.objects.filter(eliminada=False).order_by('-favoritos_recibidos')[:5]
+    imagenes_display = []
+    for i in imagenes_display_obj:
+        imagenes_display.append(i.url)
+
+    context = {'imagenes_display': imagenes_display, 'posts_populares': posts_populares,
+               'imagenes_posts_populares': imagenes_posts_populares, 'citas': citas}
+
+    return render(request, template, context)
 
 
 def authcheck(request):
@@ -196,8 +222,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
     # Datos del usuario
-    avatar = usuario_perfil.imagen_perfil
-    avatar_large = "%s?type=large" % (avatar)
+    avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
     nombre_completo = usuario_user.get_full_name()
     puntos_recibidos = usuario_perfil.votos_recibidos
     num_posts = Posts.objects.filter(creador=usuario_perfil).count()
@@ -304,7 +329,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     links = obtener_links_perfil(usuario_perfil)
 
     context = {
-        'portada': portada, 'usuario_user': usuario_user, 'avatar_large': avatar_large, 'avatar': avatar,
+        'portada': portada, 'usuario_user': usuario_user, 'avatar_large': avatar_large,
         'nombre_completo': nombre_completo, 'links': links, 'descripcion': descripcion,
         'posts': posts, 'cita_favorita': cita_favorita, 'imagenes_favoritas': imagenes_favoritas,
         'usuario_fav': usuario_fav, 'tiene_imagenesfav': tiene_imagenesfav, 'recientes': recientes,

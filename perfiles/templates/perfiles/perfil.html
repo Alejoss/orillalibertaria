@@ -24,7 +24,9 @@
 					</p>
 				</div>
 			<div class = "div_perfil_datos">
-				<img alt="140x140" src="{{avatar}}" class="img-thumbnail" />
+				<div class = "imagen_perfil">
+				<img alt="140x140" src="{{avatar_large}}" class="img-thumbnail" />
+				</div>
 					<ul class="nav nav-pills">
 					<br>
 						<li>
@@ -62,7 +64,9 @@
 			<div class="panel-group perfil_panel_sm" id="panel-131037">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						 <a id = "favoritos_dropdown" class="panel-title caret_up" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-400081">Favoritos <span class = "fa fa-sort-up"></span> </a>
+						<a class="panel-title triangulo arriba" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-400081">Favoritos 
+						<span class = "fa fa-angle-up"></span>
+						</a>
 					</div>
 					<div id="panel-element-400081" class="panel-collapse collapse in">
 						<a href = "{% url 'imagenes:favoritas' usuario_fav %}">
@@ -87,7 +91,7 @@
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-850907">Descripción</a>
+						 <a class="panel-title collapsed triangulo abajo" data-toggle="collapse" data-parent="#panel-131038" href="#panel-element-850907">Descripción <span class = "fa"></span></a>
 					</div>
 					<div id="panel-element-850907" class="panel-collapse collapse">
 						<div class="panel-body">
@@ -97,7 +101,8 @@
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						 <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-131037" href="#panel-element-850600">Links</a>
+						 <a class="panel-title collapsed triangulo abajo" data-toggle="collapse" data-parent="#panel-131039" href="#panel-element-850600">Links 
+						 <span class = "fa"></span></a>
 					</div>
 					<div id="panel-element-850600" class="panel-collapse collapse">
 						<div class="panel-body">
@@ -111,7 +116,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> <!--visible sm xs -->
 	<div class = "col-md-6 col-md-offset-1 hidden-sm hidden-xs">
 		<div class = "imagenes_portada">
 		{% if tiene_imagenesfav %}
@@ -256,27 +261,11 @@
 {% load staticfiles %}
 <script src="{% static 'js/votos.js' %} "></script>
 <script src="{% static 'js/pgwslider.min.js' %} "></script>
+<script src="{% static 'js/cambiar_caret.js' %} "></script>
 <script>
 $(document).ready(function() {
     $('.pgwSlider').pgwSlider();
 });
-
-$('#favoritos_dropdown').on('click', fav_dropdown)
-function fav_dropdown(){
-	var caret_span = $(this).find('.fa');
-	if ($(this).hasClass('caret_up')){
-		caret_span.removeClass('fa-sort-up');
-		caret_span.addClass('fa-sort-down');
-		$(this).removeClass('caret_up');
-		$(this).addClass('caret_down');
-	}
-	else if ($(this).hasClass('caret_down')){
-		caret_span.removeClass('fa-sort-down');
-		caret_span.addClass('fa-sort-up');
-		$(this).removeClass('caret_down');
-		$(this).addClass('caret_up');
-	}
-}
 </script>
 {% endblock javascript %}
 
