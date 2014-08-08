@@ -16,6 +16,9 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     url = None
     if strategy.backend.name == 'facebook':
         url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
+    elif strategy.backend.name == "twitter":
+        if response['profile_image_url'] != '':
+            url = response['profile_image_url']
 
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
 

@@ -89,8 +89,12 @@ WSGI_APPLICATION = 'olibertaria.wsgi.application'
 SOCIAL_AUTH_FACEBOOK_KEY = '313986378762096'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'bf9b90c17b7ca9dde309194a91f5411d'
 
+SOCIAL_AUTH_TWITTER_KEY = 'XwIbq6Zwl5rUYzIMheFwx9MXO'
+SOCIAL_AUTH_TWITTER_SECRET = ' 5M8hBfTyklmTMZkCRJH9PPadQGmEaMOu3ptiBbTn8Gm7gal8ju'
+
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
+    'social.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
