@@ -222,7 +222,11 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
     # Datos del usuario
-    avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
+    avatar_large = None
+    if "facebook" in usuario_perfil.imagen_perfil:
+        avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
+    elif "twimg" in usuario_perfil.imagen_perfil:
+        avatar_large = (usuario_perfil.imagen_perfil).replace("_normal", "_bigger")
     nombre_completo = usuario_user.get_full_name()
     puntos_recibidos = usuario_perfil.votos_recibidos
     num_posts = Posts.objects.filter(creador=usuario_perfil).count()
