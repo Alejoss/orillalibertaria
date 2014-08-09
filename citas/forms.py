@@ -32,6 +32,18 @@ class FormNuevaCita(forms.ModelForm):
         texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
 
+    def clean_autor(self):
+        autor = self.cleaned_data['autor']
+        autor_limpio_parcial = html.strip_tags(autor)
+        autor_limpio = bleach.clean(autor_limpio_parcial, tags=[])
+        return autor_limpio
+
+    def clean_fuente(self):
+        fuente = self.cleaned_data['fuente']
+        fuente_limpio_parcial = html.strip_tags(fuente)
+        fuente_limpio = bleach.clean(fuente_limpio_parcial, tags=[])
+        return fuente_limpio
+
 
 class FormEditarCita(forms.Form):
     texto = forms.CharField(max_length=1000, widget=Textarea(attrs={'class': 'form-control', 'id': 'wchar'}))
@@ -45,3 +57,15 @@ class FormEditarCita(forms.Form):
         texto_limpio_parcial = html.strip_tags(texto)
         texto_limpio = bleach.clean(texto_limpio_parcial, tags=[])
         return texto_limpio
+
+    def clean_autor(self):
+        autor = self.cleaned_data['autor']
+        autor_limpio_parcial = html.strip_tags(autor)
+        autor_limpio = bleach.clean(autor_limpio_parcial, tags=[])
+        return autor_limpio
+
+    def clean_fuente(self):
+        fuente = self.cleaned_data['fuente']
+        fuente_limpio_parcial = html.strip_tags(fuente)
+        fuente_limpio = bleach.clean(fuente_limpio_parcial, tags=[])
+        return fuente_limpio

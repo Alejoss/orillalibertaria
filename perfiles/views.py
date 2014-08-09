@@ -39,9 +39,9 @@ def login_page(request):
         imagen = obtener_imagen_tema(post.tema)
         imagenes_posts_populares.append(imagen)
 
-    #cita
-    citas_obj = Cita.objects.filter(eliminada=False).order_by('-favoritos_recibidos')[:6]
+    #citas
     citas = []
+    citas_obj = Cita.objects.filter(eliminada=False).order_by('-favoritos_recibidos')[:6]
     for c in citas_obj:
         cita = obtener_cita(c)
         citas.append(cita)

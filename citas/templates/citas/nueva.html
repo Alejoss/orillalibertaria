@@ -146,10 +146,14 @@ $(document).ready(function(){
 			texto: {
 				required: true,
 				minlength: 10,
-				maxlength: 1000,
+				maxlength: 500,
 			},
 			autor: {
 				required: true,
+				maxlength: 75,
+			},
+			fuente: {
+				required: false,
 				maxlength: 75,
 			},
 			check: {
@@ -169,8 +173,9 @@ $(document).ready(function(){
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
-			texto: "*Escribe una frase de mínimo 10 y máximo 1000 caracteres.",
+			texto: "*Escribe una frase de mínimo 10 y máximo 500 caracteres.",
 			autor: "*Proporciona un autor, hasta 75 caracteres.",
+			fuente: "*máximo 75 caracteres."
 			check: "*Esto es importante:",
 			bersuit: "¿Eres humano?",
 			vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."

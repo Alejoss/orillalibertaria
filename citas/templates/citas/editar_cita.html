@@ -108,14 +108,19 @@ $(document).ready(function(){
       texto: {
         required: true,
         minlength: 15,
-        maxlength: 1000
+        maxlength: 500
       },
       autor: {
         required: true,
         maxlength: 75,
       },
+      fuente: {
+        required: false,
+        maxlength: 75,
+      },
       razon: {
         required: true,
+        maxlength: 250
       },
       /* bersuit vergarabat*/
       bersuit:{
@@ -131,8 +136,9 @@ $(document).ready(function(){
     onfocusout: false,
     onkeyup: false,
     messages: {
-      texto: "*La frase debe tener mínimo 15 y máximo 1000 caracteres.",
+      texto: "*La frase debe tener mínimo 15 y máximo 500 caracteres.",
       autor: "*Proporciona un autor, hasta 75 caracteres.",
+      fuente: "*máximo 75 caracteres."
       razon: "*Describe qué estaba mal. Ej: 'ortografía', 'fuente', 'traducción'",
       bersuit: "¿Eres humano?",
       vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."
