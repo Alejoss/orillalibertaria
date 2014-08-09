@@ -28,10 +28,25 @@
 	width: 200px;
 }
 
+.div_imagen_perfil{
+	padding: 2px;
+	display: inline-block;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+	border-top-left-radius: 10px 5px;
+	border-bottom-right-radius: 10% 5%;
+	border-top-right-radius: 10px;
+}
+
 .imagen_perfil{
 	display: block;
-	max-height: 170px;
-	width: auto;
+	height: 175px !important;
+	width: 200px;
+	border-top-left-radius: 10px 5px;
+	border-bottom-right-radius: 10% 5%;
+	border-top-right-radius: 10px;
 }
 .imagenes_portada{
 	margin-left: 60px;

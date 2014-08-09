@@ -19,7 +19,7 @@
 	</form>
 	</div>
 	<div class = "form_usuario_password">
-		<form class = "hidden" action = "{% url 'perfiles:authcheck' %}" method = "post">
+		<form action = "{% url 'perfiles:authcheck' %}" method = "post">
 			{% csrf_token %}
 			<label for = "username"> Usuario: </label>
 			<input type = "text" name = "username" value = "" id = "username">

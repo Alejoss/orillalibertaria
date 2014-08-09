@@ -1,4 +1,5 @@
 {% extends "base_index.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 {% load staticfiles %}
@@ -24,9 +25,9 @@
 					</p>
 				</div>
 			<div class = "div_perfil_datos">
-				<div class = "imagen_perfil">
-				<img alt="140x140" src="{{avatar_large}}" class="img-thumbnail" />
-				</div>
+			<div class = "div_imagen_perfil">
+			<img alt = "imagen_perfil" class="imagen_perfil" src="{{avatar_large}}"/>
+			</div>
 					<ul class="nav nav-pills">
 					<br>
 						<li>
@@ -204,8 +205,8 @@
 			</div>
 			
 			<div class = "div_perfil_datos">
-			<div class = "imagen_perfil">
-			<img alt="imagen_perfil" src="{{avatar_large}}" class="img-thumbnail" />
+			<div class = "div_imagen_perfil">
+			<img alt = "imagen_perfil" class="imagen_perfil" src="{{avatar_large}}"/>
 			</div>
 				<ul class="nav nav-pills">
 				<br>
