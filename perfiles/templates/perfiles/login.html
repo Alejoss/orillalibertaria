@@ -29,10 +29,10 @@
 		</form>
 	</div>
 	<div id = "facebook_twitter" class= "hidden">
-	  <a href="{% url 'social:begin' 'facebook' %}?next=temas/index/activos/" class="btn btn-block btn-social btn-facebook">
+	  <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}" class="btn btn-block btn-social btn-facebook">
 	    <i class="fa fa-facebook"></i> Inicia sesión con Facebook
 	  </a>
-	  <a href="{% url 'social:begin' 'twitter' %}?next=temas/index/activos/" class="btn btn-block btn-social btn-twitter">
+	  <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}" class="btn btn-block btn-social btn-twitter">
 	    <i class="fa fa-twitter"></i> Sign in with Twitter
 	  </a>
 	</div>

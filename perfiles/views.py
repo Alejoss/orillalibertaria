@@ -52,6 +52,8 @@ def login_page(request):
     for i in imagenes_display_obj:
         imagenes_display.append(i.url)
 
+    print request.path
+
     context = {'imagenes_display': imagenes_display, 'posts_populares': posts_populares,
                'imagenes_posts_populares': imagenes_posts_populares, 'citas': citas}
 
