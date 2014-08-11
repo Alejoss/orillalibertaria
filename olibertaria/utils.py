@@ -41,9 +41,10 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
 def crear_nickname(strategy, details, response, user, *args, **kwargs):
     #pipeline que crea un default nickname para cada usuario.
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
-    nickname = "%s_nick" % (perfil_usuario.first_name)
-    perfil_usuario.nickname = nickname
-    perfil_usuario.save()
+    if perfil_usuario.nickname is None:
+        nickname = "%s_nick" % (user.first_name)
+        perfil_usuario.nickname = nickname
+        perfil_usuario.save()
     return kwargs
 
 
