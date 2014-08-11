@@ -143,19 +143,17 @@ def editar_perfil_des(request):
         if form.is_valid():
             # una vez validado el form. Recoge el user guardado en request (loggeado)
             # Llena los valores del obj con los valores del form request.Post.
-            descripcion = form.cleaned_data.get('descripcion')
-            link1 = form.cleaned_data.get('link1')
-            link2 = form.cleaned_data.get('link2')
-            link3 = form.cleaned_data.get('link3')
-            link4 = form.cleaned_data.get('link4')
-            link5 = form.cleaned_data.get('link5')
-            perfil_usuario.link1 = link1
-            perfil_usuario.link2 = link2
-            perfil_usuario.link3 = link3
-            perfil_usuario.link4 = link4
-            perfil_usuario.link5 = link5
-            if len(descripcion) > 5:
-                perfil_usuario.descripcion = descripcion
+
+            nickname = form.cleaned_data.get('nickname')
+            if len(nickname) < 1:
+                nickname = "%s_nickname" % (user.first_name)
+            perfil_usuario.nickname = nickname
+            perfil_usuario.descripcion = form.cleaned_data.get('descripcion')
+            perfil_usuario.link1 = form.cleaned_data.get('link1')
+            perfil_usuario.link2 = form.cleaned_data.get('link2')
+            perfil_usuario.link3 = form.cleaned_data.get('link3')
+            perfil_usuario.link4 = form.cleaned_data.get('link4')
+            perfil_usuario.link5 = form.cleaned_data.get('link5')
             perfil_usuario.save()
             # Redirije al perfil del usuario. pasa el username como
             # kwargs para manejo de urlpattern
@@ -166,6 +164,7 @@ def editar_perfil_des(request):
 
     editar_perfil_form = PerfilesForm(initial={
         'descripcion': perfil_usuario.descripcion,
+        'nickname': perfil_usuario.nickname,
         'link1': perfil_usuario.link1, 'link2': perfil_usuario.link2,
         'link3': perfil_usuario.link3, 'link4': perfil_usuario.link4,
         'link5': perfil_usuario.link5})
@@ -241,6 +240,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     numero_imgfavoritas = 0
     usuario_fav = usuario_user.username
     descripcion = usuario_perfil.obtener_descripcion()
+    nickname = usuario_perfil.nickname
 
     # Posts del usuario, utiliza el queryset de la URL.
     recientes = ""
@@ -340,7 +340,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         'populares': populares, 'puntos_recibidos': puntos_recibidos, 'num_posts': num_posts,
         'num_temas': num_temas, 'numero_imgfavoritas': numero_imgfavoritas,
         'num_frases_favoritas': num_frases_favoritas, 'temas_usuario': temas_usuario,
-        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos}
+        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos, 'nickname': nickname}
 
     if extra_context is not None:
         context.update(extra_context)

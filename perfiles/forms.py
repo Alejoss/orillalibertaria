@@ -33,12 +33,15 @@ class PerfilesForm(forms.Form):
 
     descripcion = forms.CharField(
         label="Descripción", max_length=250, required=False,
-        help_text="Quién eres en los clásicos 250 caracteres.",
         widget=forms.Textarea(attrs={'data-maxlength': 250,
                                      'rows': 3,
                                      'class': 'form-control',
                                      'id': 'wchar_250'
                                      }))
+
+    nickname = forms.CharField(label="nickname", max_length=75, required=True,
+                               widget=TextInput(attrs={'class': 'form-control'}))
+
     link1 = forms.CharField(max_length=250, required=False,
                             widget=TextInput(attrs={'class': 'form-control'}))
     link2 = forms.CharField(max_length=250, required=False,
