@@ -141,8 +141,9 @@ def editar_perfil_des(request):
     if request.method == 'POST':
         form = PerfilesForm(request.POST)
         if form.is_valid():
-            # una vez validado el form. Recoge el user guardado en request (loggeado)
             # Llena los valores del obj con los valores del form request.Post.
+            user.email = form.cleaned_data.get('email')
+            user.save()
 
             nickname = form.cleaned_data.get('nickname')
             if len(nickname) < 1:
@@ -155,14 +156,10 @@ def editar_perfil_des(request):
             perfil_usuario.link4 = form.cleaned_data.get('link4')
             perfil_usuario.link5 = form.cleaned_data.get('link5')
             perfil_usuario.save()
-            # Redirije al perfil del usuario. pasa el username como
-            # kwargs para manejo de urlpattern
             return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
-        # else:
-            # Si el form no es válido, un nuevo unbound form en "editar_perfil_form"
-            # error = "error en form.is_valid" #!!! Falta enviar errores.
 
     editar_perfil_form = PerfilesForm(initial={
+        'email': user.email,
         'descripcion': perfil_usuario.descripcion,
         'nickname': perfil_usuario.nickname,
         'link1': perfil_usuario.link1, 'link2': perfil_usuario.link2,
@@ -172,42 +169,8 @@ def editar_perfil_des(request):
     context = {'editar_perfil_form': editar_perfil_form,
                'tiene_imagenesfav': tiene_imagenesfav,
                'tiene_frasesfav': tiene_frasesfav,
-               'descripcion': descripcion,
-               'perfil_usuario': perfil_usuario}
-    return render(request, template, context)
+               'descripcion': descripcion}
 
-
-@login_required
-def editar_perfil_info(request):
-    template = 'perfiles/editar_perfil_info.html'
-
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user_object = User.objects.get(username=request.user.username)
-            form_email = form.cleaned_data['email']
-            form_firstname = form.cleaned_data['first_name']
-            form_lastname = form.cleaned_data['last_name']
-
-            if form_email != "":
-                user_object.email = form_email
-
-            if form_firstname != "":
-                user_object.first_name = form_firstname
-
-            if form_lastname != "":
-                user_object.last_name = form_lastname
-            user_object.save()
-            return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
-        else:
-            pass  # !!! enviar errores
-    user_object = request.user
-    print user_object.first_name
-    print user_object.last_name
-    perfil_info_form = UserForm(initial={'email': user_object.email,
-                                         'first_name': user_object.first_name,
-                                         'last_name': user_object.last_name})
-    context = {'perfil_info_form': perfil_info_form}
     return render(request, template, context)
 
 
@@ -222,10 +185,14 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
 
     # Datos del usuario
     avatar_large = None
-    if "facebook" in usuario_perfil.imagen_perfil:
-        avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
-    elif "twimg" in usuario_perfil.imagen_perfil:
-        avatar_large = (usuario_perfil.imagen_perfil).replace("_normal", "")
+    if usuario_perfil.imagen_perfil is not None:
+        if "facebook" in usuario_perfil.imagen_perfil:
+            avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
+        elif "twimg" in usuario_perfil.imagen_perfil:
+            avatar_large = (usuario_perfil.imagen_perfil).replace("_normal", "")
+    else:
+        avatar_large = "no tiene avata larga, remplazar"
+
     nombre_completo = usuario_user.get_full_name()
     puntos_recibidos = usuario_perfil.votos_recibidos
     num_posts = Posts.objects.filter(creador=usuario_perfil).count()
@@ -240,9 +207,9 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
     numero_imgfavoritas = 0
     usuario_fav = usuario_user.username
     descripcion = usuario_perfil.obtener_descripcion()
-    nickname = usuario_perfil.nickname
+    nickname_perfil = usuario_perfil.nickname
 
-    # Posts del usuario, utiliza el queryset de la URL.
+    # Posts del usuario, utiliza el queryset de la URL: 'recientes' o 'populares'
     recientes = ""
     populares = ""
     q = ""
@@ -262,10 +229,10 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         if p.es_respuesta is True:
             if Respuestas.objects.filter(post_respuesta=p).exists():
                 respuesta = Respuestas.objects.get(post_respuesta=p)
-                usuario_respuesta = respuesta.post_padre.creador.usuario.username
+                usuario_respuesta = respuesta.post_padre.creador.nickname
                 post.extend([True, usuario_respuesta])
             else:
-                # !!! Prueba para ver respuestas descuadradas.
+                # !!! Prueba para ver respuestas descuadradas (respuestas sin post padre)
                 post.extend([False, ""])
         else:
             post.extend([False, ""])
@@ -340,7 +307,8 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         'populares': populares, 'puntos_recibidos': puntos_recibidos, 'num_posts': num_posts,
         'num_temas': num_temas, 'numero_imgfavoritas': numero_imgfavoritas,
         'num_frases_favoritas': num_frases_favoritas, 'temas_usuario': temas_usuario,
-        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos, 'nickname': nickname}
+        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos,
+        'nickname_perfil': nickname_perfil}
 
     if extra_context is not None:
         context.update(extra_context)

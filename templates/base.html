@@ -71,7 +71,7 @@
 					{% if user.is_authenticated %}
 					<li>
 						<a href="{% url 'perfiles:perfil' user.username 'recientes' %}">
-						<span class="fa fa-user"> <p class = "nombre_perfil"> {{user.username}} </p></span> </a>
+						<span class="fa fa-user"> <p class = "nombre_perfil"> {{nickname}} </p></span> </a>
 					</li>
 					<li class = "visible-xs">
 						 <a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">

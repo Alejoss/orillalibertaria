@@ -28,7 +28,7 @@
 		{% if propio_usuario %}
 		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas </small></h2>
         {% else%}
-		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas de {{user_object.username}} </small></h2>
+		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas de <a href=" {% url 'perfiles:perfil' perfil_usuario.usuario.username 'recientes' %} "> {{perfil_usuario.nickname}} </a> </small></h2>
         {% endif %}
         <hr class = "titulo_top">
 	</div>

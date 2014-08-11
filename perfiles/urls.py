@@ -5,8 +5,6 @@ from perfiles import views
 urlpatterns = patterns('',
                        url(r'^index/$', views.index, name='index'),
                        # urls de editar perfil.
-                       url(r'^editar_perfil_info/$', views.editar_perfil_info,
-                           name='editar_perfil_info'),
                        url(r'^editar_perfil_des/$', views.editar_perfil_des,
                            name='editar_perfil_des'),
                        # urls de login

@@ -24,7 +24,7 @@
 <!-- post_padre -si el post respuesta-->
 {% if post.0.es_respuesta %}
 		<h5 id = mostrar_post_padre class="text-muted">
-			Mostrar el post de {{post_padre.0.creador.usuario.username}}
+			Mostrar el post de {{post_padre.0.creador.nickname}}
 			<i class="fa fa-comments-o"></i>
 		</h5>
 
@@ -68,7 +68,7 @@
 					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-						{{post_padre.0.creador.usuario.username}}</a> 
+						{{post_padre.0.creador.nickname}}</a> 
 						<small class = "fecha_desde"> {{post_padre.4}} </small>
 					</p>
 					</div>

@@ -228,7 +228,7 @@ def favoritas(request, username):
             imagenes_favoritas.append([i.imagen, "no_es_favorita"])
 
     context = {
-        'imagenes_favoritas': imagenes_favoritas,
+        'imagenes_favoritas': imagenes_favoritas, 'perfil_usuario': perfil_usuario,
         'propio_usuario': propio_usuario, 'username': username}
     return render(request, template, context)
 

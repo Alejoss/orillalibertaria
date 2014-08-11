@@ -16,7 +16,7 @@
 <div class = "row">
 {% if post.0.es_respuesta %}
 		<h5 id = mostrar_post_padre class="text-muted">
-			Mostrar el post de {{post_padre.0.creador.usuario.username}}
+			Mostrar el post de {{post_padre.0.nickname}}
 			<i class="fa fa-comments-o"></i>
 		</h5>
 
@@ -59,7 +59,7 @@
 					</div>
 					<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-						{{post_padre.0.creador.usuario.username}}</a> 
+						{{post_padre.0.creador.nickname}}</a> 
 						<small class = "fecha_desde">{{post_padre.4}} </small>
 					</p>
 					</div>
@@ -135,7 +135,7 @@
 						</div>
 						<div class = "nombre_fecha">
 						<p><a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-							{{post_padre.0.creador.usuario.username}}</a> 
+							{{post_padre.0.creador.nickname}}</a> 
 							<small class = "fecha_desde"> {{post_padre.4}} </small>
 						</p>
 						</div>
@@ -195,7 +195,7 @@
 				</div>
 				<div class = "nombre_fecha">
 				<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-					{{post.0.creador.usuario.username}}</a> <small class = "fecha_desde">{{post.4}} </small>
+					{{post.0.creador.nickname}}</a> <small class = "fecha_desde">{{post.4}} </small>
 				</p>
 				</div>
 				<div class = "footer_respuestas pull-right">
@@ -273,11 +273,11 @@
 					<div class = "nombre_fecha">
 					<p>
 					<a href ="{% url 'perfiles:perfil' post.0.creador.usuario.username 'recientes' %}">
-					{{post.0.creador.usuario.username}}</a>
+					{{post.0.creador.nickname}}</a>
 						{% if post.0.es_respuesta %}
 						en respuesta a 
 					<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-					{{post_padre.0.creador.usuario.username}}</a> 
+					{{post_padre.0.creador.nickname}}</a> 
 					</p>
 					{% endif %}
 						<small class = "fecha_desde">{{post.4}} </small>
@@ -376,7 +376,7 @@
 				<div class = "nombre_fecha">
 				<p>
 				<a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
-					{{respuesta.0.creador.usuario.username}}</a> 
+					{{respuesta.0.creador.nickname}}</a> 
 					<small class = "fecha_desde">{{respuesta.4}} </small>
 				</p>
 				</div>

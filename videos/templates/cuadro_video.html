@@ -44,7 +44,7 @@
 <div class = "perfil_pequena">
 	<img src = "{% static '/static/img/perfil2.jpeg' %}">
 </div>
-<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.usuario.username}}</a>
+<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
 <small class = "fecha_desde">
 {{hora_procesada_video}}</small>
 </p>
@@ -113,7 +113,7 @@
 	<div class = "perfil_pequena">
 		<img src = "{% static '/static/img/perfil2.jpeg' %}">
 	</div>
-	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.usuario.username}}</a>
+	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
 	<small class = "fecha_desde">
 	{{hora_procesada_video}}</small>
 	</p>

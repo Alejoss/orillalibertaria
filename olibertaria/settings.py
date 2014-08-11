@@ -20,7 +20,8 @@ LOGIN_URL = 'perfiles:login'
 # LOGIN_REDIRECT_URL = 'temas/main/recientes' no sirve porque no se usa el login default de django.
 
 #notificaciones
-TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',)
+TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',
+                                'olibertaria.context_processor_nickname.procesar_nickname')
 
 #endless pagination
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
@@ -90,6 +91,7 @@ SOCIAL_AUTH_FACEBOOK_KEY = '313986378762096'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'bf9b90c17b7ca9dde309194a91f5411d'
 SOCIAL_AUTH_TWITTER_KEY = 'XwIbq6Zwl5rUYzIMheFwx9MXO'
 SOCIAL_AUTH_TWITTER_SECRET = '5M8hBfTyklmTMZkCRJH9PPadQGmEaMOu3ptiBbTn8Gm7gal8ju'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',

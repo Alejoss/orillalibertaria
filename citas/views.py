@@ -215,7 +215,7 @@ def favoritas(request, username):
 
     context = {
         'citas_favoritas': citas_favoritas, 'imagenes_display': imagenes_display,
-        'user_object': user_object, 'propio_usuario': propio_usuario}
+        'perfil_usuario': perfil_usuario, 'propio_usuario': propio_usuario}
 
     return render(request, template, context)
 
@@ -243,7 +243,7 @@ def colaborar_organizar(request):
             for c in correcciones_objects:
                 fecha = tiempo_desde(c.fecha)
                 razon = c.razon
-                perfil = c.perfil.usuario.username
+                perfil = c.perfil.nickname
                 correccion = [fecha, razon, perfil]
                 correcciones.append(correccion)
         #color & iconos

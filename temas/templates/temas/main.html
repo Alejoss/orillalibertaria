@@ -39,7 +39,7 @@
 							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4  class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.nickname}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.0.tema.slug 'recientes' %} ">
 							{{posts_populares.0.tema.nombre}}</a></small>
 						</h4>
@@ -61,7 +61,7 @@
 							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4  class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.nickname}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.1.tema.slug 'recientes' %} ">
 							{{posts_populares.1.tema.nombre}}</a></small>
 						</h4>
@@ -83,7 +83,7 @@
 							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
 						</div>
 						<h4 class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.usuario.username}} </a> en
+							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.nickname}} </a> en
 							<a href = "{% url 'temas:index_tema' posts_populares.2.tema.slug 'recientes' %} ">
 							{{posts_populares.2.tema.nombre}}</a></small>
 						</h4>

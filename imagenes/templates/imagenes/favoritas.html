@@ -8,9 +8,9 @@
         <div class="span3">
             <div class="nav-headers">
             	{% if propio_usuario %}
-                <h3> {{user.username}}, tus imágenes favoritas. </h3>
+                <h3> {{nickname}}, tus imágenes favoritas. </h3>
                 {% else%}
-                <h3> Imágenes favoritas de <a href="{%url 'perfiles:perfil' username 'recientes' %}">{{username}} </a></h3>
+                <h3> Imágenes favoritas de <a href="{%url 'perfiles:perfil' username 'recientes' %}">{{perfil_usuario.nickname}} </a></h3>
                 {% endif %}
                 <br>
                 <button class="btn btn-warning" 
@@ -31,7 +31,7 @@
             <ul class="nav nav-tabs nav-stacked">
             <li><a href=" {% url 'temas:main' 'recientes' %} "><i class="fa fa-home"></i> Orilla Libertaria </a></li>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{user.username}} </a></li>
+            <li><a href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil, {{nickname}} </a></li>
             <li><a href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-wrench"></i> Ayúdanos a revisar la Galería </a></li> 
             {% else %}
             <li><a href="url 'perfiles:login'"><i class="fa fa-user"></i> Login </a></li>
@@ -54,13 +54,13 @@
         		  <span class='icon-certificate marcar_portada' title='Elegir como portada'></span>
 				{% endif %}
             {% else %}
+                <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
                 {% if user.is_authenticated %}
                 <p class = "hidden">{{i.0.id}}</p>
                 <span class='estrella marcar_favorito fa fa-star fa-lg {{i.1}}'></span>
                 {% else %}
                 <span class='estrella fa fa-star'></span>
                 {% endif %}
-                <span class = "favoritos"> {{i.0.favoritos_recibidos}} </span>
             {% endif %}
             </div>
         </div>
