@@ -11,8 +11,6 @@ urlpatterns = patterns('',
                        url(r'^login/$', views.login_page, name="login"),
                        url(r'^authcheck/$', views.authcheck, name="authcheck"),
                        url(r'^logout/$', views.logout, name="logout"),
-                       url(r'^loggedin/$', views.loggedin, name="loggedin"),
-                       url(r'^invalid/$', views.invalid, name="invalid"),
                        # urls de registro
                        url(r'^registrar/$', views.registrar, name='registrar'),
                        url(r'^registro_ok/$', views.registro_ok,

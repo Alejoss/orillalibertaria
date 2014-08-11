@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import os
 import re
 import pytz
 from datetime import datetime
+
+from django.core.exceptions import ImproperlyConfigured
 
 from perfiles.models import Perfiles
 from temas.models import Votos, Posts
@@ -9,6 +12,14 @@ from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def obtener_env_secret_key():
+    try:
+        return os.environ["OL_SECRET_KEY"]
+    except KeyError:
+        error_msg = "Falta la OL_SECRET_KEY virtualenv"
+        raise ImproperlyConfigured(error_msg)
 
 
 def obtener_avatar(strategy, details, response, user, *args, **kwargs):

@@ -75,24 +75,8 @@ def authcheck(request):
 
 
 def logout(request):
-    template = 'perfiles/logout.html'
-
     auth.logout(request)  # Logout el user guardado en Request
-    return render(request, template, {})
-
-
-def loggedin(request):
-    template = 'perfiles/loggedin.html'
-    # Mensaje de Bienvenida.
-    #!!! En el futuro redireccionar (despues de 3 seg) a dnd estaba antes (next)
-    # o a la página de Temas
-    return render(request, template, {})
-
-
-def invalid(request):
-    # Invalid login. Esta pagina hay que eliminar.
-    # Debe ser la misma que login pero con mensajes de error.
-    return render(request, 'perfiles/invalid.html', {})
+    return redirect('temas:main', 'recientes')
 
 
 def registrar(request):

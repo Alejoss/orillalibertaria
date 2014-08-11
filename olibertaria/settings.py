@@ -15,6 +15,7 @@ import dj_database_url  # Heroku
 from os.path import join
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
+
 # login required redirect
 LOGIN_URL = 'perfiles:login'
 # LOGIN_REDIRECT_URL = 'temas/main/recientes' no sirve porque no se usa el login default de django.
@@ -40,7 +41,7 @@ TEMPLATE_DIRS = (
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'reyd@kps)!ab2z9nu0ok%*es6su51oa$%d3s450c$ksjc&rl1k'
+SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,11 +87,12 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
-#python social auth
-SOCIAL_AUTH_FACEBOOK_KEY = '313986378762096'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'bf9b90c17b7ca9dde309194a91f5411d'
-SOCIAL_AUTH_TWITTER_KEY = 'XwIbq6Zwl5rUYzIMheFwx9MXO'
-SOCIAL_AUTH_TWITTER_SECRET = '5M8hBfTyklmTMZkCRJH9PPadQGmEaMOu3ptiBbTn8Gm7gal8ju'
+#python social auth #estan guardadas en heroku no en local environments.
+if not DEBUG:
+    SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
+    SOCIAL_AUTH_TWITTER_KEY = os.environ["SOCIAL_AUTH_TWITTER_KEY"]
+    SOCIAL_AUTH_TWITTER_SECRET = os.environ["SOCIAL_AUTH_TWITTER_SECRET"]
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
