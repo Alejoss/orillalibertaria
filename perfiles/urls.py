@@ -7,6 +7,8 @@ urlpatterns = patterns('',
                        # urls de editar perfil.
                        url(r'^editar_perfil_des/$', views.editar_perfil_des,
                            name='editar_perfil_des'),
+                       url(r'^revisar_nickname/$', views.revisar_nickname,
+                           name='revisar_nickname'),
                        # urls de login
                        url(r'^login/$', views.login_page, name="login"),
                        url(r'^authcheck/$', views.authcheck, name="authcheck"),

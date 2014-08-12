@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 
 
 class Perfiles(models.Model):
-    usuario = models.OneToOneField(User, unique=True, null=True)
-    nickname = models.CharField(max_length=75, null=True)
+    usuario = models.OneToOneField(User, null=True)
+    nickname = models.CharField(max_length=75, unique=True, null=True)
     imagen_perfil = models.CharField(max_length=255, null=True)
     descripcion = models.CharField(max_length=250, blank=True, null=True)
     votos_recibidos = models.SmallIntegerField(default=0)

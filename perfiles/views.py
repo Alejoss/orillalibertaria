@@ -4,7 +4,7 @@
 import random
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 
-from forms import FormRegistroUsuario, PerfilesForm, UserForm
+from forms import FormRegistroUsuario, PerfilesForm
 from models import Perfiles
 from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde, \
     obtener_imagen_tema
@@ -26,6 +26,21 @@ from utils import obtener_links_perfil
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 # Create your views here.
+
+
+def revisar_nickname(request):
+    if request.is_ajax():
+        print "llego ajax revisar_nickname"
+        nickname_nuevo = request.GET.get('nickname', '')
+        print nickname_nuevo
+        if Perfiles.objects.exclude(usuario=request.user).filter(nickname=nickname_nuevo).exists():
+            print "False"
+            return HttpResponse("false")
+        else:
+            print "True"
+            return HttpResponse("true")
+    else:
+        return HttpResponseRedirect(reverse('perfiles:login'))
 
 
 def login_page(request):
@@ -114,6 +129,7 @@ def registro_ok(request):
 @login_required
 def editar_perfil_des(request):
     template = 'perfiles/editar_perfil_des.html'
+    print "llego editar_perfil_des"
 
     user = request.user
     # crea una tabla de Perfiles para el user
@@ -127,6 +143,7 @@ def editar_perfil_des(request):
     if request.method == 'POST':
         form = PerfilesForm(request.POST)
         if form.is_valid():
+            print "form is valid"
             # Llena los valores del obj con los valores del form request.Post.
             user.email = form.cleaned_data.get('email')
             user.save()
@@ -143,6 +160,8 @@ def editar_perfil_des(request):
             perfil_usuario.link5 = form.cleaned_data.get('link5')
             perfil_usuario.save()
             return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
+        else:
+            print "form not valid"
 
     editar_perfil_form = PerfilesForm(initial={
         'email': user.email,

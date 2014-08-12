@@ -26,28 +26,8 @@ from utils import obtener_posts_populares
 # print "variable %s" %(variable) <--- para debug
 
 
-def prueba(request):
-    template = "temas/prueba.html"
-    context = {}
-
-    return render(request, template, context)
-
-
 def redirect_main(request):
     return redirect('temas:main', queryset=u'recientes')
-
-
-def prueba_ajax(request):
-    print "llego a def prueba_ajax"
-    if request.is_ajax():
-        print "request is ajax!"
-        variable = request.GET.get('data', '')
-        print variable
-        data = {}
-        data['variable'] = 'se recibio la data y esta es la respuesta :)'
-        return HttpResponse(json.dumps(data), content_type="application/json")
-    else:
-        return HttpResponse('no_ajax')
 
 
 def normalize_query(query_string,

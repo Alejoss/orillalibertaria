@@ -38,8 +38,4 @@ urlpatterns = patterns('',
                        url(r'^remover_voto_ajax/$', views.remover_voto_ajax,
                            name='remover_voto_ajax'),
 
-                       # prueba
-                       url(r'^prueba/$', views.prueba, name='prueba'),
-                       url(r'^prueba_ajax/$', views.prueba_ajax,
-                           name='prueba_ajax'),
                        )

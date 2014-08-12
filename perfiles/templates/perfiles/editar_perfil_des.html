@@ -25,7 +25,7 @@
 				<div class = "row textarea_form">
 				{{editar_perfil_form.nickname}}
 				</div>
-				<span class = "help-block"> Es el nombre que te representará en Orilla Libertaria. </span>
+				<span id="help_nickname" class = "help-block"> Es el nombre que te representará en Orilla Libertaria. </span>
 			</div>
 			<div class = "form-group">
 				<label class = "control-label" for = "descripcion"> Descripción </label>
@@ -117,6 +117,7 @@
 <script>
 $(document).ready(function(){
 	$('#wchar_250').wChar({max:250});
+	
 	$('#formulario').validate({
 		rules: {
 			descripcion: {
@@ -129,8 +130,12 @@ $(document).ready(function(){
 			},
 			nickname: {
 				required: true,
-				maxlength: 75
-			},
+				maxlength: 75,
+				remote: {
+					url:'/perfiles/revisar_nickname/',
+					async: false
+				} /*remote*/
+			},/*nickname*/
 			link1: {
 				required: false,
 				maxlength: 200,
@@ -157,7 +162,11 @@ $(document).ready(function(){
 		onkeyup: false,
 		messages: {
 			email: "*Campo requerido, máximo 75 caracteres.",
-			nickname: "*Campo requerido, máximo 75 caracteres.",
+			nickname: {
+				required: "*Campo requerido.",
+				maxlength: "*máximo 75 caracteres.",
+				remote: "*Este nickname ya existe."
+			},
 			descripcion: "*Tu descripción debe tener como máximo 250 caracteres.",
 			link1: "*Este link parece no ser válido.",
 			link2: "*Este link parece no ser válido.",

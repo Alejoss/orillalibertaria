@@ -40,7 +40,8 @@ class PerfilesForm(forms.Form):
                                      }))
 
     nickname = forms.CharField(label="nickname", max_length=75, required=True,
-                               widget=TextInput(attrs={'class': 'form-control'}))
+                               widget=TextInput(attrs={'class': 'form-control',
+                                                       'id': 'nickname'}))
 
     email = forms.EmailField(required=False, max_length=75,
                              widget=TextInput(attrs={'class': 'form-control'}))
