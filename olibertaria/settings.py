@@ -44,7 +44,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -88,7 +88,7 @@ ROOT_URLCONF = 'olibertaria.urls'
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
 #python social auth #estan guardadas en heroku no en local environments.
-if not DEBUG:
+if DEBUG:
     SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
     SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
     SOCIAL_AUTH_TWITTER_KEY = os.environ["SOCIAL_AUTH_TWITTER_KEY"]
