@@ -1,4 +1,8 @@
 /* css para el navbar */
+.borde {
+  border: 1px solid red;
+}
+
 .cuadro_buscar{
 	margin-top: 10px;
 }

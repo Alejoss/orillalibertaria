@@ -16,8 +16,7 @@ from notificaciones.models import Notificacion
 from olibertaria.utils import bersuit_vergarabat
 
 
-@page_template('index_page_imagenes.html')
-def index(request, queryset, template='imagenes/index.html', extra_context=None):
+def index(request, queryset, template='imagenes/galeria.html', extra_context=None):
     if request.user.is_authenticated():
         #si esta login
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
@@ -226,6 +225,8 @@ def favoritas(request, username):
     else:
         for i in Ifavoritas_objects:
             imagenes_favoritas.append([i.imagen, "no_es_favorita"])
+
+    print propio_usuario
 
     context = {
         'imagenes_favoritas': imagenes_favoritas, 'perfil_usuario': perfil_usuario,

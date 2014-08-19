@@ -1,49 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Orilla Libertaria</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- Le styles -->
-    {% load staticfiles %}
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"> <!--font awesome -->
-    <link href="{% static 'css/fgallery_css/bootstrap.css'  %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
-    <link href="{% static 'css/fgallery_css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/fgallery_css/icon-style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/fgallery_css/bootstrap-responsive.css' %}" rel="stylesheet">
-  	<link href="{% static 'css/fgallery_css/jquery.fancybox.css' %}" rel="stylesheet">
-  	<link href="{% static 'css/olibertaria_imagenes.css' %}" rel="stylesheet">
-  	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
-
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title>Orilla Libertaria Imágenes</title>
+  {% load staticfiles %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/galeria.css' %}" rel="stylesheet">
+    <link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
 
 <body>
-	<hr>
- <!--"{% static 'img/fgallery/4_b.jpg' %}"-->
+<div class = "container">
+
+<div class="modal fade" id="modal_reportar">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class = "pull-right" id="close_modal_reportar" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4> Has denunciado una imagen </h4>
+        </div>
+        <div class="modal-body">
+          <p>Gracias por colaborar con la comunidad de Orilla Libertaria. Las imágenes se remueven de la Galería cuando cuatro usuarios con más de 10 puntos las denuncian.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% block menu %}
+{% endblock menu %}
+
 {% block content %}
 {% endblock content %}
-   
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'js/fgallery_js/jquery-1.7.2.min.js' %}"></script>
-    <script src="{% static 'js/fgallery_js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/fgallery_js/image-gallery.js' %}"></script>
-    <script src="{% static 'js/fgallery_js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
-    <script src="{% static 'js/fgallery_js/jquery.fancybox.js' %}"></script>
-    {% block extra_javascript %}
-    {% endblock extra_javascript %}
+
+<div class="modal fade" id="modal_imagen" 
+tabindex="-1" role="dialog" aria-labelledby="modal_imagen" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+            <div class="modal-header">
+                <p id = "modal_counter" data-counter="" class ="hidden"></p>
+                <p class = "imagen_id hidden"></p>
+                <p id = "modal_favoritos" class = "favoritos"></p>
+                <span id = "modal_estrella" class='estrella marcar_favorito fa fa-star fa-lg'></span>
+                <span id = "modal_left" class = "modal_left fa fa-caret-left fa-lg"></span>
+                <span id ="puzzle_modal" class = "puzzle_modal fa fa-puzzle-piece fa-lg"></span>
+                <span id = "modal_right" class = "modal_right fa fa-caret-right fa-lg"></span>
+                <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class = "thumbnail imagen_modal" src="">
+            </div>
+    </div>
+    </div>
+</div>
+
+<script src="{% static 'js/modal.js' %} "></script>
+<script src="{% static 'js/imagen_favorita.js' %} "></script>
+<script src="{% static 'js/modal_galeria.js' %} "></script>
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+
+</div> <!--container -->
 </body>
 </html>

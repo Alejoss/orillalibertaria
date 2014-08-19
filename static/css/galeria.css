@@ -1,0 +1,77 @@
+body {
+    padding-top: 5px;
+	background:#fafafa;
+    background: url(../img/body-bg.png) repeat;
+	}  
+
+.control_galeria{
+	margin-top: 30px;
+}
+
+.panel_imagen{
+	margin: 30px;
+}
+.estrella {
+	display: inline-block;
+	margin-left: 5px;
+	cursor: pointer;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+.favoritos {
+	display: inline-block;
+	margin-left: 10px;
+    font-weight: bold;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+.reportar {
+	display: inline-block;
+    cursor: pointer;
+    margin-top: 2px;
+}
+.imagen {
+	cursor: pointer;
+	height: 250px;
+	width: 250px;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.es_favorita{
+	color:#ffd700;
+}
+.icono_portada {
+  	cursor: default;
+	width:auto;
+  	display: inline-block;
+}
+.marcar_portada {
+	cursor: pointer;
+}
+
+/* modal */
+.modal-dialog{
+	width: 640px !important;
+}
+.modal_left{
+	margin-left: 225px;
+	cursor: pointer;
+}
+.puzzle_modal{
+	margin-left: 25px;
+	cursor: default;
+}
+.modal_right{
+	margin-left: 23px;
+	cursor: pointer;
+}
+.imagen_modal{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 600px;
+	height: auto;
+}
+
+/* Colaborar organizar */
+

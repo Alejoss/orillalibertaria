@@ -5,9 +5,7 @@
 	<div class = "endless_page_template">
 		{% for i in imagenes %}
         <div class="span3 galery"> <!--span cambiado -->
-            <div class="image-galery"><a class="group" rel="group1" href="{{i.0.url}}">
-                <img class = "thumbnail" src=" {{i.0.url}} " /></a>
-            </div>
+            <div class="image-galery"><a class="group" rel="group1" href="{{i.0.url}}"><img class = "thumbnail" src=" {{i.0.url}} " /></a></div>
             <div>
                 <p class = "favoritos"> 
                 {{i.0.favoritos_recibidos}}
