@@ -1,6 +1,16 @@
 /* css para el cuadro de notificaciones */
+.notificacion_obj{
+	font-weight: bold;
+}
+
 .ver_todas_link{
 	margin-left: 10px;
+}
+
+.marcar_leidas_cuadro{
+	margin-right: 5px;
+	display: inline-block;
+	color: #428BCA;
 }
 
 .btn_marcar_leidas{

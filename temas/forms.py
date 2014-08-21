@@ -8,7 +8,7 @@ from django.utils import html
 
 
 class FormCrearTema(forms.Form):
-    nombre = forms.CharField(max_length=100, widget=TextInput(attrs={
+    nombre = forms.CharField(max_length=50, widget=TextInput(attrs={
         'class': 'form-control'
         }))
     texto = forms.CharField(

@@ -153,11 +153,11 @@ def editar_perfil_des(request):
                 nickname = "%s_nickname" % (user.first_name)
             perfil_usuario.nickname = nickname
             perfil_usuario.descripcion = form.cleaned_data.get('descripcion')
-            perfil_usuario.link1 = form.cleaned_data.get('link1')
-            perfil_usuario.link2 = form.cleaned_data.get('link2')
-            perfil_usuario.link3 = form.cleaned_data.get('link3')
-            perfil_usuario.link4 = form.cleaned_data.get('link4')
-            perfil_usuario.link5 = form.cleaned_data.get('link5')
+            perfil_usuario.link1 = (form.cleaned_data.get('link1')).lower()
+            perfil_usuario.link2 = (form.cleaned_data.get('link2')).lower()
+            perfil_usuario.link3 = (form.cleaned_data.get('link3')).lower()
+            perfil_usuario.link4 = (form.cleaned_data.get('link4')).lower()
+            perfil_usuario.link5 = (form.cleaned_data.get('link5')).lower()
             perfil_usuario.save()
             return redirect('perfiles:perfil', username=request.user.username, queryset='recientes')
         else:

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
@@ -30,6 +30,27 @@ def marcar_leidas(request):
         return HttpResponse("notificacion leidas")
     else:
         return HttpResponse("notificaciones_leidas_error")
+
+
+@login_required
+def marcar_leida_redirect(request, object_id, slug):
+    #Marca una notificacion como leida y redirige a la pagina del objeto de la notificacion.
+    notificacion = Notificacion.objects.get(id=object_id)
+    if notificacion.leida is False:
+        notificacion.leida = True
+        notificacion.save()
+    tipo_objeto = notificacion.tipo_objeto
+    objeto_id = notificacion.objeto_id
+    if tipo_objeto == "post":
+        return redirect('temas:post', slug=slug, post_id=objeto_id, queryset='recientes')
+    elif tipo_objeto == "video":
+        return redirect('videos:video', slug=slug, video_id=objeto_id)
+    elif tipo_objeto == "cita":
+        return redirect('citas:cita', cita_id=objeto_id)
+    elif tipo_objeto == "imagen":
+        return redirect('imagenes:imagen', imagen_id=objeto_id)
+    else:
+        return redirect('temas:main', queryset='recientes')
 
 
 @login_required

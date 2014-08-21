@@ -11,7 +11,6 @@ $('.es_favorita').hover(function(){
     });
 
 function reportar(){
-    $(this).addClass("red");
     $('#modal_reportar').modal('show');
     var imagen_id = $(this).parent().find('.imagen_id').text();
     $.ajax({
@@ -22,8 +21,6 @@ function reportar(){
 }
 
 function close_modal_reportar(){
-    $('#modal_reportar').addClass("hidden");
-    var flag = $('.container').find(".red");
     flag.removeClass("red");
 }
 

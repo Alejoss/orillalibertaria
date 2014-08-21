@@ -103,19 +103,19 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     # muestra la pagina principal de todos los temas
     posts_populares = obtener_posts_populares()
 
-    todos = ""
+    recientes = ""
     activos = ""
     populares = ""
     q = ""
     if queryset == "populares":
         q = "-nivel_popularidad"
         populares = "active"
-    elif queryset == "todos":
-        q = "nombre"
-        todos = "active"
-    else:
+    elif queryset == "activos":
         q = "-nivel_actividad"
         activos = "active"
+    else:
+        q = "-fecha_creacion"
+        recientes = "active"
 
     temas = []
     temas_obj = Temas.objects.order_by(q)
@@ -140,7 +140,7 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
         imagenes_posts_populares.append(imagen)
 
     context = {'temas': temas, 'posts_populares': posts_populares,
-               'cita': cita, 'todos': todos, 'activos': activos,
+               'cita': cita, 'recientes': recientes, 'activos': activos,
                'populares': populares, 'imagenes_posts_populares': imagenes_posts_populares}
 
     if extra_context is not None:

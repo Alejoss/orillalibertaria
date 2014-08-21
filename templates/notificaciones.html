@@ -1,24 +1,20 @@
 
 <ul class = "lista_notificaciones list-group">
 {% for notificacion in notificaciones %}
-
+<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">
 	{% if notificacion.0.tipo_objeto == "post" %}
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> voto a favor de tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
-		</li>
+
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> voto a favor de tu 
+			<a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">		
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
-		</li>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó tu <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">				
-			Felicitaciones, tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a> tiene más de {{notificacion.2}} votos.
-		</li>
+			Felicitaciones, tu <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">post</a> en <a href="{% url 'temas:index_tema' notific0acion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a> tiene más de {{notificacion.2}} votos.
 		{% endif %}
 
 	{% endif %}
@@ -26,20 +22,16 @@
 	{% if notificacion.0.tipo_objeto == "video" %}
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">				
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorito el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
-		</li>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorito el <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
-		</li>
+
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó el <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			Felicitaciones, el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a> tiene más de {{notificacion.2}} favoritos.
-		</li>
+
+			Felicitaciones, el <a class ="notificacion_obj" href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}"> {{notificacion.1.tema.nombre}}</a> tiene más de {{notificacion.2}} favoritos.
 		{% endif %}
 		
 	{% endif %}
@@ -47,20 +39,18 @@
 	{% if notificacion.0.tipo_objeto == "imagen" %}
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.url}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a href="{% url 'imagenes:imagen' notificacion.1.id %}">imagen</a> que compartiste.
-		</li>
+
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a>
+			marcó como favorita la <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">imagen</a> que compartiste.
 		{% elif notificacion.0.tipo_notificacion == "denuncia" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.url}}">
-			La <a href="{% url 'imagenes:imagen' notificacion.1.id %}">imagen</a> que compartiste ha sido denunciada y removida de la Galería.
-		</li>
+
+			La <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">imagen</a> que compartiste ha sido denunciada y removida de la Galería.
 		{% elif notificacion.0.tipo_notificacion == "num" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.url}}">
-			Felicitaciones, la <a href="{% url 'imagenes:imagen' notificacion.1.id %}">imagen</a> que compartiste tiene más de {{notificacion.2}} favoritos.
-		</li>
+
+			Felicitaciones, la <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">imagen</a> que compartiste tiene más de {{notificacion.2}} favoritos.
 		{% endif %}
 		
 	{% endif %}
@@ -68,23 +58,18 @@
 	{% if notificacion.0.tipo_objeto == "cita" %}
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> de {{notificacion.1.autor}} que compartiste:</br>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">frase</a> de {{notificacion.1.autor}} que compartiste:</br>
 			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} ... <span class = "fa fa-quote-right fa-lg"></span> 
-		</li>
 		{% elif notificacion.0.tipo_notificacion == "denuncia" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			La <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> que compartiste ha sido denunciada y removida del Banco de Frases:</br>
+			La <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">frase</a> que compartiste ha sido denunciada y removida del Banco de Frases:</br>
 			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}}... <span class = "fa fa-quote-right fa-lg"></span> 
-		</li>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			Felicitaciones, la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> que compartiste tiene más de {{notificacion.2}} favoritos:</br>
+			Felicitaciones, la <a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' 'slug' notificacion.0.id %}">frase</a> que compartiste tiene más de {{notificacion.2}} favoritos:</br>
 			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} ... <span class = "fa fa-quote-right fa-lg"></span>
-		</li>
 		{% endif %}
 		
 	{% endif %}
+</li>
 {% endfor %}
 </ul>
 <a class = "ver_todas_link" href="{% url 'notificaciones:index' %} "><i class = "fa fa-bars"></i> <small>ver todas</small></a>

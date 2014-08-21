@@ -101,9 +101,9 @@
 	<hr>
 	<h3 style = "display: inline-block"> Temas </h3>
 	<div class="btn-group btn-group-sm control">
-		<button class="btn btn-default {{todos}}" 
-		type="button" onclick="location.href='{% url 'temas:main' 'todos' %}';">
-		<span class="fa fa-sort-alpha-asc"> </span> Todos
+		<button class="btn btn-default {{recientes}}" 
+		type="button" onclick="location.href='{% url 'temas:main' 'recientes' %}';">
+		<span class="fa fa-thumb-tack"> </span> Recientes
 		</button> 
 		<button class="btn btn-default {{activos}} "
 		type="button" onclick="location.href='{% url 'temas:main' 'activos' %}';">
@@ -120,8 +120,8 @@
 	<div class= "btn-group control">
 		 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Temas <span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li class = " {{todos}} ">
-				<a href="{% url 'temas:main' 'todos' %}">Todos</a>
+			<li class = " {{recientes}} ">
+				<a href="{% url 'temas:main' 'recientes' %}">Recientes</a>
 			</li>
 			<li class = " {{activos}} ">
 				<a href="{% url 'temas:main' 'activos' %}">Activos</a>

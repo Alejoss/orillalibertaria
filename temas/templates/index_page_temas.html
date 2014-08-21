@@ -11,7 +11,7 @@
 		</div>
 		<div class="panel-body">
 			<div class = "div_imagen_tema">
-				<img class = "imagen_tema" src = "{{t.2}}">
+			<a href = "{% url 'temas:index_tema' t.0.slug 'ultimos' %}"><img class = "imagen_tema" src = "{{t.2}}"></a>
 			</div>
 			<p class = "text truncate">
 				{{t.1|safe}}

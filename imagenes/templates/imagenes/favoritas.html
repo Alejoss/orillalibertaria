@@ -7,11 +7,11 @@
         <a class = "list-group-item active" href="{% url 'imagenes:index' 'recientes' %}">
         <i class="fa fa-star"></i> {{nickname}}, tus imágenes favoritas.</a>
         {% else%}
-        <a class = "list-group-item active" href="{%url 'perfiles:perfil' username 'recientes' %}"><i class="fa fa-star"></i>Imágenes favoritas de {{perfil_usuario.nickname}} </a>
+        <a class = "list-group-item active" href="{%url 'perfiles:perfil' username 'recientes' %}">Imágenes favoritas de {{perfil_usuario.nickname}} </a>
 
             {% if user.is_authenticated %}
             <a class = "list-group-item" href="{% url 'imagenes:favoritas' user.username %}">
-                <i class="fa fa-star"></i>Tus favoritas, {{nickname}}</a>
+                <i class="fa fa-star"></i> Tus favoritas, {{nickname}}</a>
             {% else %}
                 <a class = "list-group-item" href="{% url 'perfiles:login' %}">
                 <span class = "fa fa-lock"></span> Favoritas</a>
@@ -23,20 +23,17 @@
         <a class = "list-group-item {{populares}}" href="{% url 'imagenes:index' 'populares' %}"> <i class="fa fa-bookmark"></i> Populares</a>
     </ul>
     <ul class = "list-group">
-        <a class = "list-group-item list-group-item-warning" href="{% url 'temas:main' 'recientes' %}"><i class="fa fa-home"></i> Orilla Libertaria</a>
+        <a class = "list-group-item" href=" {% url 'citas:index' 'recientes' %} "><i class="fa fa-quote-right"></i> Banco de Frases </a>
         {% if user.is_authenticated %}
-        <a class = "list-group-item" href="{% url 'perfiles:perfil' user.username 'recientes' %}"><i class="fa fa-user"></i> Tu Perfil</a>
         <a class = "list-group-item" href=" {% url 'imagenes:colaborar_organizar' %} "><i class="fa fa-wrench"></i> Ayúdanos a revisar la Galería </a>
-        {% else %}
-        <a class = "list-group-item" href="{% url 'perfiles:login' %}"><i class="fa fa-user"></i> Login </a>
-        {% endif %}
-        <a class = "list-group-item list-group-item-warning" href="#modal_imagen">
+        <a class = "list-group-item list-group-item-warning" href="{% url 'imagenes:nueva' %}">
         <span class="fa fa-puzzle-piece"> </span> Comparte una imagen</a>
+        {% endif %}
     </ul>
 </div>
 {% endblock menu %}
 
-{% block content %}
+{% block imagenes %}
     {% for i in imagenes_favoritas %}
     <div class="col-lg-3 col-sm-4 col-xs-6 panel_imagen">
         <div class = "panel panel-default">
@@ -64,5 +61,5 @@
         </div>
     </div>
     {% endfor %}
-{% endblock content %}
+{% endblock imagenes %}
 
