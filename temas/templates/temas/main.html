@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link href="{% static 'css/main.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 {% endblock extra_css %}
 
 
@@ -21,78 +22,143 @@
 
 <!--arriba-->
 {% block arriba %}
-<div class="row clearfix">
-	<div class="col-md-12 column">
-		<div class="row">
-			<div class="col-md-4">
-				<div class="thumbnail">
-					<div class = "thumbnail_main_div hidden-sm hidden-xs">
-						<img alt="300x200" src="{{imagenes_posts_populares.0}}"/>
-					</div>
-					<div class="caption thumbnail_main_post">
-					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.0}}">
-						<p class = "text">
-						{{posts_populares.0.texto|truncatewords:30}}
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.0.tema.slug posts_populares.0.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
-						</p>
+<div class="row">
+	<div class = "col-md-8">
+		<div class = "thumbnail">
+			<div class = "row">
+			<h4 class = "titulo_videos_populares"> Videos Populares </h4>
+			{% for video in videos_populares %}
+				<div class = "col-md-4">
+					<div class = "thumbnail">
+						<a class = "thumb_video" href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
+							<div class = "overlay_videos"> 
+								<p class = "overlay_p">
+									{{video.0.titulo}}
+								</p>
+								<div class = "overlay_favoritos pull-right">
+									<p>{{video.0.favoritos_recibidos}}</p>
+									<span class = "fa fa-star"></span>
+								</div>
+							</div>
+							<img class = "imagen_video" src = "{{video.1}}" href="">
+
+						</a>
 						<div class = "perfil_pequena">
-							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
-						</div>
-						<h4  class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.0.creador.usuario 'recientes' %}"> {{posts_populares.0.creador.nickname}} </a> en
-							<a href = "{% url 'temas:index_tema' posts_populares.0.tema.slug 'recientes' %} ">
-							{{posts_populares.0.tema.nombre}}</a></small>
-						</h4>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="thumbnail">
-					<div class = "thumbnail_main_div hidden-sm hidden-xs">
-						<img alt="300x200" src="{{imagenes_posts_populares.1}}"/>
-					</div>
-					<div class="caption thumbnail_main_post">
-					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.1}}">
-						<p class = "text">
-						{{posts_populares.1.texto|truncatewords:30}} 
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.1.tema.slug posts_populares.1.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
-						</p>
-						<div class = "perfil_pequena">
-							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
-						</div>
-						<h4  class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.1.creador.usuario 'recientes' %}"> {{posts_populares.1.creador.nickname}} </a> en
-							<a href = "{% url 'temas:index_tema' posts_populares.1.tema.slug 'recientes' %} ">
-							{{posts_populares.1.tema.nombre}}</a></small>
-						</h4>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="thumbnail">
-					<div class = "thumbnail_main_div hidden-sm hidden-xs">
-						<img alt="300x200" src="{{imagenes_posts_populares.2}}"/>
-					</div>
-					<div class="caption thumbnail_main_post">
-						<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagenes_posts_populares.2}}">
-						<p class = "text">
-						{{posts_populares.2.texto|truncatewords:30}} 
-						<a style = "float:right" href="{% url 'temas:post' posts_populares.2.tema.slug posts_populares.2.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
-						</p>
-						<div class = "perfil_pequena">
-							<img src = "{{posts_populares.0.creador.imagen_perfil}}">
+							<img src = "{{video.0.perfil.imagen_perfil}}">
 						</div>
 						<h4 class = "display_inline_block">
-							<small> <a href = "{% url 'perfiles:perfil' posts_populares.2.creador.usuario 'recientes' %}"> {{posts_populares.2.creador.nickname}} </a> en
-							<a href = "{% url 'temas:index_tema' posts_populares.2.tema.slug 'recientes' %} ">
-							{{posts_populares.2.tema.nombre}}</a></small>
+							<small>en
+							<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
+							{{video.0.tema.nombre|truncatechars:30}}</a></small>
 						</h4>
+					</div>
+				</div>
+			{% endfor %}
+			</div>
+			<div class = "row">
+				<div class = "col-md-10 col-md-offset-1">
+					<hr>
+					<div class = "col-md-12">
+						<form class="form" method = "get" role="search"
+							action = "{% url 'temas:buscar' %}" >
+							<div class="form-group">
+								<input id ="buscar_temas" type="text" class="form-control" name = "q">
+							</div> 
+							<button type="submit" class="btn btn-warning pull-right boton_buscar_main">Buscar Tema en Orilla Libertaria</button>
+						</form>
+					<p class = "pull-right datos_olibertaria">
+					<small>{{num_temas_ol}} Temas - {{num_videos_ol}} Videos - {{num_posts_ol}} Posts  </small></p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	<div class="col-md-4">
+		<div id ="post_popular" class="thumbnail">
+			<h4 class = "titulo_post_popular"> Post Popular </h4>
+			
+		<div class = "overlay_post">
+			<div class="row">
+				<div class = "overlay_post_perfil pull-left">
+					<a href="{% url 'perfiles:perfil' post_popular.creador.usuario 'recientes' %}">
+					<div class = "row">
+						<div class = "imagen_perfil_overlay perfil_pequena">
+							<img src = "{{post_popular.creador.imagen_perfil}}">
+						</div>
+						<p class = "overlay_perfil_nombre">{{post_popular.creador.nickname}}</p>
+					</div>
+					<div class = "row datos_perfil_overlay">
+						<p class = "puntos_perfil_overlay">{{post_popular.creador.votos_recibidos}} Puntos
+						</p>
+						<p class = "posts_perfil_overlay">{{post_popular.creador.numero_de_posts}} Posts
+						</p>
+					</div>
+					</a>
+				</div>
+				<div class = "overlay_post_tema pull-right">
+					<a href="{% url 'temas:index_tema' post_popular.tema.slug 'recientes' %}">
+					<div class = "row">
+						<div class = "perfil_pequena imagen_tema_overlay">
+							<img src = "{{post_popular.tema.imagen}}">
+						</div>
+						<p class = "overlay_tema_nombre pull-right">
+						{{post_popular.tema.nombre}}</p>
+					</div>
+					<div class = "row datos_tema_overlay">
+						<p class = "posts_tema_overlay">{{tema_posts_count}} Posts
+						</p>
+						<p class = "videos_tema_overlay">
+						{{tema_videos_count}} Videos
+						</p>
+					</div>
+					</a>
+				</div>
+			</div>
+		</div> <!--ovelay_post-->
+
+		<div class="row ver_post_overlay">
+			<a class = "ver_post_link" href="{% url 'temas:post' post_popular.tema.slug post_popular.id 'recientes' %}">
+			<div class = "ver_post_div">
+				<div class = "ver_post_comments">
+					<p>{{comments_post_popular}} 
+			 		<span class="fa fa-comments"></span> 
+			 		</p>
+		 		</div>
+				<div class = "ver_posts_p">
+					<span class = "ver_post_puntos">
+					{{post_popular.votos_positivos}}
+					</span> 
+					<p class = "ver_post_text"> 
+						<strong>- Leer Post</strong>
+					</p>
+				</div>
+			</div>
+			</a>
+		</div>
+			
+			<div class="caption thumbnail_main_post">
+				<div id = "post_popular_parcial">
+				<div class = "thumbnail_main_div hidden-sm hidden-xs">
+					<img alt="300x200" src="{{imagen_post_popular}}"/>
+				</div>
+					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagen_post_popular}}">
+					<p class = "text">
+					{{post_popular.texto|truncatewords:30}}
+					</p>
+				</div>	
+					<a style = "float:right" href="{% url 'temas:post' post_popular.tema.slug post_popular.id 'recientes' %}"> <h4><small>leer post</h4></small></a>
+				<div class = "perfil_pequena">
+					<img src = "{{post_popular.creador.imagen_perfil}}">
+				</div>
+				<h4 class = "display_inline_block">
+					<small> <a href = "{% url 'perfiles:perfil' post_popular.creador.usuario 'recientes' %}"> {{post_popular.creador.nickname}} </a> en
+					<a href = "{% url 'temas:index_tema' post_popular.tema.slug 'recientes' %} ">
+					{{post_popular.tema.nombre}}</a></small>
+				</h4>
+			</div> <!--thumbnail_main_post-->
+		</div> <!--post _popular -->
+	</div> <!-- div col 4 -->
+</div> <!-- row -->
 
 {% endblock arriba %}
 	
@@ -184,3 +250,17 @@
 	</div>
 </div>
 {% endblock sidebar %}
+
+{% block javascript %}
+<script>
+
+$(document).ready(function(){
+	var temas_json = JSON.parse('{{lista_temas_json|safe}}');
+	$("#buscar_temas").autocomplete({
+		source: temas_json,
+		minLength: 2,
+	});
+});
+
+</script>
+{% endblock javascript %}

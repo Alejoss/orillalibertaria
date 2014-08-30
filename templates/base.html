@@ -7,21 +7,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
+
+  	<!--CORE CSS-->
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"><!--font awesome -->
+	
+	<!-- OLIBERTARIA CSS -->
 	<link href="{% static 'css/olibertaria_base.css' %}" rel="stylesheet">
 	<link href="{% static 'css/notificaciones.css' %}" rel="stylesheet">
 
+	<!-- PLUGINS CSS -->
 	<link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
 	<link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
 	<link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
-
 	<link href="{% static 'css/pgwslider.min.css' %}" rel="stylesheet">
+
 	{% block extra_css %}
 	{% endblock extra_css %}
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	
 </head>
 
 <body>
@@ -30,8 +34,11 @@
 	<div class="col-md-12 column">
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="navbar-header">
-				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> 
-				 <a class="display_inline_block navbar-brand" href=" {% url 'temas:main' 'activos' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
+				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+				 <a href="{% url 'temas:inicio' %}" class = "inicio {{flecha_hidden}}">
+					<i class = "inicio_flecha fa fa-chevron-left"></i>
+				 </a>
+				 <a class="display_inline_block navbar-brand" href="{% url 'temas:main' 'recientes' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -108,7 +115,7 @@
 
 <br><br><br>
 	<!--autolink--> <!--notificaciones-->
-	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 	<script src="{% static 'js/Autolinker.min.js' %} "></script>
 	<script src="{% static 'js/bootstrap.min.js' %} "></script>
 	<script src="{% static 'js/truncar.js' %} "></script>
@@ -134,7 +141,7 @@
 			{
 			text: "",
 			class: "btn btn-default",
-			html: "<p class ='marcar_leidas_cuadro'><small> Marcar como leídas</small></p> <i class = 'fa fa-check-square-o fa-lg'></i>",
+			html: "<p class ='marcar_leidas_cuadro'><small> Marcar como leídas</small> <i class = 'fa fa-check-square-o fa-lg'></i> </p>",
 			click: function() {
 			$( this ).dialog( "close" );
 			$(".num_notificaciones").addClass("hidden");

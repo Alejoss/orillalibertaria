@@ -1,5 +1,212 @@
-
 /* css para los thumbnails de temas/main */
+.thumb_hover .overlay{
+  transition:opacity 1s;
+  -webkit-transition:opacity 1s;
+}
+
+.titulo_videos_populares{
+  margin-left: 20px;
+}
+
+.titulo_post_popular{
+  margin-left: 10px;
+}
+
+/*overlay videos */
+.thumb_video:hover .overlay_videos{
+  opacity: 0.8;
+}
+
+.overlay_videos{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100px;
+  background: #fff;
+  opacity: 0;
+}
+
+.overlay_favoritos{
+  display: inline-block;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.overlay_favoritos p{
+  font-weight: bold;
+  margin-bottom: 0px;
+  display: inline-block;
+}
+.overlay_favoritos span{
+  margin-top: 0px;
+  display: inline-block;
+}
+
+.overlay_p{
+  display: inline-block;
+  font-weight: bold;
+  margin-top: 10px;
+  width: 150px;
+  margin-left: 25px;
+
+}
+
+/* overlay post */
+#post_popular .overlay_post{
+  transition:opacity 1s;
+  -webkit-transition:opacity 1s;
+}
+
+#post_popular:hover .overlay_post{
+  opacity: 0.8;
+}
+
+#post_popular .ver_post_overlay{
+  transition:opacity 1.5s;
+  -webkit-transition:opacity 1.5s;
+}
+#post_popular:hover .ver_post_overlay{
+  opacity: 0.8;
+}
+
+.overlay_post{
+  position:absolute;
+  width: 360px;
+  height: 120px;
+  background: #fff;
+  opacity: 0;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.overlay_post_perfil{
+  width: 170px;
+  height: 120px;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.overlay_post_tema{
+  width: 170px;
+  height: 120px;
+  margin-right: 15px;
+  display: inline-block;
+}
+.overlay_tema_nombre{
+  margin-right: 5px;
+  margin-top: 12px;
+  text-align: right;
+  font-weight: bold;
+}
+.overlay_perfil_nombre{
+  margin-left: 5px;
+  margin-top: 12px;
+  float:left;
+  font-weight: bold;
+}
+.datos_perfil_overlay{
+  display: block;
+  margin-left: 50px;
+  font-weight: bold;
+}
+.datos_perfil_overlay p{
+  display: block;
+}
+.posts_perfil_overlay{
+  display: inline-block;
+}
+.puntos_perfil_overlay{
+  display: inline-block;
+}
+.datos_tema_overlay{
+  display: block;
+  margin-right: 50px;
+  text-align: right;
+  font-weight: bold;
+}
+.datos_tema_overlay p{
+  display: block;
+}
+.posts_tema_overlay{
+}
+.videos_tema_overlay{
+}
+.imagen_tema_overlay{
+  margin-left: 0px;
+  margin-right: 20px;
+  float: right;
+}
+.imagen_perfil_overlay{
+  margin-left: 15px;
+  float:left;
+}
+
+/*ver post overlay */
+
+.ver_post_overlay{
+  position: absolute;
+  background: #fff;
+  opacity: 0;
+  margin-top: 130px;
+  margin-left: 5px;
+  height: 49px;
+  width: 360px;
+}
+.ver_post_link{
+  height: auto;
+  width: auto;
+  display: inline;
+}
+.ver_post_div{
+  margin-left: 100px;
+}
+.ver_post_p{
+  height: 49px;
+}
+.ver_post_puntos{
+  display: inline-block; 
+  vertical-align: middle;
+  font-weight: bold;
+  text-align: center;
+  position: relative; 
+  padding: 15px 0;
+}
+.ver_post_text{
+  display: inline-block; 
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.ver_post_puntos::before, .ver_post_puntos::after{
+  position: absolute;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family:'FontAwesome';
+}
+.ver_post_puntos::before{
+  content: "\f077";
+  top: 0;
+  font-weight: lighter;
+}
+.ver_post_puntos::after{
+  content: "\f078";
+  bottom: 0;
+  font-weight: lighter;
+}
+.ver_post_comments{
+  float:right;
+  margin-top: 25px;
+  margin-right: 30px;
+}
+
+/*thumbnail post*/
+
+.imagen_video{
+  margin-bottom: 10px;
+}
 
 .thumbnail_main_post{
 	min-height: 115px;
@@ -21,6 +228,19 @@
   height: auto;
   width: 100%;
 }
+
+
+/*buscar main */
+.boton_buscar_main{
+  margin-bottom: 5px;
+}
+
+.datos_olibertaria{
+  color: gray;
+  margin-right: 10px;
+}
+
+
 
 /* css para temas/main general */
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# PERFILES VIEWS.PY
+# VIEWS PERFILES
 
 import random
 
@@ -48,7 +48,7 @@ def login_page(request):
     template = 'perfiles/login.html'
 
     #temas - posts populares
-    posts_populares = obtener_posts_populares()
+    posts_populares = obtener_posts_populares(5)
     imagenes_posts_populares = []
     for post in posts_populares:
         imagen = obtener_imagen_tema(post.tema)
@@ -66,8 +66,6 @@ def login_page(request):
     imagenes_display = []
     for i in imagenes_display_obj:
         imagenes_display.append(i.url)
-
-    print request.path
 
     context = {'imagenes_display': imagenes_display, 'posts_populares': posts_populares,
                'imagenes_posts_populares': imagenes_posts_populares, 'citas': citas}

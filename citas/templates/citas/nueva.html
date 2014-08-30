@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 {% endblock form_specific_css %}
 
+
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Añade una frase </h2>
@@ -123,8 +124,15 @@
 {% endblock description %}
 
 {% block extra_javascript %}
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <script>
 $(document).ready(function(){
+	var autores_json = JSON.parse('{{lista_de_autores_json|safe}}');
+	$("#autor").autocomplete({
+		source: autores_json,
+		minLength: 2,
+		autoFocus: true
+	});
 	
   /* bersuit vergarabat*/
   $.validator.addMethod("seleccion_correcta", function(value, element){
@@ -136,6 +144,7 @@ $(document).ready(function(){
       return false;
     }
   });
+
   $.validator.addMethod('empty', function(value, element){
     return (value === '');
   });
@@ -159,6 +168,7 @@ $(document).ready(function(){
 			check: {
 				required: true,
 			},
+
 	      /* bersuit vergarabat*/
 		    bersuit:{
 		        required: true,
@@ -169,22 +179,19 @@ $(document).ready(function(){
 		      }
 	      /*bersuit vergarabat*/
 		},
+
 		errorElement: "span",
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
 			texto: "*Escribe una frase de mínimo 10 y máximo 500 caracteres.",
 			autor: "*Proporciona un autor, hasta 75 caracteres.",
-			fuente: "*máximo 75 caracteres."
+			fuente: "*máximo 75 caracteres.",
 			check: "*Esto es importante:",
 			bersuit: "¿Eres humano?",
 			vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."
 		}
 	});
-});
-var autores_json = JSON.parse('{{lista_de_autores_json|safe}}');
-$("#autor").autocomplete({
-	source: autores_json
 });
 
 </script>

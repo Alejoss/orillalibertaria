@@ -1,8 +1,6 @@
 from django.db import models
 from perfiles.models import Perfiles
 
-# Create your models here.
-
 
 class Imagen(models.Model):
     url = models.CharField(max_length=250, null=True)

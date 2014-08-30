@@ -5,6 +5,12 @@
 <link href="{% static 'css/perfil.css' %}" rel="stylesheet">
 {% endblock form_specific_css %}
 
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href="{% url 'perfiles:editar_perfil_des' %}">Editar Perfil</a>
+</li>
+{% endblock navbar_mobile_xs %}
+
 {% block arriba %}
 {% endblock arriba %}
 

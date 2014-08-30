@@ -3,6 +3,22 @@
   border: 1px solid red;
 }
 
+.inicio{
+	float: left;
+	display: inline-block;
+	height: 60px;
+	width: 15px;
+	cursor: pointer;
+}
+.inicio_flecha{
+	margin-top: 25px;
+	color: gray;
+	margin-left: 3px;
+}
+.inicio_flecha:hover{
+	color: #5e5e5e
+}
+
 .cuadro_buscar{
 	margin-top: 10px;
 }
@@ -12,7 +28,7 @@
 	height: 60px;
 	margin-top: -15px;
 	margin-bottom: 0px;
-	padding-bottom: 0px
+	padding-bottom: 0px;
 	width: auto;
 }
 
@@ -140,9 +156,6 @@ padding: 5px
 
 /* css para los paneles */
 .fecha_desde{
-	color: grey;
+	color: gray;
 	display: inline-block;
-}
-.footer_css{
-	background-color: ;
 }

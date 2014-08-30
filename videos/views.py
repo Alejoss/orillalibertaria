@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# VIEW.PY VIDEO
+# VIEWS VIDEOS
 
 import urlparse
 from datetime import datetime

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# VIEWS.PY TEMAS
+# VIEWS TEMAS
 
 from datetime import datetime
 import re
@@ -19,11 +19,73 @@ from notificaciones.models import Notificacion
 from perfiles.models import Perfiles
 from citas.models import Cita
 from videos.models import Videos
+from imagenes.models import Imagen
 from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
     obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde
-from utils import obtener_posts_populares
+from utils import obtener_posts_populares, obtener_videos_populares
 
 # print "variable %s" %(variable) <--- para debug
+
+
+def inicio(request):
+    template = 'inicio.html'
+    flecha_hidden = "hidden"
+    objetivo_temas = 100
+    objetivo_posts = 500
+    objetivo_videos = 500
+    objetivo_imagenes = 500
+    objetivo_frases = 500
+
+    temas_actuales = Temas.objects.all().count()
+    posts_actuales = Posts.objects.filter(eliminado=False, es_respuesta=False).count()
+    videos_actuales = Videos.objects.filter(eliminado=False).count()
+    imagenes_actuales = Imagen.objects.filter(eliminada=False).count()
+    frases_actuales = Cita.objects.filter(eliminada=False).count()
+
+    objetivos = {'objetivo_temas': objetivo_temas, 'objetivo_posts': objetivo_posts,
+                 'objetivo_videos': objetivo_videos, 'objetivo_imagenes': objetivo_imagenes,
+                 'objetivo_frases': objetivo_frases}
+
+    actuales = {'temas_actuales': temas_actuales, 'posts_actuales': posts_actuales,
+                'videos_actuales': videos_actuales, 'imagenes_actuales': imagenes_actuales,
+                'frases_actuales': frases_actuales}
+
+    temas_faltantes = objetivo_temas - temas_actuales
+
+    if temas_faltantes < 0:
+        temas_faltantes = 0
+    porcentaje_temas = 1-(float(temas_faltantes)/float(objetivo_temas))
+
+    posts_faltantes = objetivo_posts - posts_actuales
+    if posts_faltantes < 0:
+        posts_faltantes = 0
+    porcentaje_posts = 1-(float(posts_faltantes)/float(objetivo_posts))
+
+    videos_faltantes = objetivo_videos - videos_actuales
+    if videos_faltantes < 0:
+        videos_faltantes = 0
+    porcentaje_videos = 1-(float(videos_faltantes)/float(objetivo_videos))
+
+    imagenes_faltantes = objetivo_imagenes - imagenes_actuales
+    if imagenes_faltantes < 0:
+        imagenes_faltantes = 0
+    porcentaje_imagenes = 1-(float(imagenes_faltantes)/float(objetivo_imagenes))
+
+    frases_faltantes = objetivo_frases - frases_actuales
+    if frases_faltantes < 0:
+        frases_faltantes = 0
+    porcentaje_frases = 1-(float(frases_faltantes)/float(objetivo_frases))
+
+    progress_bar = (porcentaje_temas + porcentaje_posts +
+                    porcentaje_videos + porcentaje_imagenes +
+                    porcentaje_frases)/5
+    progress_bar = str(progress_bar*100)
+    print progress_bar
+
+    context = {'flecha_hidden': flecha_hidden, 'progress_bar': progress_bar,
+               'objetivos': objetivos, 'actuales': actuales}
+
+    return render(request, template, context)
 
 
 def redirect_main(request):
@@ -101,7 +163,28 @@ def buscar(request):
 @page_template('index_page_temas.html')
 def main(request, queryset, template='temas/main.html', extra_context=None):
     # muestra la pagina principal de todos los temas
-    posts_populares = obtener_posts_populares()
+    post_popular = (obtener_posts_populares(1))[0]
+    imagen_post_popular = obtener_imagen_tema(post_popular.tema)
+    tema_posts_count = Posts.objects.filter(
+        tema=post_popular.tema, eliminado=False, es_respuesta=False).count()
+    tema_videos_count = Videos.objects.filter(
+        tema=post_popular.tema, eliminado=False).count()
+    lista_temas_autocomplete = []
+    for tema in Temas.objects.all():
+        lista_temas_autocomplete.append(tema.nombre)
+    lista_temas_json = json.dumps(lista_temas_autocomplete)
+    comments_post_popular = Respuestas.objects.filter(post_padre=post_popular).count()
+
+    #Olibertaria datos
+    num_temas_ol = Temas.objects.all().count()
+    num_posts_ol = Posts.objects.filter(eliminado=False).count()
+    num_videos_ol = Videos.objects.filter(eliminado=False).count()
+
+    videos_populares_obj = obtener_videos_populares(3)
+    videos_populares = []
+    for video in videos_populares_obj:
+        imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
+        videos_populares.append([video, imagen_video])
 
     recientes = ""
     activos = ""
@@ -134,14 +217,15 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     cita_obj = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
     cita = obtener_cita(cita_obj)
 
-    imagenes_posts_populares = []
-    for post in posts_populares:
-        imagen = obtener_imagen_tema(post.tema)
-        imagenes_posts_populares.append(imagen)
-
-    context = {'temas': temas, 'posts_populares': posts_populares,
+    context = {'temas': temas, 'post_popular': post_popular, 'videos_populares': videos_populares,
                'cita': cita, 'recientes': recientes, 'activos': activos,
-               'populares': populares, 'imagenes_posts_populares': imagenes_posts_populares}
+               'populares': populares, 'imagen_post_popular': imagen_post_popular,
+               'tema_posts_count': tema_posts_count,
+               'tema_videos_count': tema_videos_count,
+               'num_temas_ol': num_temas_ol, 'num_posts_ol': num_posts_ol,
+               'num_videos_ol': num_videos_ol,
+               'comments_post_popular': comments_post_popular,
+               'lista_temas_json': lista_temas_json}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -444,6 +528,7 @@ def respuesta(request, slug, post_id):
         return HttpResponseRedirect(reverse('temas:post',
                                             kwargs={'slug': tema.slug, 'post_id': post_id, 'queryset': u'recientes'}))
 
+
 @login_required
 def remover_voto_ajax(request):
     if request.is_ajax():
@@ -468,6 +553,7 @@ def remover_voto_ajax(request):
         return HttpResponse('remover_voto_ajax hecho')
     else:
         return HttpResponse('error_no_ajax')
+
 
 @login_required
 def vote_up_ajax(request):

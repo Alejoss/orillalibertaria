@@ -3,6 +3,9 @@ from django.conf.urls import patterns, url
 from temas import views
 
 urlpatterns = patterns('',
+                       # inicio
+                       url(r'^inicio/$', views.inicio, name='inicio'),
+
                        # main page
                        url(r'^index/(?P<queryset>\w+)/$',
                            views.main, name='main'),

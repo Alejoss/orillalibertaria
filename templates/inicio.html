@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'css/inicio.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+
+{% block content %}
+<div class="container">
+		<div class="col-md-8 column">
+			<div class="jumbotron">
+				<h1>
+					Orilla Libertaria
+				</h1>
+				<p>
+					Imagina una isla a la que llegan barcos con el contenido interesante que han podido recolectar en el océano que es el Internet.
+				</p>
+				
+				<p>
+					Estamos seguros de que será una herramienta muy útil para la comunidad libertaria hispanohablante.
+				</p>
+				<p>
+					<a class="btn btn-primary btn-large" href="{% url 'temas:main' 'recientes' %}">Continuar</a>
+				</p>
+			</div> <!-- jumbotron -->
+			<div class="row">
+			<div class = "col-md-4">
+				<img class = "barco_inicio_izq" src="{% static '/static/img/barco_espin.png' %}">
+			</div>
+			<div class = "col-md-4">
+				<dl class="dl dl_inicio">
+					<dt>
+						Estamos en versión
+					</dt>
+					<dt>
+						Beta
+					</dt>
+					<dd>
+						Si encuentras errores o tienes sugerencias, por favor escríbenos en el meta tema Orilla Libertaria.
+					</dd>
+				</dl>
+			</div>
+			<div class = "col-md-4">
+				<img class = "barco_inicio_der" src="{% static '/static/img/barco_amagi.png' %}">
+			</div>
+			<div class = "col-md-12">
+				<div class="progress progress_inicio">
+					<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100"
+					style="width: {{progress_bar}}%;">
+					</div>
+				</div>
+				<h5 class = "pull-left"><small> Actual: {{actuales.temas_actuales}} Temas, {{actuales.videos_actuales}} Videos, {{actuales.posts_actuales}} Posts, {{actuales.imagenes_actuales}} Imágenes, {{actuales.frases_actuales}} Frases.</small></h5>
+				<h5 class = "pull-right"><small> Meta: 100+ Temas, 500+ Videos, 500+ Posts </small></h5>
+			</div>
+			</div> <!--row-->
+		</div> <!--col md 8 -->
+		<div class="col-md-4 column">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Temas
+					</h3>
+				</div>
+				<div class="panel-body">
+					<ul class = "ul_inicio">
+						<li> <i class = "fa fa-puzzle-piece"></i> Suma temas </li>
+						<li> <i class = "fa fa-edit"></i> Edita temas </li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Posts
+					</h3>
+				</div>
+				<div class="panel-body">
+					<ul class = "ul_inicio">
+						<li> <i class = "fa fa-comment"></i> Postea en temas </li>
+						<li> <i class = "fa fa-chevron-up"></i> Vota por los mejores posts </li>
+						<li> <i class = "fa fa-comments"></i> Responde y únete a la conversación </li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Videos
+					</h3>
+				</div>
+				<div class="panel-body">
+					<ul class = "ul_inicio">
+						<li> <i class = "fa fa-play-circle"></i> Añade videos al tema </li>
+						<li> <i class = "fa fa-star"></i> Marca tus favoritos </li>
+						<li> <i class = "fa fa-comments"></i> Coméntalos </li>
+					</ul>
+				</div>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Imágenes
+					</h3>
+				</div>
+				<div class="panel-body">
+				<ul class = "ul_inicio">
+					<li>
+						<i class = "fa fa-picture-o"></i> Comparte imágenes
+					</li>
+					<li>
+						<i class = "fa fa-star"></i> Elige tus favoritas
+					</li>
+					<li>
+						<i class="fa fa-wrench"></i> Colabora y organiza la Galería.
+					</li>
+				</ul>
+				</div>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Frases
+					</h3>
+				</div>
+				<div class="panel-body">
+				<ul class = "ul_inicio">
+					<li>
+						<i class = "fa fa-quote-left"></i> Comparte frases
+					</li>
+					<li>
+						<i class = "fa fa-star"></i> Elige tus favoritas
+					</li>
+					<li>
+						<i class = "fa fa-wrench"></i> Colabora y organiza el Banco de Frases.
+					</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}

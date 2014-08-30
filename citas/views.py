@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# VIEWS CITAS
+
 from math import sqrt
 from datetime import datetime
 import json
@@ -18,8 +20,7 @@ from imagenes.models import Imagen
 from notificaciones.models import Notificacion
 
 
-# Create your views here.
-@page_template('index_page_citas.html')
+@page_template('index_page_citas.html')  # endless pagination
 def index(request, queryset, template='citas/index.html', extra_context=None):
     if request.user.is_authenticated():
         #si user esta login:
@@ -32,6 +33,7 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
         #no login
         citas_favoritas = []
 
+    #queryset y active button
     autor = ""
     recientes = ""
     populares = ""
@@ -46,6 +48,7 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
         q = "-fecha"
         recientes = "active"
 
+    #citas obj.
     citas = []
     citas_obj = Cita.objects.filter(eliminada=False).order_by(q)
 
@@ -59,6 +62,7 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
         else:
             citas.append([cita, ""])
 
+    #imagenes slider
     imagenes_display = obtener_imagenes_display(7)
 
     context = {
@@ -75,6 +79,7 @@ def cita(request, cita_id):
     template = 'citas/cita.html'
     cita = Cita.objects.get(id=cita_id)
 
+    # verificar si es favorita
     if request.user.is_authenticated():
         #si usuario login
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
@@ -92,6 +97,8 @@ def cita(request, cita_id):
         es_favorita = ""
 
     cita = obtener_cita(cita)
+
+    #imagenes slider
     imagenes_display = obtener_imagenes_display(7)
 
     context = {'cita': cita, 'es_favorita': es_favorita, 'imagenes_display': imagenes_display}
@@ -100,8 +107,10 @@ def cita(request, cita_id):
 
 @login_required
 def nueva(request):
+    #suma una frase
     template = 'citas/nueva.html'
     if request.method == "POST":
+        #obtener perfil y crear nueva cita
         form = FormNuevaCita(request.POST)
         if form.is_valid():
             nueva_cita = form.save(commit=False)
@@ -110,8 +119,9 @@ def nueva(request):
             nueva_cita.save()
             return HttpResponseRedirect(reverse('citas:index', kwargs={'queryset': (u'recientes')}))
         else:
-            pass  # !!! enviar errores
+            pass
 
+    #obtener lista de autores para ayudar al usuario.
     lista_de_autores = []
     lista_de_autores_obj = Cita.objects.filter(
         eliminada=False).values('autor').order_by('autor')
@@ -121,6 +131,8 @@ def nueva(request):
     lista_de_autores_json = json.dumps(lista_de_autores)
 
     form = FormNuevaCita()
+
+    #honeypot antispan
     lista_bersuit = bersuit_vergarabat()
 
     context = {'FormNuevaCita': FormNuevaCita, 'lista_bersuit': lista_bersuit,
@@ -130,25 +142,29 @@ def nueva(request):
 
 @login_required
 def marcar_favorito(request):
+    #marca una cita como favorita
     if request.is_ajax():
         cita_id = request.GET.get('frase_id', '')
         cita = Cita.objects.get(pk=cita_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
-        # revisa si ya marco como favorito a esa cita
-        fue_eliminado = False
+        # revisa si ya marco como favorita a esa cita
+        fue_eliminada = False
         registro_existe = Cfavoritas.objects.filter(
             cita=cita, perfil=perfil_usuario).exists()
+
         if registro_existe:
             registro_favorito = Cfavoritas.objects.get(
                 cita=cita, perfil=perfil_usuario)
-            fue_eliminado = registro_favorito.eliminado
-            if fue_eliminado is True:
+            fue_eliminada = registro_favorito.eliminado
+            # marca la cita como favorita
+            if fue_eliminada is True:
                 cita.favoritos_recibidos += 1
                 registro_favorito.eliminado = False
                 registro_favorito.fecha = datetime.today()
                 cita.save()
                 registro_favorito.save()
                 return HttpResponse('nueva frase favorita')
+            # desmarca la cita como favorita
             else:
                 cita.favoritos_recibidos -= 1
                 registro_favorito.eliminado = True
@@ -156,6 +172,7 @@ def marcar_favorito(request):
                 registro_favorito.save()
                 return HttpResponse('frase favorita removida')
         else:
+            # suma la cita como nueva favorita
             cita.favoritos_recibidos += 1
             registro_favorito = Cfavoritas(cita=cita, perfil=perfil_usuario)
             registro_favorito.save()
@@ -176,10 +193,11 @@ def marcar_favorito(request):
 
             return HttpResponse('nueva frase favorita')
     else:
-        return HttpResponse("error_fav_cita")  # !!!raise 404
+        return HttpResponse("error_fav_cita")
 
 
 def favoritas(request, username):
+    # muestra las citas favoritas de un usuario
     template = 'citas/favoritas.html'
     user_object = User.objects.get(username=username)
 
@@ -190,7 +208,7 @@ def favoritas(request, username):
 
     if request.user.is_authenticated():
         if user_object == request.user:
-            propio_usuario = True
+            propio_usuario = True  # usuario revisando sus propias favoritas
         if propio_usuario:
             for c in Cfavoritas_objects:
                 citas_favoritas.append([c.cita, "dorado", c.fecha])

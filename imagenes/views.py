@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# VIEWS.PY IMAGENES
+# VIEWS IMAGENES
+
 from math import sqrt
 
 from django.shortcuts import render, redirect
