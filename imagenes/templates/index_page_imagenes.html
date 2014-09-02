@@ -1,26 +1,25 @@
 {% load endless %}
 
-{% paginate 14 imagenes %}
+{% paginate 4 imagenes %}
 <div class = "row">
 	<div class = "endless_page_template">
 		{% for i in imagenes %}
-        <div class="span3 galery"> <!--span cambiado -->
-            <div class="image-galery"><a class="group" rel="group1" href="{{i.0.url}}">
-                <img class = "thumbnail" src=" {{i.0.url}} " /></a>
+            <div class="col-lg-3 col-sm-4 col-xs-6 panel_imagen">
+                <div class = "panel panel-default">
+                    <div class = "panel-body">
+                        <img data-toggle="modal" data-target="#modal_imagen" src="{{i.0.url}}" class="imagen thumbnail img-responsive">
+                        <p id = "imagen_{{forloop.counter}}" data-counter="{{forloop.counter}}" class = "forloop_counter hidden">{{forloop.counter}}</p>
+                        <p class = "imagen_id hidden">{{i.0.id}}</p>
+                        <p class = "favoritos">{{i.0.favoritos_recibidos}}</p>
+                        {% if user.is_authenticated %}
+                        <span class='estrella marcar_favorito fa fa-star fa-lg {{i.1}} '></span>
+                        <span rel="tooltip" title="Denunciar Imagen" class="pull-right reportar fa fa-flag "></span>
+                        {% else %}
+                        <span class='estrella fa fa-star'></span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div>
-                <p class = "favoritos"> 
-                {{i.0.favoritos_recibidos}}
-                </p>
-                <p class = "hidden">{{i.0.id}}</p>
-                {% if user.is_authenticated %}
-                <span class='estrella marcar_favorito fa fa-star fa-lg {{i.1}} '></span>
-                <span rel="tooltip" title="Denunciar Imagen" class="reportar fa fa-flag "></span>
-                {% else %}
-                <span class='estrella fa fa-star'></span>
-                {% endif %}
-            </div>
-        </div>
         {% endfor %}
 	</div>
 </div>

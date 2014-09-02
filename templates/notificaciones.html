@@ -72,4 +72,33 @@
 </li>
 {% endfor %}
 </ul>
-<a class = "ver_todas_link" href="{% url 'notificaciones:index' %} "><i class = "fa fa-bars"></i> <small>ver todas</small></a>
+
+
+
+<script>
+
+$("#notificaciones").on("click",'.marcar_leidas_cuadro', function(){
+	$(".num_notificaciones").addClass("hidden");
+	$("#spinner").removeClass('fa-rotate-180');
+	$.ajax({
+	data: {'cantidad':'cinco'},
+	url: '/notificaciones/marcar_leidas/',
+	type: 'get',
+	});
+	$("#notificaciones").hide("fold", 1000);
+});
+
+$(".mostrar_notificaciones").click(function(){
+	if ($("#spinner").hasClass('fa-rotate-180')){
+		$("#spinner").removeClass("fa-rotate-180");
+		$("#notificaciones").hide("fold", 1000)
+	}
+	else
+	{
+		$("#notificaciones").show("fold", 1000)
+		$("#spinner").addClass('fa-rotate-180');
+		$("#notificaciones").removeClass("hidden");
+	}
+});
+
+</script>

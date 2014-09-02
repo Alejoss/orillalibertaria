@@ -2,7 +2,10 @@
 {% load staticfiles %}
 
 {% block form_specific_css %}
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<link href="{% static 'css/jquery-ui.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.structure.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.theme.min_ol_autocomplete.css' %}" rel="stylesheet">
+
 {% endblock form_specific_css %}
 
 

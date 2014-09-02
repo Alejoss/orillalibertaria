@@ -30,7 +30,6 @@ from utils import obtener_links_perfil
 
 def revisar_nickname(request):
     if request.is_ajax():
-        print "llego ajax revisar_nickname"
         nickname_nuevo = request.GET.get('nickname', '')
         print nickname_nuevo
         if Perfiles.objects.exclude(usuario=request.user).filter(nickname=nickname_nuevo).exists():

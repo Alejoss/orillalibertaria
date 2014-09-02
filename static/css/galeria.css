@@ -54,16 +54,20 @@ body {
 	width: 640px !important;
 }
 .modal_left{
-	margin-left: 225px;
+	margin-left: 190px;
 	cursor: pointer;
+	width: 30px;
+	text-align: center
 }
 .puzzle_modal{
-	margin-left: 25px;
+	margin-left: 30px;
 	cursor: default;
 }
 .modal_right{
-	margin-left: 23px;
+	margin-left: 25px;
 	cursor: pointer;
+	width: 25px;
+	text-align: center
 }
 .imagen_modal{
 	display: block;

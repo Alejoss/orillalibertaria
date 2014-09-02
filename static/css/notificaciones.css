@@ -4,18 +4,18 @@
 }
 
 .ver_todas_link{
-	margin-left: 10px;
+	display: inline-block;
+}
+.ver_todas_link button{
+	height: 40px
 }
 
 .marcar_leidas_cuadro{
-	margin-right: 5px;
 	display: inline-block;
-	color: #428BCA;
+	height: 40px;
+	float: right;
 }
 
-.btn_marcar_leidas{
-	margin-left: 30px;
-}
 
 .no_leida{
 	background-color: #fcf8e3
@@ -38,27 +38,25 @@
 .lista_notificaciones{
 	margin-bottom: 5px;
 }
-.lista_notificaciones_todas >li{
-	height: 75px;
+.lista_notificaciones >li{
+	height: 85px;
 	overflow: auto;
 }
 
-.no-close .ui-dialog-titlebar-close {
-	display: none;
-}
-
-.ui-dialog-buttonset{
-	position: relative;
-	float:right;
-	border-radius: 6px;
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	background-clip: padding-box;
-}
-
 .cuadro_notificaciones{
+	z-index: 10;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: none;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 50px;
 	padding: 10px;
+	width: 300px;
+	height: 500px;
 	background-color: #ffffff;
 	border: 1px solid #999999;
 	border: 1px solid rgba(0, 0, 0, 0.2);
@@ -70,3 +68,14 @@
 
 }
 
+/* css especifico para pagina de todas las notificaciones */
+
+
+.btn_marcar_leidas{
+	margin-left: 30px;
+}
+
+.lista_notificaciones_todas >li{
+	height: 75px;
+	overflow: auto;
+}

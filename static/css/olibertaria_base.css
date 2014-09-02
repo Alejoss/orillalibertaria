@@ -10,12 +10,12 @@
 	width: 15px;
 	cursor: pointer;
 }
-.inicio_flecha{
-	margin-top: 25px;
+.inicio_info{
+	margin-top: 5px;
 	color: gray;
 	margin-left: 3px;
 }
-.inicio_flecha:hover{
+.inicio_info:hover{
 	color: #5e5e5e
 }
 

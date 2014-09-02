@@ -17,6 +17,7 @@ from notificaciones.models import Notificacion
 from olibertaria.utils import bersuit_vergarabat
 
 
+@page_template('index_page_imagenes.html')
 def index(request, queryset, template='imagenes/galeria.html', extra_context=None):
     if request.user.is_authenticated():
         #si esta login

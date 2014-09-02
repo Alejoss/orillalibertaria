@@ -28,7 +28,9 @@
 		<div class="panel panel-info">
 			<div class="panel-body">
 				<div class = "div_imagen_tema">
+				<a href=" {% url 'videos:video' video.0.id tema.0.slug 'recientes' %} ">
 					<img class = "imagen_tema" src = "{{video.1}}">
+				</a>
 				</div>
 				<p class = "text truncate">
 				<strong>{{video.0.titulo}}:</strong> {{video.4|safe}}
