@@ -7,11 +7,23 @@ from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 
 from perfiles.models import Perfiles
-from temas.models import Votos, Posts
+from temas.models import Votos, Posts, Respuestas
 from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def obtener_respuestas_post(post):
+    #obtiene un post object y devuelve dos respuestas para la vista previa.
+    respuestas_obj = Respuestas.objects.filter(post_padre=post,
+                                               post_padre__eliminado=False).order_by('-id')[:2]
+    respuestas = []
+    for r in respuestas_obj:
+        if len(r.post_padre.texto) > 1:
+            respuestas.append(r.post_respuesta)
+
+    return respuestas
 
 
 def obtener_env_secret_key():

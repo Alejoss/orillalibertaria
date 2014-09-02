@@ -1,4 +1,13 @@
 /* css para el panel con el post y los votos */
+.respuesta_post{
+	margin-left: 70px;
+}
+.respuesta_post .perfil_pequena{
+	display: inline-block;
+}
+.respuesta_post p{
+	display: inline-block;
+}
 
 .inline_block{
 	display:inline-block;

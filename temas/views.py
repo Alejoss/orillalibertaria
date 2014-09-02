@@ -21,7 +21,8 @@ from citas.models import Cita
 from videos.models import Videos
 from imagenes.models import Imagen
 from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
-    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde
+    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde,\
+    obtener_respuestas_post
 from utils import obtener_posts_populares, obtener_videos_populares
 
 # print "variable %s" %(variable) <--- para debug
@@ -80,7 +81,6 @@ def inicio(request):
                     porcentaje_videos + porcentaje_imagenes +
                     porcentaje_frases)/5
     progress_bar = str(progress_bar*100)
-    print progress_bar
 
     context = {'flecha_hidden': flecha_hidden, 'progress_bar': progress_bar,
                'objetivos': objetivos, 'actuales': actuales}
@@ -301,7 +301,11 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
             voted_status = "no-vote"
 
         texto_procesado = procesar_espacios(post.texto)
-        posts.append([post, num_respuestas, voted_status, texto_procesado])
+        respuestas = obtener_respuestas_post(post)
+        posts.append([post, num_respuestas, voted_status, texto_procesado,
+                      respuestas])
+
+        #respuestas vista previa
 
     # thumbnail de imágenes.
     imagenes_display = obtener_imagenes_display(7)
@@ -473,12 +477,10 @@ def editar_post(request, post_id):
         template = 'temas/editar_post.html'
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         if perfil_usuario != post.creador:
-            print "no es el perfil del creador"
             return redirect('temas:post', slug=post.tema.slug, post_id=post.id, queryset=u'recientes')
             pass
             #!!! raise 404
         else:
-            print "si es el perfil creador"
             form_editar_post = FormEditarPost(initial={'texto': post.texto})
             context = {'form_editar_post': form_editar_post, 'post': post}
             return render(request, template, context)
@@ -570,7 +572,6 @@ def vote_up_ajax(request):
         if usuario_votado == usuario_votante:
             return HttpResponse('no puedes votar tus propios post')
         else:
-            print "no es mismo usuario"
             ya_voto = Votos.objects.filter(post_votado=post_votado,
                                            usuario_votante=usuario_votante).exists()
             if ya_voto:
@@ -612,10 +613,8 @@ def vote_up_ajax(request):
                 voto.save()
 
                 # suma 1 a los votos_positivos del objeto post
-                print post_votado.votos_positivos
                 post_votado.votos_positivos += 1
                 post_votado.save()
-                print post_votado.votos_positivos
 
                 # suma 1 a los votos recibidos del usuario_votado.
                 usuario_votado.votos_recibidos += 1
