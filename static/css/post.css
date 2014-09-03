@@ -1,17 +1,26 @@
 /* css para el panel con el post y los votos */
 .respuesta_post{
-	margin-left: 70px;
 	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-right: 20px;
 	border-bottom: 1px solid;
 	border-color: #bce8f1;
 }
-.respuesta_post .perfil_pequena{
+
+.perfil_pequena_respuesta > img{
 	display: inline-block;
+	max-width: 35px;
+	max-height: 35px;
+	padding: 0px;
+	margin-top:5px;
+	width:auto;
+	border-top-left-radius: 10px 5px;
+	border-bottom-right-radius: 10% 5%;
+	border-top-right-radius: 10px;
 }
-.respuesta_post p{
+.perfil_pequena_respuesta{
 	display: inline-block;
+	max-height: 40px;
+	max-width: 40px;
+	padding: 0px
 }
 
 .inline_block{

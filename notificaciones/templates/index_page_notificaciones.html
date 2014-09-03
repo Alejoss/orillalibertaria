@@ -75,17 +75,17 @@
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> de {{notificacion.1.autor}} que compartiste:</br>
-			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} ... <span class = "fa fa-quote-right fa-lg"></span> 
+			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} <span class = "fa fa-quote-right fa-lg"></span> 
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "denuncia" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			La <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> que compartiste ha sido denunciada y removida del Banco de Frases:</br>
-			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}}... <span class = "fa fa-quote-right fa-lg"></span> 
+			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} <span class = "fa fa-quote-right fa-lg"></span> 
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			Felicitaciones, la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> que compartiste tiene más de {{notificacion.2}} favoritos:</br>
-			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} ... <span class = "fa fa-quote-right fa-lg"></span>
+			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} <span class = "fa fa-quote-right fa-lg"></span>
 		</li>
 		{% endif %}
 		

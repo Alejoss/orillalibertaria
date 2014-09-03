@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 # VIEWS TEMAS
 
 from datetime import datetime
@@ -302,8 +302,9 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
 
         texto_procesado = procesar_espacios(post.texto)
         respuestas = obtener_respuestas_post(post)
+        hora_procesada = tiempo_desde(post.fecha)
         posts.append([post, num_respuestas, voted_status, texto_procesado,
-                      respuestas])
+                      hora_procesada, respuestas])
 
         #respuestas vista previa
 
@@ -442,9 +443,10 @@ def post(request, slug, post_id, queryset):
                 respuesta_estado = "no-vote"
             texto_procesado_resp = procesar_espacios(post_respuesta.texto)
             hora_procesada = tiempo_desde(post_respuesta.fecha)
+            respuestas_respuesta = obtener_respuestas_post(post_respuesta)
             respuestas.append(
                 [post_respuesta, respuesta_numrespuestas, respuesta_estado,
-                 texto_procesado_resp, hora_procesada])
+                 texto_procesado_resp, hora_procesada, respuestas_respuesta])
 
     # otros
     # utiliza el mismo form que los posts normales

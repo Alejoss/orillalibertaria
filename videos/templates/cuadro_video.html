@@ -1,5 +1,3 @@
-{% load staticfiles %}
-
 <div class = "row clearfix">
 {% if video.es_youtube %}
 <div class = "col-md-7">
@@ -42,7 +40,7 @@
 <div class = "col-md-5">
 <div> <!-- foto perfil fecha -->
 <div class = "perfil_pequena">
-	<img src = "{% static '/static/img/perfil2.jpeg' %}">
+	<img src = "{{video.perfil.imagen_perfil}}">
 </div>
 <p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
 <small class = "fecha_desde">
@@ -111,7 +109,7 @@
 
 <div> <!-- foto perfil fecha -->
 	<div class = "perfil_pequena">
-		<img src = "{% static '/static/img/perfil2.jpeg' %}">
+		<img src = "{{video.perfil.imagen_perfil}}">
 	</div>
 	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
 	<small class = "fecha_desde">

@@ -20,7 +20,7 @@ from temas.models import Temas, Tema_descripcion, Posts, Respuestas
 from citas.models import Cita
 from notificaciones.models import Notificacion
 from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
-    bersuit_vergarabat, tiempo_desde
+    bersuit_vergarabat, tiempo_desde, obtener_respuestas_post
 
 
 @login_required
@@ -281,7 +281,9 @@ def video(request, video_id, slug, queryset):
             voted_status = "no-vote"
         texto_procesado = procesar_espacios(post.texto)
         hora_procesada = tiempo_desde(post.fecha)
-        posts.append([post, num_respuestas, voted_status, texto_procesado, hora_procesada])
+        respuestas_post = obtener_respuestas_post(post)
+        posts.append([post, num_respuestas, voted_status,
+                      texto_procesado, hora_procesada, respuestas_post])
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -512,9 +514,10 @@ def post_video(request, video_id, slug, post_id, queryset):
                 respuesta_estado = "no-vote"
             texto_procesado_resp = procesar_espacios(r.post_respuesta.texto)
             hora_procesada = tiempo_desde(post_respuesta.fecha)
+            respuestas_respuesta = obtener_respuestas_post(post_respuesta)
             respuestas.append(
                 [post_respuesta, respuesta_numrespuestas, respuesta_estado,
-                 texto_procesado_resp, hora_procesada])
+                 texto_procesado_resp, hora_procesada, respuestas_respuesta])
 
     # form_respuestas
     form_respuesta = FormNuevoPost()
