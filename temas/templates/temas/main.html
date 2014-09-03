@@ -76,7 +76,7 @@
 		<div id ="post_popular" class="thumbnail">
 			<h4 class = "titulo_post_popular"> Post Popular </h4>
 			
-		<div class = "overlay_post">
+		<div class = "overlay_post visible-lg">
 			<div class="row">
 				<div class = "overlay_post_perfil pull-left">
 					<a href="{% url 'perfiles:perfil' post_popular.creador.usuario 'recientes' %}">
@@ -115,7 +115,7 @@
 			</div>
 		</div> <!--ovelay_post-->
 
-		<div class="row ver_post_overlay">
+		<div class="row ver_post_overlay visible-lg">
 			<a class = "ver_post_link" href="{% url 'temas:post' post_popular.tema.slug post_popular.id 'recientes' %}">
 			<div class = "ver_post_div">
 				<div class = "ver_post_comments">

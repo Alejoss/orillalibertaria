@@ -23,7 +23,7 @@
 <div class="row clearfix">
 	<div class="col-md-7 column">
         <div class = "perfil_pequena titulo_top pull-right">
-			<img src = "{% static '/static/img/perfil2.jpeg' %}">
+			<img src = "{{perfil_usuario.imagen_perfil}}">
 		</div>
 		{% if propio_usuario %}
 		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas </small></h2>
@@ -79,20 +79,9 @@
 			</button>
 			<hr>
 		</div>
-		<div class = "hidden-sm div_carrusel">
-			<div class = " visible-lg visible-md cuadro_carrusel">
-				<div id="owl-demo" class="owl-carousel owl-theme tema_slide_imagenes ">
-					{% for i in imagenes_display %}
-					<div class="item"><img src=" {{i.url}} " alt="404 imagen libertaria"></div>
-					{% endfor %}
-				</div>
-			</div>
-			<hr>
-			<button type="button" class="btn btn-xs btn-info btn_galeria"
-			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">
-				Ver galería de imágenes</button>
-		</div> <!--div carrousel -->
-		<br>
+		
+			{% include "imagenes_sidebar.html" %}
+		
 	</div> <!--column 4-->
 </div>
 {% endblock %}

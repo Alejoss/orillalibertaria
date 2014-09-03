@@ -38,7 +38,7 @@
 				 <a href="{% url 'temas:inicio' %}" class = "inicio {{flecha_hidden}}">
 					<i class = "inicio_info fa fa-info-circle"></i>
 				 </a>
-				 <a class="display_inline_block navbar-brand" href="{% url 'temas:main' 'recientes' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
+				 <a class="display_inline_block navbar-brand" href="{% url 'temas:main' 'activos' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -67,14 +67,14 @@
 						 {% if num_notificaciones > 0 %}
 						 <span class = "num_notificaciones badge">{{num_notificaciones}} </span>
 						 {% endif %}
-						 <span class = "fa fa-puzzle-piece fa-lg"></span></a>
+						 <span rel="tooltip" title="notificaciones" class = "fa fa-puzzle-piece fa-lg"></span></a>
 					</li>
 					<li class = "hidden-xs">
 						<a href="#" class="mostrar_notificaciones dropdown-toggle" data-toggle="dropdown">
 						 {% if num_notificaciones > 0 %}
 						<span class = "num_notificaciones badge">{{num_notificaciones}} </span>
 						 {% endif %}
-						<span id="spinner" class = "fa fa-puzzle-piece fa-lg"></span></a>
+						<span rel="tooltip" title="Notificaciones" id="spinner" class = "fa fa-puzzle-piece fa-lg"></span></a>
 					</li>
 					<li class="dropdown visible-sm visible-md visible-lg">
 						 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-gear"></span><strong class="caret"></strong></a>

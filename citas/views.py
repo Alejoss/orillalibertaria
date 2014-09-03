@@ -228,8 +228,7 @@ def favoritas(request, username):
         for c in Cfavoritas_objects:
             citas_favoritas.append([c.cita, "", c.fecha])
 
-    imagenes_display = Imagen.objects.all().order_by(
-        '-favoritos_recibidos')[:5]
+    imagenes_display = obtener_imagenes_display(7)
 
     context = {
         'citas_favoritas': citas_favoritas, 'imagenes_display': imagenes_display,
@@ -416,10 +415,6 @@ def coorg_editar(request, cita_id):
                 cita=cita, perfil=perfil_usuario, razon=razon)
             ceditadas_obj.save()
             return redirect('citas:colaborar_organizar')
-        else:
-            form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
-                                                       'autor': cita.autor,
-                                                       'fuente': cita.fuente})
 
     form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
                                                'autor': cita.autor,
@@ -430,8 +425,12 @@ def coorg_editar(request, cita_id):
         if x['autor'] not in lista_de_autores:
             lista_de_autores.append(x['autor'])
 
+    lista_de_autores_json = json.dumps(lista_de_autores)
+
     lista_bersuit = bersuit_vergarabat()
 
     context = {'form_editar_cita': form_editar_cita, 'cita_id': cita_id,
-               'lista_de_autores': lista_de_autores, 'lista_bersuit': lista_bersuit}
+               'lista_de_autores': lista_de_autores, 'lista_bersuit': lista_bersuit,
+               'lista_de_autores_json': lista_de_autores_json}
+
     return render(request, template, context)

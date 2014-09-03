@@ -53,7 +53,7 @@ def marcar_leida_redirect(request, object_id, slug):
     elif tipo_objeto == "imagen":
         return redirect('imagenes:imagen', imagen_id=objeto_id)
     else:
-        return redirect('temas:main', queryset='recientes')
+        return redirect('temas:main', queryset='activos')
 
 
 @login_required

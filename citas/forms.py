@@ -47,7 +47,9 @@ class FormNuevaCita(forms.ModelForm):
 
 class FormEditarCita(forms.Form):
     texto = forms.CharField(max_length=1000, widget=Textarea(attrs={'class': 'form-control', 'id': 'wchar'}))
-    autor = forms.CharField(max_length=150, required=False, widget=TextInput(attrs={'class': 'form-control'}))
+    autor = forms.CharField(max_length=150, required=False,
+                            widget=TextInput(attrs={'class': 'form-control',
+                                                    'id': 'autor'}))
     fuente = forms.CharField(max_length=150, required=False, widget=TextInput(attrs={'class': 'form-control'}))
     razon = forms.CharField(
         widget=TextInput(attrs={'class': "form-control", 'placeholder': '¿Qué es lo que estaba mal?'}))

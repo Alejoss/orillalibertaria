@@ -1,6 +1,14 @@
 {% extends "base_forms.html" %}
 {% load staticfiles %}
 
+{% block form_specific_css %}
+<link href="{% static 'css/jquery-ui.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.structure.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.theme.min_ol_autocomplete.css' %}" rel="stylesheet">
+
+{% endblock form_specific_css %}
+
+
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Editar Frase </h2>
@@ -85,8 +93,17 @@
 {% endblock description %}
 
 {% block extra_javascript %}
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <script>
 $(document).ready(function(){
+
+  /* autocomplete */
+  var autores_json = JSON.parse('{{lista_de_autores_json|safe}}');
+  $("#autor").autocomplete({
+    source: autores_json,
+    minLength: 2,
+    autoFocus: true
+  });
 
   /* bersuit vergarabat*/
   $.validator.addMethod("seleccion_correcta", function(value, element){
@@ -138,7 +155,7 @@ $(document).ready(function(){
     messages: {
       texto: "*La frase debe tener mínimo 15 y máximo 500 caracteres.",
       autor: "*Proporciona un autor, hasta 75 caracteres.",
-      fuente: "*máximo 75 caracteres."
+      fuente: "*máximo 75 caracteres.",
       razon: "*Describe qué estaba mal. Ej: 'ortografía', 'fuente', 'traducción'",
       bersuit: "¿Eres humano?",
       vergarabat: "Si no eres un spam bot, contáctanos y cuéntanos de este error. Recuerda que ésta página está programada para Firefox y Chrome."

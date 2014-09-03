@@ -81,14 +81,14 @@ def authcheck(request):
     if user is not None:
         # Si existe, hace login a ese usuario y lo guarda en "request"
         auth.login(request, user)
-        return redirect('temas:main', 'recientes')
+        return redirect('temas:main', 'activos')
     else:
         return redirect('perfiles:login')
 
 
 def logout(request):
     auth.logout(request)  # Logout el user guardado en Request
-    return redirect('temas:main', 'recientes')
+    return redirect('temas:main', 'activos')
 
 
 def registrar(request):
@@ -107,7 +107,7 @@ def registrar(request):
             perfil_nuevo, created = Perfiles.objects.get_or_create(
                 usuario=user)
             perfil_nuevo.save()
-            return HttpResponseRedirect(reverse('temas:main', kwargs={'queryset': u'recientes'}))
+            return HttpResponseRedirect(reverse('temas:main', kwargs={'queryset': u'activos'}))
         else:
             error = "error en form.is_valid"  # !!!
     # Crea un nuevo form vacio. (unbound)

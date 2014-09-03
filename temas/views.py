@@ -89,7 +89,7 @@ def inicio(request):
 
 
 def redirect_main(request):
-    return redirect('temas:main', queryset=u'recientes')
+    return redirect('temas:main', queryset=u'activos')
 
 
 def normalize_query(query_string,
@@ -157,7 +157,7 @@ def buscar(request):
                    'temas_encontrados': temas_encontrados}
         return render(request, template, context)
     else:
-        return redirect('temas:main', queryset=u'recientes')
+        return redirect('temas:main', queryset=u'activos')
 
 
 @page_template('index_page_temas.html')
@@ -193,12 +193,12 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     if queryset == "populares":
         q = "-nivel_popularidad"
         populares = "active"
-    elif queryset == "activos":
-        q = "-nivel_actividad"
-        activos = "active"
-    else:
+    elif queryset == "recientes":
         q = "-fecha_creacion"
         recientes = "active"
+    else:
+        q = "-nivel_actividad"
+        activos = "active"
 
     temas = []
     temas_obj = Temas.objects.order_by(q)
@@ -254,7 +254,8 @@ def nuevo_tema(request):
 
             tema_descripcion_obj.save()
 
-            return HttpResponseRedirect(reverse('temas:main', kwargs={'queryset': (u'recientes')}))
+            return HttpResponseRedirect(reverse('temas:main',
+                                                kwargs={'queryset': (u'recientes')}))
         else:
             pass  # !!! enviar errores
 
