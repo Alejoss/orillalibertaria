@@ -1,6 +1,9 @@
 <div class = "row clearfix">
 {% if video.es_youtube %}
-<div class = "col-md-7">
+<div class = "col-md-offset-1 col-md-6 
+			  col-lg-offset-1 col-lg-5
+              col-sm-offset-1 col-sm-8
+              col-xs-offset-0 col-xs-8">
 	<div class = "div_video thumbnail">
 		<div class="thumbnail js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
 		</div>
@@ -37,25 +40,25 @@
 		</div>
 	</div>
 </div>
-<div class = "col-md-5">
-<div> <!-- foto perfil fecha -->
-<div class = "perfil_pequena">
-	<img src = "{{video.perfil.imagen_perfil}}">
-</div>
-<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
-<small class = "fecha_desde">
-{{hora_procesada_video}}</small>
-</p>
-<hr>
-</div> <!-- foto perfil fecha -->
-<div class = "div_descripcion_video">
-	<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
-		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
+<div class = "col-md-4 col-sm-3 col-xs-4">
+	<div> <!-- foto perfil fecha -->
+	<div class = "perfil_pequena">
+		<img src = "{{video.perfil.imagen_perfil}}">
+	</div>
+	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
+	<small class = "fecha_desde">
+	{{hora_procesada_video}}</small>
 	</p>
-</div>
+	<hr>
+	</div> <!-- foto perfil fecha -->
+	<div class = "div_descripcion_video">
+		<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
+			<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
+		</p>
+	</div>
 </div>
 {% else %}
-<div class = "col-md-7">
+<div class = "col-md-7 col-sm-7">
 	<div class = "div_video thumbnail">
 	<div class = "video_no_youtube">
 	<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Photo-Video-Start-icon.png">
@@ -105,7 +108,8 @@
 		</div>
 	</div>
 </div>
-<div class = "col-md-5">
+
+<div class = "col-md-5 col-sm-7">
 
 <div> <!-- foto perfil fecha -->
 	<div class = "perfil_pequena">
@@ -124,4 +128,7 @@
 	</div>
 </div>
 {% endif %}
+</div>
+<div class = "row">
+	<hr/>
 </div>

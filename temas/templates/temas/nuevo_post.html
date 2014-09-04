@@ -43,7 +43,7 @@ $(document).ready(function(){
 		rules: {
 			texto: {
 				required: true,
-				minlength: 15,
+				minlength: 5,
 				maxlength: 10000
 			}
 		},
@@ -51,7 +51,7 @@ $(document).ready(function(){
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
-			texto: "*El post debe tener min 10, max 10.000 caracteres."
+			texto: "*El post debe tener min 5, max 10.000 caracteres."
 		}
 	});
 });

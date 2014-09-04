@@ -201,13 +201,6 @@
   margin-top: 25px;
   margin-right: 30px;
 }
-
-/*thumbnail post*/
-
-.imagen_video{
-  margin-bottom: 10px;
-}
-
 .thumbnail_main_post{
 	min-height: 115px;
 }
@@ -229,6 +222,31 @@
   width: 100%;
 }
 
+/*thumbnail videos*/
+.imagen_video{
+  max-height: 150px;
+  margin-bottom: 10px;
+}
+
+.imagen_video_small{
+  float: right;
+  max-height: 150px;
+  margin-bottom: 10px;
+  margin-right: 5px;  
+}
+
+.video_des_small{
+  display: inline-block;
+  height: 150px;
+}
+.video_des_small p{
+  margin:15px;
+}
+
+.autor_titulo_video_thumb{
+  margin-top: 50px;
+  margin-left: 15px;
+}
 
 /*buscar main */
 .boton_buscar_main{

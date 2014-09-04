@@ -15,7 +15,7 @@ from endless_pagination.decorators import page_template
 from forms import FormRegistroUsuario, PerfilesForm
 from models import Perfiles
 from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde, \
-    obtener_imagen_tema
+    obtener_imagen_tema, obtener_respuestas_post
 from temas.utils import obtener_posts_populares
 from temas.models import Temas
 from temas.models import Posts, Respuestas
@@ -232,13 +232,14 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
             if Respuestas.objects.filter(post_respuesta=p).exists():
                 respuesta = Respuestas.objects.get(post_respuesta=p)
                 usuario_respuesta = respuesta.post_padre.creador.nickname
-                post.extend([True, usuario_respuesta])
+                es_respuesta = True
             else:
                 # !!! Prueba para ver respuestas descuadradas (respuestas sin post padre)
-                post.extend([False, ""])
+                es_respuesta = False
+                usuario_respuesta = None
         else:
-            post.extend([False, ""])
-
+            es_respuesta = False
+            usuario_respuesta = None
         if request.user.is_authenticated():
             voted_status = obtener_voted_status(p, perfil_usuario_visitante)
         else:
@@ -249,12 +250,10 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
 
         texto_procesado = procesar_espacios(p.texto)
         hora_procesada = tiempo_desde(p.fecha)
+        respuestas_post = obtener_respuestas_post(p)
 
-        post.append(voted_status)
-        post.append(num_respuestas)
-        post.append(post_en_video)
-        post.append(texto_procesado)
-        post.append(hora_procesada)
+        post = [p, es_respuesta, usuario_respuesta, voted_status, num_respuestas, post_en_video,
+                texto_procesado, hora_procesada, respuestas_post]
 
         #suma el post a la lista de posts
         posts.append(post)

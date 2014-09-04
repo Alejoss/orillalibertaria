@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load tz %}
 
 {% block extra_css %}
 {% load staticfiles %}
@@ -15,8 +14,8 @@
 <!-- post_padre -si el post respuesta-->
 <div class = "row">
 {% if post.0.es_respuesta %}
-		<h5 id = mostrar_post_padre class="text-muted">
-			Mostrar el post de {{post_padre.0.nickname}}
+		<h5 id = "mostrar_post_padre" class="text-muted">
+			Mostrar el post de {{post_padre.0.creador.nickname}}
 			<i class="fa fa-comments-o"></i>
 		</h5>
 
@@ -75,7 +74,7 @@
 
 		{% else %}
 
-			<div class = "col-md-2">
+			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
 					<div class = "btn-group-vertical">
 					{% if user.is_authenticated %}
@@ -103,7 +102,7 @@
 					</div>
 				</div>
 			</div>
-			<div class = "col-md-10">
+			<div class = "col-md-10 col-sm-10 col-xs-10">
 				<div class="panel panel-success post_resaltado_success">
 					<div class="panel-body">
 						<p class = "text truncate">
@@ -212,7 +211,7 @@
 <!-- Post. -->
 	<div class = "row">
 		<br>
-		<div class = "col-md-2">
+		<div class = "col-md-2 col-sm-2 col-xs-2">
 			<div class = "control_votos">
 				<div class = "btn-group-vertical">
 					{% if user.is_authenticated %}
@@ -240,7 +239,7 @@
 				</div>
 			</div>
 		</div>
-		<div class = "col-md-10">
+		<div class = "col-md-10 col-sm-10 col-xs-10">
 			<div class="panel panel-warning post_resaltado_warning">
 				<div class="panel-body">
 					<p class = "text truncate">
@@ -315,7 +314,7 @@
 <div class = "row">
 {% for respuesta in respuestas %}
 <div class = "post">
-	<div class = "col-md-2">
+	<div class = "col-md-2 col-sm-2 col-xs-2">
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
 				{% if user.is_authenticated %}
@@ -343,7 +342,7 @@
 			</div>
 		</div>
 	</div>
-	<div class = "col-md-10">
+	<div class = "col-md-10 col-sm-10 col-xs-10">
 		<div class="panel panel-info post_resaltado_info">
 			<div class="panel-body">
 				<p class = "text truncate">
@@ -370,6 +369,12 @@
 					</div>
 				</div>
 				{% endif %}
+				<div class = "footer_respuestas pull-right">
+		 			<a href = "{% url 'temas:post' tema.0.slug respuesta.0.id 'recientes' %} ">
+		 				{{respuesta.1}}
+		 			<span class="fa fa-comments"></span>
+		 			<span class="fa fa-chevron-right"> </span>  </a>
+		 		</div>
 				<div class = "perfil_pequena"> <!-- perfil pequeña -->
 						<img src = "{{respuesta.0.creador.imagen_perfil}}">
 					</div>
@@ -380,20 +385,15 @@
 					<small class = "fecha_desde">{{respuesta.4}} </small>
 				</p>
 				</div>
-				<div class = "footer_respuestas pull-right">
-		 			<a href = "{% url 'temas:post' tema.0.slug respuesta.0.id 'recientes' %} ">
-		 				{{respuesta.1}}
-		 			<span class="fa fa-comments"></span>
-		 			<span class="fa fa-chevron-right"> </span>  </a>
-		 		</div>
 		 		{% for resp in respuesta.5 %}
 		 			<div class = "row">
-		 				<div class ="col-md-2 col-md-offset-1">
+		 				<div class ="col-md-offset-1 col-sm-offset-1 col-xs-offset-1
+		 					col-md-2 col-sm-2 col-xs-2">
 			 				<div class = "perfil_pequena_respuesta pull-right">
 								<img src = "{{resp.creador.imagen_perfil}}">
 							</div>
 						</div>
-						<div class = "col-md-9">
+						<div class = "col-md-9 col-sm-9 col-xs-9">
 		 				<p class = "respuesta_post pull-left"><small> <i class = "fa fa-comment"></i> - {{resp.texto|truncatewords:50}} </small></p>
 		 				</div>
 		 			</div>
@@ -456,7 +456,7 @@ $(document).ready(function(){
 		rules: {
 			texto: {
 				required: true,
-				minlength: 15,
+				minlength: 5,
 				maxlength: 10000
 			}
 		},
@@ -464,7 +464,7 @@ $(document).ready(function(){
 		onfocusout: false,
 		onkeyup: false,
 		messages: {
-			texto: "*Escribe una post de mínimo 15 y máximo 10.000 caracteres.",
+			texto: "*Escribe una post de mínimo 5 y máximo 10.000 caracteres.",
 		}
 	});
 });

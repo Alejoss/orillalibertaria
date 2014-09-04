@@ -30,7 +30,8 @@
 				<div class = "col-md-4">
 					<div class = "thumbnail">
 						<a class = "thumb_video" href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
-							<div class = "overlay_videos"> 
+							<!--overlay videos -->
+							<div class = "overlay_videos visible-md visible-lg"> 
 								<p class = "overlay_p">
 									{{video.0.titulo}}
 								</p>
@@ -39,17 +40,35 @@
 									<span class = "fa fa-star"></span>
 								</div>
 							</div>
-							<img class = "imagen_video" src = "{{video.1}}" href="">
-
+							<!--overlay videos -->
+							<img class = "visible-md visible-lg imagen_video" src = "{{video.1}}">
+							<img class = "visible-sm visible-xs imagen_video_small" src = "{{video.1}}">
 						</a>
-						<div class = "perfil_pequena">
-							<img src = "{{video.0.perfil.imagen_perfil}}">
+						<div class = "visible-md visible-lg">
+							<div class = "perfil_pequena">
+								<img src = "{{video.0.perfil.imagen_perfil}}">
+							</div>
+							<h4 class = "display_inline_block">
+								<small>en
+								<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
+								{{video.0.tema.nombre|truncatechars:30}}</a></small>
+							</h4>
 						</div>
-						<h4 class = "display_inline_block">
-							<small>en
-							<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
-							{{video.0.tema.nombre|truncatechars:30}}</a></small>
-						</h4>
+						<div class = "video_des_small visible-sm visible-xs">
+						<p>
+							{{video.0.titulo}}
+						</p>
+						<div class = "autor_titulo_video_thumb">
+							<div class = "perfil_pequena">
+								<img src = "{{video.0.perfil.imagen_perfil}}">
+							</div>
+							<h4 class = "display_inline_block">
+								<small>en
+								<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
+								{{video.0.tema.nombre|truncatechars:30}}</a></small>
+							</h4>
+						</div>
+						</div>
 					</div>
 				</div>
 			{% endfor %}
