@@ -23,6 +23,17 @@
 	margin-top: 10px;
 }
 
+.ol_brand{
+	display:inline-block;
+}
+.logo_xs{
+	display: inline-block;
+	height: 40px;
+	margin-top: -15px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	width: auto;
+}
 .logo{
 	display: inline-block;
 	height: 60px;

@@ -24,7 +24,18 @@
   -webkit-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
    margin-bottom: 20px;
-   margin-right: 40px;
+}
+.barco_inicio_der_xs{
+  height: 175px;
+  max-width: 100%;
+  padding: 4px;
+  line-height: 1.428571429;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+   margin-bottom: 20px;
 }
 .dl_inicio{
   margin-left: 25px;

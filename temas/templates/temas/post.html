@@ -129,7 +129,13 @@
 							</div>
 						</div>
 						{% endif %}
-						<div class = "perfil_pequena"> <!-- perfil pequeña -->
+						<div class = "footer_respuestas pull-right">
+				 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
+			 				{{post_padre.2}}
+			 				<span class="fa fa-comments"></span>
+			 				<span class="fa fa-chevron-right"></span> </a>
+				 		</div>
+						<div class = "perfil_pequena">
 							<img src = "{{post_padre.0.creador.imagen_perfil}}">
 						</div>
 						<div class = "nombre_fecha">
@@ -138,12 +144,6 @@
 							<small class = "fecha_desde"> {{post_padre.4}} </small>
 						</p>
 						</div>
-						<div class = "footer_respuestas pull-right">
-				 			<a href = "{% url 'temas:post' tema.0.slug post_padre.0.id 'recientes' %} ">
-			 				{{post_padre.2}}
-			 				<span class="fa fa-comments"></span>
-			 				<span class="fa fa-chevron-right"></span> </a>
-				 		</div>
 					</div> <!--panel footer -->
 				</div> <!-- panel success -->
 			</div> <!-- class md 10 -->

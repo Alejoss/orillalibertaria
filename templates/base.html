@@ -35,10 +35,13 @@
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="navbar-header">
 				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
-				 <a href="{% url 'temas:inicio' %}" class = "inicio {{flecha_hidden}}">
-					<i class = "inicio_info fa fa-info-circle"></i>
+				 <a href="{% url 'temas:inicio' %}" class = "inicio">
+					<i class = "inicio_info {{flecha_hidden}} fa fa-info-circle"></i>
 				 </a>
-				 <a class="display_inline_block navbar-brand" href="{% url 'temas:main' 'activos' %} "> <img class = "logo" src = " {% static '/static/img/logo.png' %} "> Orilla Libertaria</a>
+				 <a class="display_inline_block navbar-brand" href="{% url 'temas:main' 'activos' %} "> 
+				 <img class = "logo" src = " {% static '/static/img/logo.png' %} ">
+				 Orilla Libertaria
+				 </a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
