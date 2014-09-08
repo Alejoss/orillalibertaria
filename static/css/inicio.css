@@ -1,7 +1,7 @@
 .barco_inicio_izq{
   display: inline-block;
   height: 175px;
-  max-width: 100%;
+  width: auto;
   padding: 4px;
   line-height: 1.428571429;
   background-color: #ffffff;
@@ -12,10 +12,10 @@
    margin-bottom: 20px;
    margin-left: 40px;
 }
-.barco_inicio_der{
+.barco_inicio_xs{
   display: inline-block;
   height: 175px;
-  max-width: 100%;
+  width: auto;
   padding: 4px;
   line-height: 1.428571429;
   background-color: #ffffff;
@@ -24,8 +24,10 @@
   -webkit-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
    margin-bottom: 20px;
+   margin-left: 55px;
 }
-.barco_inicio_der_xs{
+.barco_inicio_der{
+  display: inline-block;
   height: 175px;
   max-width: 100%;
   padding: 4px;

@@ -4,10 +4,11 @@
 <div class = "row">
 	<div class = "endless_page_template">
 		{% for i in imagenes %}
-            <div class="col-lg-3 col-sm-4 col-xs-6 panel_imagen">
+            <div class="col-lg-3 col-sm-5 col-xs-11 panel_imagen">
                 <div class = "panel panel-default">
                     <div class = "panel-body">
                         <img data-toggle="modal" data-target="#modal_imagen" src="{{i.0.url}}" class="imagen thumbnail img-responsive">
+                        <div class = "row">
                         <p id = "imagen_{{forloop.counter}}" data-counter="{{forloop.counter}}" class = "forloop_counter hidden">{{forloop.counter}}</p>
                         <p class = "imagen_id hidden">{{i.0.id}}</p>
                         <p class = "favoritos">{{i.0.favoritos_recibidos}}</p>
@@ -17,6 +18,7 @@
                         {% else %}
                         <span class='estrella fa fa-star'></span>
                         {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -11,6 +11,9 @@ body {
 .panel_imagen{
 	margin: 30px;
 }
+.panel_imagen .panel{
+	max-width: 300px !important;
+}
 .estrella {
 	display: inline-block;
 	margin-left: 5px;
@@ -28,7 +31,7 @@ body {
 .reportar {
 	display: inline-block;
     cursor: pointer;
-    margin-top: 2px;
+    margin: 5px;
 }
 .imagen {
 	cursor: pointer;

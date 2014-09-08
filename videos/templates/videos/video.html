@@ -136,7 +136,9 @@
  					<div class ="col-md-offset-1 col-sm-offset-1 col-xs-offset-1
 		 					col-md-2 col-sm-2 col-xs-2">
 	 					<div class = "perfil_pequena_respuesta pull-right">
+	 					<a title = "{{respuesta.creador.nickname}}"  href="{% url 'perfiles:perfil' respuesta.creador.usuario 'recientes' %}">
 							<img src = "{{respuesta.creador.imagen_perfil}}">
+						</a>
 						</div>
 					</div>
 					<div class = "col-md-9 col-sm-9 col-xs-9">

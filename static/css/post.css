@@ -5,7 +5,7 @@
 	border-color: #bce8f1;
 }
 
-.perfil_pequena_respuesta > img{
+.perfil_pequena_respuesta a img{
 	display: inline-block;
 	max-width: 35px;
 	max-height: 35px;
@@ -103,4 +103,24 @@
 	display:block;
 	margin-left: 70px;
 	margin-top: 10px;
+}
+
+.div_goback_tema{
+  	border: 1px solid #dddddd;
+  	border-radius: 4px;
+  	-webkit-transition: all 0.2s ease-in-out;
+    	    transition: all 0.2s ease-in-out;
+}
+
+.goback_tema{
+}
+.goback_tema img{
+	display: inline;
+	max-height: 80px;
+	width: auto;
+	margin: 5px;
+}
+.goback_tema h1{
+	display: inline-block;
+	margin-left: 5px;
 }
