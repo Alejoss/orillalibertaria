@@ -7,6 +7,14 @@
 <link href="{% static 'css/post.css' %}" rel="stylesheet">
 {% endblock extra_css %}
 
+{% block navbar_mobile_xs %}
+<li class = "visible-xs">
+	<a href=" {% url 'perfiles:logout' %} ">Logout</a>
+</li>
+<li class = "visible-xs">
+	<a href="{% url 'perfiles:editar_perfil_des' %}">Editar Perfil</a>
+</li>
+{% endblock navbar_mobile_xs %}
 
 {% block arriba %}
 <div class = "row clearfix">

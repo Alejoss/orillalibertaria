@@ -23,7 +23,6 @@ $('#modal_imagen').on('show.bs.modal', function(e){
 
 function girar_puzzlepiece(puzzle_piece, direccion){
 	if (direccion == "derecha"){
-		console.log("rotar derecha");
 		if ($(puzzle_piece).hasClass("fa-rotate-90")){
 			$(puzzle_piece).addClass("fa-rotate-180");	
 			$(puzzle_piece).removeClass("fa-rotate-90");
@@ -65,9 +64,8 @@ $('#modal_right').on('click', function(){
 	if ($(counter_p_nuevo).length){
 		puzzle = $("#puzzle_modal");
 		girar_puzzlepiece(puzzle, "derecha");
-
 		var counter_nuevo = $(counter_p_nuevo).data('counter');
-		var src_nueva = $(counter_p_nuevo).parent().find('.imagen').attr('src');
+		var src_nueva = $(counter_p_nuevo).parent().prev('.imagen').attr('src');
 		var fav_nuevos = $(counter_p_nuevo).parent().find('.favoritos').text();
 		var estrella_img = $(counter_p_nuevo).parent().find('.marcar_favorito');
 
@@ -94,7 +92,7 @@ $('#modal_left').on('click', function(){
 		girar_puzzlepiece(puzzle, "izquierda");
 
 		var counter_nuevo = $(counter_p_nuevo).data('counter');
-		var src_nueva = $(counter_p_nuevo).parent().find('.imagen').attr('src');
+		var src_nueva = $(counter_p_nuevo).parent().prev('.imagen').attr('src');
 		var fav_nuevos = $(counter_p_nuevo).parent().find('.favoritos').text();
 		var estrella_img = $(counter_p_nuevo).parent().find('.marcar_favorito');
 
