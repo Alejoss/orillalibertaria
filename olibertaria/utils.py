@@ -43,7 +43,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     elif strategy.backend.name == "twitter":
         if response['profile_image_url'] != '':
             url = response['profile_image_url']
-    elif strategy.backend.name == "GoogleOAuth2":
+    elif strategy.backend.name == "google-oauth2":
         print response.get('image')
         print response['image'].get('url')
         if response['image'].get('url') is not None:
