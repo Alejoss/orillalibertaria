@@ -171,7 +171,7 @@ def editar_perfil_des(request):
     context = {'editar_perfil_form': editar_perfil_form,
                'tiene_imagenesfav': tiene_imagenesfav,
                'tiene_frasesfav': tiene_frasesfav,
-               'descripcion': descripcion}
+               'perfil_usuario': perfil_usuario}
 
     return render(request, template, context)
 

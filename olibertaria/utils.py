@@ -44,10 +44,9 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
         if response['profile_image_url'] != '':
             url = response['profile_image_url']
     elif strategy.backend.name == "google-oauth2":
-        print response.get('image')
-        print response['image'].get('url')
         if response['image'].get('url') is not None:
-            url = response['image'].get('url')
+            url_50 = response['image'].get('url')
+            url = url_50.replace("sz=50", "sz=100")
 
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
 
