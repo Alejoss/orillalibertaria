@@ -2,6 +2,7 @@
 import os
 import re
 import pytz
+import random
 from datetime import datetime
 
 from django.core.exceptions import ImproperlyConfigured
@@ -12,6 +13,21 @@ from notificaciones.models import Notificacion
 from videos.models import Videos
 from citas.models import Cita
 from imagenes.models import Imagen
+
+
+def obtener_avatar_large(perfil):
+    avatar_large = None
+    if perfil.imagen_perfil is not None:
+        if "facebook" in perfil.imagen_perfil:
+            avatar_large = "%s?type=large" % (perfil.imagen_perfil)
+        elif "twimg" in perfil.imagen_perfil:
+            avatar_large = (perfil.imagen_perfil).replace("_normal", "")
+        elif "google" in perfil.imagen_perfil:
+            avatar_large = (perfil.imagen_perfil).replace("sz=50", "sz=400")
+    else:
+        avatar_large = "no tiene avatar larga, remplazar con default"
+
+    return avatar_large
 
 
 def obtener_respuestas_post(post):
@@ -45,8 +61,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
             url = response['profile_image_url']
     elif strategy.backend.name == "google-oauth2":
         if response['image'].get('url') is not None:
-            url_50 = response['image'].get('url')
-            url = url_50.replace("sz=50", "sz=100")
+            url = response['image'].get('url')
 
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
 
@@ -70,7 +85,8 @@ def crear_nickname(strategy, details, response, user, *args, **kwargs):
     #pipeline que crea un default nickname para cada usuario.
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
     if perfil_usuario.nickname is None:
-        nickname = "%s_nick" % (user.first_name)
+        rand_num = random.randint(99)
+        nickname = "%s_nick_%s" % (user.username, rand_num)
         perfil_usuario.nickname = nickname
         perfil_usuario.save()
     return kwargs

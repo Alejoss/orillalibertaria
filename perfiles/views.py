@@ -15,7 +15,7 @@ from endless_pagination.decorators import page_template
 from forms import FormRegistroUsuario, PerfilesForm
 from models import Perfiles
 from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde, \
-    obtener_imagen_tema, obtener_respuestas_post
+    obtener_imagen_tema, obtener_respuestas_post, obtener_avatar_large
 from temas.utils import obtener_posts_populares
 from temas.models import Temas
 from temas.models import Posts, Respuestas
@@ -136,6 +136,7 @@ def editar_perfil_des(request):
         perfil=perfil_usuario).exists()
     tiene_frasesfav = Cfavoritas.objects.filter(perfil=perfil_usuario).exists()
     descripcion = perfil_usuario.obtener_descripcion()
+    avatar_large = obtener_avatar_large(perfil_usuario)
 
     if request.method == 'POST':
         form = PerfilesForm(request.POST)
@@ -162,7 +163,7 @@ def editar_perfil_des(request):
 
     editar_perfil_form = PerfilesForm(initial={
         'email': user.email,
-        'descripcion': perfil_usuario.descripcion,
+        'descripcion': descripcion,
         'nickname': perfil_usuario.nickname,
         'link1': perfil_usuario.link1, 'link2': perfil_usuario.link2,
         'link3': perfil_usuario.link3, 'link4': perfil_usuario.link4,
@@ -171,7 +172,7 @@ def editar_perfil_des(request):
     context = {'editar_perfil_form': editar_perfil_form,
                'tiene_imagenesfav': tiene_imagenesfav,
                'tiene_frasesfav': tiene_frasesfav,
-               'perfil_usuario': perfil_usuario}
+               'avatar_large': avatar_large}
 
     return render(request, template, context)
 
@@ -186,14 +187,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
 
     # Datos del usuario
-    avatar_large = None
-    if usuario_perfil.imagen_perfil is not None:
-        if "facebook" in usuario_perfil.imagen_perfil:
-            avatar_large = "%s?type=large" % (usuario_perfil.imagen_perfil)
-        elif "twimg" in usuario_perfil.imagen_perfil:
-            avatar_large = (usuario_perfil.imagen_perfil).replace("_normal", "")
-    else:
-        avatar_large = "no tiene avata larga, remplazar"
+    avatar_large = obtener_avatar_large(usuario_perfil)
 
     nombre_completo = usuario_user.get_full_name()
     puntos_recibidos = usuario_perfil.votos_recibidos
