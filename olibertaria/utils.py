@@ -37,11 +37,17 @@ def obtener_env_secret_key():
 def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
     url = None
+    print strategy.backend.name
     if strategy.backend.name == 'facebook':
         url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
     elif strategy.backend.name == "twitter":
         if response['profile_image_url'] != '':
             url = response['profile_image_url']
+    elif strategy.backend.name == "GoogleOAuth2":
+        print response.get('image')
+        print response['image'].get('url')
+        if response['image'].get('url') is not None:
+            url = response['image'].get('url')
 
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
 

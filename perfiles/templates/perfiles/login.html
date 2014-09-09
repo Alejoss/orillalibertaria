@@ -32,13 +32,17 @@
 	  <a href="{% url 'social:begin' 'facebook' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-facebook">
 	    <i class="fa fa-facebook"></i> Inicia sesión con Facebook
 	  </a>
+	  <a href="{% url 'social:begin' 'google-oauth2' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-google-plus">
+	    <i class="fa fa-google"></i> Inicia sesión con Google
+	  </a>
 	  <a href="{% url 'social:begin' 'twitter' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-twitter">
-	    <i class="fa fa-twitter"></i> Sign in with Twitter
+	    <i class="fa fa-twitter"></i> Inicia sesión con Twitter
 	  </a>
 	</div>
 </div>
 <div class = "col-md-8">
 	<div class = "col-md-8 ">
+	<br>
 		<ul class = "list-group">
 			<li class = "list-group-item list-group-item-info"> Participa con posts y videos en los diferentes temas </li>
 		</ul>
