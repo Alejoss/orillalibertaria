@@ -4,7 +4,7 @@ from perfiles.models import Perfiles
 
 
 class Cita(models.Model):
-    texto = models.CharField(max_length=500, null=True)
+    texto = models.CharField(max_length=1000, null=True)
     autor = models.CharField(max_length=75, null=True)
     fuente = models.CharField(max_length=75, null=True)
     favoritos_recibidos = models.SmallIntegerField(default=0)

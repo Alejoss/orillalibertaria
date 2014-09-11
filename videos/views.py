@@ -52,6 +52,7 @@ def nuevo_video(request, slug):
             nuevo_video.save()
             return redirect('videos:videos_tema', slug=tema.slug, queryset='recientes')
         else:
+            print "form invalid"
             return redirect('videos:nuevo_video', slug=tema.slug)
     else:
         form_nuevo_video = FormNuevoVideo()
