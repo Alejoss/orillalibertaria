@@ -5,7 +5,7 @@ from math import sqrt
 from datetime import datetime
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -16,14 +16,13 @@ from olibertaria.utils import obtener_imagenes_display, obtener_cita, bersuit_ve
 from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
-from imagenes.models import Imagen
 from notificaciones.models import Notificacion
 
 
 @page_template('index_page_citas.html')  # endless pagination
 def index(request, queryset, template='citas/index.html', extra_context=None):
     if request.user.is_authenticated():
-        #si user esta login:
+        #si user esta login, obtener citas favoritas del usuario:
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         cfavoritas_objects = Cfavoritas.objects.filter(eliminado=False, perfil=perfil_usuario)
         citas_favoritas = []
@@ -33,7 +32,7 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
         #no login
         citas_favoritas = []
 
-    #queryset y active button
+    #queryset y clase "active" para button de filtro
     autor = ""
     recientes = ""
     populares = ""
@@ -55,6 +54,7 @@ def index(request, queryset, template='citas/index.html', extra_context=None):
     for c in citas_obj:
         cita = obtener_cita(c)
         if request.user.is_authenticated():
+            # sumar clase a las citas favoritas del usuario
             if c in citas_favoritas:
                 citas.append([cita, "dorado"])
             else:
@@ -81,7 +81,6 @@ def cita(request, cita_id):
 
     # verificar si es favorita
     if request.user.is_authenticated():
-        #si usuario login
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         cfavoritas_objects = Cfavoritas.objects.filter(
             eliminado=False, perfil=perfil_usuario)
@@ -121,7 +120,7 @@ def nueva(request):
         else:
             pass
 
-    #obtener lista de autores para ayudar al usuario.
+    # obtener lista de autores para ayudar al usuario. (sidebar+autocomplete)
     lista_de_autores = []
     lista_de_autores_obj = Cita.objects.filter(
         eliminada=False).values('autor').order_by('autor')
@@ -142,10 +141,10 @@ def nueva(request):
 
 @login_required
 def marcar_favorito(request):
-    #marca una cita como favorita
+    # AJAX marca una cita como favorita
     if request.is_ajax():
         cita_id = request.GET.get('frase_id', '')
-        cita = Cita.objects.get(pk=cita_id)
+        cita = get_object_or_404(Cita, pk=cita_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         # revisa si ya marco como favorita a esa cita
         fue_eliminada = False
@@ -193,7 +192,7 @@ def marcar_favorito(request):
 
             return HttpResponse('nueva frase favorita')
     else:
-        return HttpResponse("error_fav_cita")
+        return HttpResponse("ajax error fav cita")
 
 
 def favoritas(request, username):
@@ -213,6 +212,7 @@ def favoritas(request, username):
             for c in Cfavoritas_objects:
                 citas_favoritas.append([c.cita, "dorado", c.fecha])
         else:
+            # obiene las citas favoritas del usuario visitante y suma la clase "dorado".
             perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
             cfavoritas_usuario_visitante = Cfavoritas.objects.filter(
                 perfil=perfil_usuario_visitante, eliminado=False)
@@ -228,6 +228,7 @@ def favoritas(request, username):
         for c in Cfavoritas_objects:
             citas_favoritas.append([c.cita, "", c.fecha])
 
+    # slider imagenes
     imagenes_display = obtener_imagenes_display(7)
 
     context = {
@@ -239,10 +240,14 @@ def favoritas(request, username):
 
 @login_required
 def colaborar_organizar(request):
+    # Pagina que obtiene las citas eliminadas y las despliega.
+
     template = 'citas/citas_coorg.html'
     citas_eliminadas = Cita.objects.filter(
         eliminada=True, removidatotalmente=False)
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    
+    # diferentes niveles de calificacion de las citas.
     success_uno = "#dff0d8"
     success_dos = "#d0e9c6"
     danger_uno = "#f2dede"
@@ -254,7 +259,7 @@ def colaborar_organizar(request):
     for cita in citas_eliminadas:
         frase = [cita.texto, cita.autor, cita.fuente, cita.id]
         correcciones = []
-        # ediciones
+        # ediciones realizadas a las citas eliminadas.
         if Ceditadas.objects.filter(cita=cita).exists():
             correcciones_objects = Ceditadas.objects.filter(cita=cita)
             for c in correcciones_objects:
@@ -283,6 +288,7 @@ def colaborar_organizar(request):
         else:
             color = default
             estado.append(["flag"])
+
         # accion del usuario.
         accion_usr = ["", ""]
         if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
@@ -313,9 +319,10 @@ def colaborar_organizar(request):
 
 @login_required
 def denunciar_cita(request):
+    reputacion_necesaria = 10
     if request.is_ajax:
         cita_id = request.GET.get('frase_id', '')
-        cita_denunciada = Cita.objects.get(id=cita_id)
+        cita_denunciada = get_object_or_404(Cita, id=cita_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         ya_denuncio = False
         ya_denuncio = Cdenunciadas.objects.filter(
@@ -323,12 +330,13 @@ def denunciar_cita(request):
         if ya_denuncio:
             return HttpResponse("cita ya denunciada")
         else:
-            if perfil_usuario.votos_recibidos > 10:
+            # marcar la cita como denunciada si el usuario tiene la reputacion necesaria
+            if perfil_usuario.votos_recibidos > reputacion_necesaria:
                 cdenunciada_obj = Cdenunciadas(
                     cita=cita_denunciada, perfil=perfil_usuario)
                 cita_denunciada.denunciada += 1
                 if cita_denunciada.denunciada > 3:
-                    #Notificacion imagen denunciada
+                    # Notificacion imagen eliminada para quien subio la imagen.
                     notificacion_denuncia = Notificacion(target=cita_denunciada.perfil,
                                                          objeto_id=cita_denunciada.id, tipo_objeto="cita",
                                                          tipo_notificacion="denuncia")
@@ -342,17 +350,20 @@ def denunciar_cita(request):
 
 @login_required
 def marcar_visto(request, cita_id):
-    cita = Cita.objects.get(id=cita_id)
+    # obtiene la cita eliminada y reduce el numero de "denuncias" por con 1.
+    # si la cita tiene <= 1 numero de denuncias, regresa al Banco de Frases
+    cita = get_object_or_404(Cita, id=cita_id)
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
+
     if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
         cdenunciada_obj = Cdenunciadas.objects.get(
             cita=cita, perfil=perfil_usuario)
-        if cdenunciada_obj.eliminado is False:
-            cita.denunciada -= 2
-            cdenunciada_obj.eliminado = True
+        if cdenunciada_obj.eliminado is False:  # Si el mismo usuario había denunciado esa cita antes.
+            cita.denunciada -= 2  # remueve la denuncia y ademas marca el visto (x2)
+            cdenunciada_obj.eliminado = True  # el cdenunciada_obj es marcado como eliminado
             cdenunciada_obj.save()
         elif cdenunciada_obj.eliminado is True:
-            pass
+            pass  # esta marcando con visto a una que ya marco con visto.
     else:
         cita.denunciada -= 1
         cdenunciada_obj = Cdenunciadas(
@@ -368,8 +379,9 @@ def marcar_visto(request, cita_id):
 
 @login_required
 def marcar_x(request, cita_id):
+    # obtiene la cita eliminada y aumenta el numero de "denuncias" por con 1.
+    # si la cita tiene <= 7 numero de denuncias, es removida totalmente
     cita = Cita.objects.get(id=cita_id)
-    print cita.denunciada
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
     if Cdenunciadas.objects.filter(cita=cita, perfil=perfil_usuario).exists():
         cdenunciada_obj = Cdenunciadas.objects.get(
@@ -395,7 +407,7 @@ def marcar_x(request, cita_id):
 @login_required
 def coorg_editar(request, cita_id):
     template = 'citas/editar_cita.html'
-    cita = Cita.objects.get(id=cita_id)
+    cita = get_object_or_404(Cita, id=cita_id)
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
     if request.method == 'POST':
         form = FormEditarCita(request.POST)
@@ -412,13 +424,15 @@ def coorg_editar(request, cita_id):
                 cita.fuente = fuente
             cita.save()
             ceditadas_obj = Ceditadas(
-                cita=cita, perfil=perfil_usuario, razon=razon)
+                cita=cita, perfil=perfil_usuario, razon=razon)  # campo que guarda datos sobre la edición.
             ceditadas_obj.save()
             return redirect('citas:colaborar_organizar')
 
     form_editar_cita = FormEditarCita(initial={'texto': cita.texto,
                                                'autor': cita.autor,
                                                'fuente': cita.fuente})
+
+    # lista de autores para ayudar al usuario (autocomplete - sidebar)
     lista_de_autores = []
     lista_de_autores_obj = Cita.objects.filter(eliminada=False).values('autor').order_by('autor')
     for x in lista_de_autores_obj:
@@ -427,6 +441,7 @@ def coorg_editar(request, cita_id):
 
     lista_de_autores_json = json.dumps(lista_de_autores)
 
+    # honeypot
     lista_bersuit = bersuit_vergarabat()
 
     context = {'form_editar_cita': form_editar_cita, 'cita_id': cita_id,

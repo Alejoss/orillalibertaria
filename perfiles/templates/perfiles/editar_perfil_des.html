@@ -1,7 +1,7 @@
 {% extends "base_forms.html" %}
+{% load staticfiles %}
 
 {% block form_specific_css %}
-{% load staticfiles %}
 <link href="{% static 'css/perfil.css' %}" rel="stylesheet">
 {% endblock form_specific_css %}
 
@@ -99,10 +99,11 @@
 
 {% block description %}
 <div class = "info_editar_perfil_des">
-	<div class = "thumbnail">
+	<div class = "div_imagen_perfil">
 		<img class = "imagen_perfil" src = "{{avatar_large}}">
 	</div>
 	<div class = "pull-right">
+		<br>	
 		<h4> {{nickname}} </h4>
 		<h5 class = "text-muted"> {{user.first_name}} {{user.last_name}} </h5>
 		<h5 class = "text-muted"> {{user.email}} </h5>

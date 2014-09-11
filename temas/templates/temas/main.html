@@ -3,6 +3,9 @@
 
 {% block extra_css %}
 <link href="{% static 'css/main.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.structure.min_ol_autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery-ui.theme.min_ol_autocomplete.css' %}" rel="stylesheet">
 {% endblock extra_css %}
 
 
@@ -12,7 +15,7 @@
 	<a href="{% url 'temas:nuevo_tema'%}">Crear un tema nuevo</a>
 </li>
 <li class = "visible-xs">
-	<a href="{% url 'citas:index' 'recientes' %}">Banco de frases</a>
+	<a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a>
 </li>
 <li class = "visible-xs">
 	<a href="{% url 'imagenes:index' 'recientes' %}">Galería de imágenes</a>

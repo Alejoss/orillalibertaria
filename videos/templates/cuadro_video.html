@@ -2,8 +2,8 @@
 {% if video.es_youtube %}
 <div class = "col-md-offset-1 col-md-6 
 			  col-lg-offset-1 col-lg-5
-              col-sm-offset-1 col-sm-8
-              col-xs-offset-0 col-xs-8">
+              col-sm-offset-1 col-sm-12
+              col-xs-offset-0 col-xs-12">
 	<div class = "div_video thumbnail">
 		<div class="thumbnail js-lazyYT" data-youtube-id="{{video.youtube_id}}" data-width="400" data-height="300">
 		</div>
@@ -40,7 +40,8 @@
 		</div>
 	</div>
 </div>
-<div class = "col-md-4 col-sm-3 col-xs-4">
+<div class = "col-sm-offset-1 col-xs-offset-1 col-md-offset-0 col-lg-offset-0
+              col-md-4 col-sm-10 col-xs-10">
 	<div> <!-- foto perfil fecha -->
 	<div class = "perfil_pequena">
 		<img src = "{{video.perfil.imagen_perfil}}">

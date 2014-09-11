@@ -10,7 +10,7 @@ from endless_pagination.decorators import page_template
 from perfiles.models import Perfiles
 from temas.models import Temas, Posts
 from models import Notificacion
-from olibertaria.utils import obtener_args_notificacion, obtener_num_notificaciones
+from olibertaria.utils import obtener_args_notificacion, obtener_num_notificaciones, obtener_avatar_large
 
 
 @login_required
@@ -21,8 +21,10 @@ def marcar_leidas(request):
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
         if cantidad == 'todos':
+            # marca todas las notificaciones como leidas. desde notificaciones_index
             notificaciones_marcar = Notificacion.objects.filter(target=perfil_usuario, leida=False)
         else:
+            # marca cinco notificaciones como leídas. desde el modal
             notificaciones_marcar = Notificacion.objects.filter(
                 target=perfil_usuario).order_by('-id')[:5]
 
@@ -37,11 +39,12 @@ def marcar_leidas(request):
 
 @login_required
 def marcar_leida_redirect(request, object_id, slug):
-    #Marca una notificacion como leida y redirige a la pagina del objeto de la notificacion.
+    # Marca una notificacion como leida y redirige a la pagina del objeto de la notificacion.
     notificacion = Notificacion.objects.get(id=object_id)
     if notificacion.leida is False:
         notificacion.leida = True
         notificacion.save()
+
     tipo_objeto = notificacion.tipo_objeto
     objeto_id = notificacion.objeto_id
     if tipo_objeto == "post":
@@ -59,10 +62,10 @@ def marcar_leida_redirect(request, object_id, slug):
 @login_required
 @page_template('index_page_notificaciones.html')
 def notificaciones_index(request, template='notificaciones/notificaciones_index.html', extra_context=None):
-    #muestra todas las notificaciones.
+    # muestra todas las notificaciones.
     # Datos del usuario
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
-    avatar_large = "%s?type=large" % (perfil_usuario.imagen_perfil)
+    avatar_large = obtener_avatar_large(perfil_usuario)
     puntos_recibidos = perfil_usuario.votos_recibidos
     num_posts = Posts.objects.filter(creador=perfil_usuario).count()
     num_temas = Temas.objects.filter(creador=perfil_usuario).count()
@@ -85,7 +88,7 @@ def notificaciones_index(request, template='notificaciones/notificaciones_index.
                'puntos_recibidos': puntos_recibidos, 'num_posts': num_posts, 'num_temas': num_temas,
                'creo_temas': creo_temas, 'temas_usuario': temas_usuario, 'avatar_large': avatar_large}
 
-    if extra_context is not None:
+    if extra_context is not None:  # endless pagination
         context.update(extra_context)
 
     return render(request, template, context)

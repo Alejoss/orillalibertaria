@@ -3,7 +3,7 @@
 
 from math import sqrt
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -20,14 +20,15 @@ from olibertaria.utils import bersuit_vergarabat
 @page_template('index_page_imagenes.html')
 def index(request, queryset, template='imagenes/galeria.html', extra_context=None):
     if request.user.is_authenticated():
-        #si esta login
+        #si esta login.
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         imagenes_favoritas_obj = Ifavoritas.objects.filter(
             perfil=perfil_usuario, eliminado=False)
-        imagenes_favoritas_ids = []
+        imagenes_favoritas_ids = []  # contiene las ids de las imagenes fav del usuario.
         for i in imagenes_favoritas_obj:
             imagenes_favoritas_ids.append(int(i.imagen.id))
 
+    # Filtra el Queryset y asigna la clase active para el boton del filtro.
     populares = ""
     recientes = ""
     q = ""
@@ -43,14 +44,15 @@ def index(request, queryset, template='imagenes/galeria.html', extra_context=Non
     for imagen in imagenes_obj:
         es_favorita = "no_es_favorita"
         if request.user.is_authenticated():
-        #si esta login
+        #si esta login marca las favoritas del usuario.
             if imagen.id in imagenes_favoritas_ids:
                 es_favorita = "es_favorita"
         imagenes.append([imagen, es_favorita])
 
     context = {'imagenes': imagenes, 'populares':
                populares, 'recientes': recientes}
-    if extra_context is not None:
+
+    if extra_context is not None:  # endless pagination
         context.update(extra_context)
     return render(request, template, context)
 
@@ -90,6 +92,7 @@ def nueva(request):
             nueva_imagen = Imagen(url=url, perfil=perfil_usuario)
             nueva_imagen.save()
             if favorita:
+                # marco como favorita la imagen que subio.
                 nueva_imagen.favoritos_recibidos += 1
                 Ifavorita_obj = Ifavoritas(
                     imagen=nueva_imagen, perfil=perfil_usuario)
@@ -99,7 +102,7 @@ def nueva(request):
             return HttpResponseRedirect(reverse('imagenes:index', args=[u'recientes']))
         else:
             form_nueva_imagen = FormNuevaImagen()
-            lista_bersuit = bersuit_vergarabat()
+            lista_bersuit = bersuit_vergarabat()  # honeypot
             context = {'form_nueva_imagen': form_nueva_imagen, 'lista_bersuit': lista_bersuit}
             return render(request, template, context)
     else:
@@ -113,7 +116,7 @@ def nueva(request):
 def marcar_favorito(request):
     if request.is_ajax():
         imagen_id = request.GET.get('imagen_id', '')
-        imagen = Imagen.objects.get(pk=imagen_id)
+        imagen = get_object_or_404(Imagen, pk=imagen_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         # revisa si ya marco como favorito a esa imagen
         fue_eliminado = False
@@ -124,6 +127,7 @@ def marcar_favorito(request):
                 imagen=imagen, perfil=perfil_usuario)
             fue_eliminado = registro_favorito.eliminado
             if fue_eliminado:
+                # el usuario había desmarcado esa imagen como favorita
                 imagen.favoritos_recibidos += 1
                 registro_favorito.eliminado = False
                 imagen.save()
@@ -147,6 +151,7 @@ def marcar_favorito(request):
 
         #Notificaciones de imagen
             if perfil_usuario != imagen.perfil:
+                # para que no le lleguen notificaciones al usuario de sus propias acciones
                 notificacion_imagen_fav = Notificacion(actor=perfil_usuario, target=imagen.perfil,
                                                        objeto_id=imagen.id, tipo_objeto="imagen",
                                                        tipo_notificacion="fav_voteup")
@@ -159,31 +164,25 @@ def marcar_favorito(request):
                 notificacion_imagen_num.save()
 
         return HttpResponse("favorito marcado")
-    # falta 404 si el request no es ajax.
 
 
 @login_required
 def marcar_portada_ajax(request):
-    print "llego ajax function"
     if request.is_ajax():
-        print "request is ajax"
         imagen_id = request.GET.get('imagen_id', '')
-        imagen = Imagen.objects.get(id=imagen_id)
-        print imagen.id
+        imagen = get_object_or_404(Imagen, id=imagen_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
         ya_tiene_portada = Ifavoritas.objects.filter(
             perfil=perfil_usuario, eliminado=False, portada=True).exists()
         if ya_tiene_portada:
-            print "ya tiene portada"
             portada_anterior = Ifavoritas.objects.filter(
-                perfil=perfil_usuario, eliminado=False, portada=True)
+                perfil=perfil_usuario, portada=True)
             for p in portada_anterior:
-                print p.imagen.id
+                #  desmarca la portada anterior
                 p.portada = False
                 p.save()
             nueva_portada = Ifavoritas.objects.get(
                 imagen=imagen, perfil=perfil_usuario, eliminado=False)
-            print nueva_portada.imagen.id
             nueva_portada.portada = True
             nueva_portada.save()
         else:
@@ -191,13 +190,12 @@ def marcar_portada_ajax(request):
                 imagen=imagen, perfil=perfil_usuario, eliminado=False)
             registro_portada.portada = True
             registro_portada.save()
-    return HttpResponse('nueva portada')
-    #!!! flata 404 si no es ajax
+    return HttpResponse('nueva portada marcada')
 
 
 def favoritas(request, username):
     template = 'imagenes/favoritas.html'
-    user_object = User.objects.get(username=username)
+    user_object = get_object_or_404(User, username=username)
     perfil_usuario = Perfiles.objects.get(usuario=user_object)
     propio_usuario = False
     Ifavoritas_objects = Ifavoritas.objects.filter(perfil=perfil_usuario, eliminado=False).order_by('-fecha')
@@ -205,11 +203,11 @@ def favoritas(request, username):
 
     if request.user.is_authenticated():
         if request.user == user_object:
-            propio_usuario = True
+            propio_usuario = True  # usuario viendo sus imágenes favoritas
         if propio_usuario:
             for i in Ifavoritas_objects:
                 if i.portada is True:
-                    imagenes_favoritas.append([i.imagen, True])
+                    imagenes_favoritas.append([i.imagen, True])  # imagen de portada
                 else:
                     imagenes_favoritas.append([i.imagen, False])
         else:
@@ -220,6 +218,7 @@ def favoritas(request, username):
             for x in favoritas_usuario_visitante_obj:
                 favoritas_usuario_visitante.append(x.imagen)
             for i in Ifavoritas_objects:
+                # suma la clase a las favoritas del usuario visitante
                 if i.imagen in favoritas_usuario_visitante:
                     imagenes_favoritas.append([i.imagen, "es_favorita"])
                 else:
@@ -227,8 +226,6 @@ def favoritas(request, username):
     else:
         for i in Ifavoritas_objects:
             imagenes_favoritas.append([i.imagen, "no_es_favorita"])
-
-    print propio_usuario
 
     context = {
         'imagenes_favoritas': imagenes_favoritas, 'perfil_usuario': perfil_usuario,
@@ -239,17 +236,18 @@ def favoritas(request, username):
 @login_required
 def denunciar(request):
     if request.is_ajax():
+        reputacion_necesaria = 10
         imagen_id = request.GET.get('imagen_id')
-        imagen = Imagen.objects.get(pk=imagen_id)
+        imagen = get_object_or_404(Imagen, pk=imagen_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
-
         ya_denuncio = False
         ya_denuncio = Idenunciadas.objects.filter(
             imagen=imagen, perfil=perfil_usuario).exists()
         if ya_denuncio:
             return HttpResponse('imagen ya denunciada')
         else:
-            if perfil_usuario.votos_recibidos > 10:
+            if perfil_usuario.votos_recibidos > reputacion_necesaria:
+                # crea un idenunciada object si el usuario tiene la reputación
                 idenunciada_object = Idenunciadas(
                     imagen=imagen, perfil=perfil_usuario)
                 imagen.denunciada += 1
@@ -257,7 +255,7 @@ def denunciar(request):
                 if imagen.denunciada > 3:
                     imagen.eliminada = True
 
-                    #Notificacion imagen denunciada
+                    #Notificacion imagen eliminada al que subio la imagen
                     notificacion_denuncia = Notificacion(target=imagen.perfil,
                                                          objeto_id=imagen.id, tipo_objeto="imagen",
                                                          tipo_notificacion="denuncia")
@@ -265,7 +263,6 @@ def denunciar(request):
 
                 imagen.save()
         return HttpResponse('imagen denunciada')
-    # falta 404 si request no es ajax
 
 
 @login_required
@@ -279,15 +276,16 @@ def colaborar_organizar(request):
     if hay_imagenes_denunciadas:
         imagenes_denunciadas_obj = Imagen.objects.filter(
             eliminada=True, removidatotalmente=False)
+
+        # diferentes tonos para la cantidad de denuncias recibidas
         success_uno = "#dff0d8"
         success_dos = "#d0e9c6"
         danger_uno = "#f2dede"
         danger_dos = "#ebcccc"
         default = "#ebebeb"
 
-        # iconos & color de imagenes denunciadas.
+        # iconos & color de imagenes denunciadas. font awesome icons
         for i in imagenes_denunciadas_obj:
-            print i.denunciada
             estado = []
             color = ""
             if i.denunciada < 4:
@@ -307,7 +305,8 @@ def colaborar_organizar(request):
             else:
                 color = default
 
-            # accion usuario
+            # accion usuario. Revisa si el usuario ya a marcado con visto o con x
+            # cambia el icono a -circle con respecto a la accion que haya hecho
             accion_usr = ["", ""]
             if Idenunciadas.objects.filter(imagen=i, perfil=perfil_usuario).exists():
                 idenunciada_obj = Idenunciadas.objects.get(
@@ -319,7 +318,7 @@ def colaborar_organizar(request):
 
             imagenes_denunciadas.append([i, color, estado, accion_usr])
 
-        #!!! progress bar
+        # progress bar. 100% = ya no quedan imágenes denunciadas.
         num_imagenes_eliminadas = imagenes_denunciadas_obj.count()
         max_y = num_imagenes_eliminadas * 3
         y = 0
@@ -337,25 +336,28 @@ def colaborar_organizar(request):
 
 @login_required
 def marcar_visto(request, imagen_id):
-    imagen = Imagen.objects.get(id=imagen_id)
-    print imagen.denunciada
+    imagen = get_object_or_404(Imagen, id=imagen_id)
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
     if Idenunciadas.objects.filter(imagen=imagen, perfil=perfil_usuario).exists():
+        # Usuario ya marco esta imagen
         idenunciada_obj = Idenunciadas.objects.get(
             imagen=imagen, perfil=perfil_usuario)
         if idenunciada_obj.eliminado is False:
+            # Usuario habia marcado con X y ahora marca con visto. (x2)
             imagen.denunciada -= 2
             idenunciada_obj.eliminado = True
             idenunciada_obj.save()
         elif idenunciada_obj.eliminado is True:
+            # Usuario ya marco con visto. No pasa nada.
             pass
     else:
-        imagen.denunciada -= 1
+        imagen.denunciada -= 1  # visto reduce numero de denuncias por uno.
         idenunciada_obj = Idenunciadas(
             imagen=imagen, perfil=perfil_usuario, eliminado=True)
         idenunciada_obj.save()
 
     if imagen.denunciada <= 1:
+        # retira la imaginadas de la pagina de eliminadas
         imagen.eliminada = False
     imagen.save()
 
@@ -364,9 +366,7 @@ def marcar_visto(request, imagen_id):
 
 @login_required
 def marcar_x(request, imagen_id):
-    print "llego marcar_x"
     imagen = Imagen.objects.get(id=imagen_id)
-    print imagen.denunciada
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
     if Idenunciadas.objects.filter(imagen=imagen, perfil=perfil_usuario).exists():
         idenunciada_obj = Idenunciadas.objects.get(
@@ -383,6 +383,7 @@ def marcar_x(request, imagen_id):
         idenunciada_obj.save()
 
     if imagen.denunciada >= 7:
+        # remueve la imagen totalmente
         imagen.removidatotalmente = True
     imagen.save()
 

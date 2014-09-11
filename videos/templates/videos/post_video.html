@@ -252,20 +252,6 @@
 					<br/>
 				</div>
 				<div class="panel-footer">
-					<div class = "perfil_pequena">
-						<img src = "{{post.0.creador.imagen_perfil}}">
-					</div>
-					<div class = "nombre_fecha">
-					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
-						{{post.0.creador.usuario.username}}</a>
-						{% if post.0.es_respuesta %}
-						en respuesta a 
-						<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
-						{{post_padre.0.creador.usuario.username}}</a> 
-						{% endif %}
-						<small class = "fecha_desde">{{post.4}}</small>
-					</p>
-					</div>
 					{% if post.0.creador.usuario == request.user %}
 					<div class = "eliminar_editar pull-left">
 						<div class = "btn-group dropup">
@@ -283,6 +269,20 @@
 						</div>
 					</div>
 					{% endif %}
+					<div class = "perfil_pequena">
+						<img src = "{{post.0.creador.imagen_perfil}}">
+					</div>
+					<div class = "nombre_fecha">
+					<p><a href ="{% url 'perfiles:perfil' post.0.creador.usuario 'recientes' %}">
+						{{post.0.creador.usuario.username}}</a>
+						{% if post.0.es_respuesta %}
+						en respuesta a 
+						<a href ="{% url 'perfiles:perfil' post_padre.0.creador.usuario 'recientes' %}">
+						{{post_padre.0.creador.usuario.username}}</a> 
+						{% endif %}
+						<small class = "fecha_desde">{{post.4}}</small>
+					</p>
+					</div>
 				</div>
 			</div>
 		</div> <!-- class md 10 -->
@@ -451,7 +451,6 @@
 
 {% block javascript %}
 <script src="{% static 'js/lazyYT.js' %}"></script>
-<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{% static 'js/video_fav.js' %}"></script>
 <script src="{% static 'js/votos.js' %} "></script>
 <script src="{% static 'js/validation-core.js' %} "></script>

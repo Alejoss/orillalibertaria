@@ -1,11 +1,12 @@
 {% extends "base_forms.html" %}
 {% load staticfiles %}
+<!--Nueva frase Form-->
+
 
 {% block form_specific_css %}
 <link href="{% static 'css/jquery-ui.min_ol_autocomplete.css' %}" rel="stylesheet">
 <link href="{% static 'css/jquery-ui.structure.min_ol_autocomplete.css' %}" rel="stylesheet">
 <link href="{% static 'css/jquery-ui.theme.min_ol_autocomplete.css' %}" rel="stylesheet">
-
 {% endblock form_specific_css %}
 
 
@@ -127,7 +128,6 @@
 {% endblock description %}
 
 {% block extra_javascript %}
-<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <script>
 $(document).ready(function(){
 	var autores_json = JSON.parse('{{lista_de_autores_json|safe}}');

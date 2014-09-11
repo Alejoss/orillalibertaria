@@ -8,6 +8,8 @@ from django.utils import html
 
 
 class FormCrearTema(forms.Form):
+    # class form-control es para Bootstrap.
+    # wchar_min es para control de caracteres en el input
     nombre = forms.CharField(max_length=50, widget=TextInput(attrs={
         'class': 'form-control'
         }))
@@ -22,6 +24,7 @@ class FormCrearTema(forms.Form):
     imagen = forms.CharField(label="Imagen", max_length=250, required=False,
                              widget=TextInput(attrs={'class': 'form-control'}))
 
+    # remover todo tipo de html tags del texto por seguridad
     def clean_texto(self):
         texto = self.cleaned_data['texto']
         texto_limpio_parcial = html.strip_tags(texto)

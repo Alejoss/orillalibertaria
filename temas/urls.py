@@ -34,6 +34,7 @@ urlpatterns = patterns('',
                            views.sumar_post, name='sumar_post'),
                        url(r'^/eliminar_post/(?P<post_id>\d+)/$',
                            views.eliminar_propio_post, name='eliminar_propio_post'),
+                       # Ajax
                        url(r'^vote_up_ajax/$', views.vote_up_ajax,
                            name='vote_up_ajax'),
                        url(r'^vote_down_ajax/$', views.vote_down_ajax,

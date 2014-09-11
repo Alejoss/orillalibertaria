@@ -15,6 +15,7 @@ urlpatterns = patterns('',
                        url(r'^(?P<username>\w+)/favoritas/$',
                            views.favoritas, name='favoritas'),
 
+                       # Ajax
                        url(r'marcar_favorito/$', views.marcar_favorito,
                            name='marcar_favorito'),
 

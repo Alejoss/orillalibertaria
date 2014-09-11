@@ -39,6 +39,9 @@
 				<br/>
 			</div>
 			<div class="panel-footer">
+				<div class = "footer_respuestas pull-right">
+ 					<a href = " {% url 'videos:video' video.0.id tema.0.slug 'recientes' %} "> {{video.3}} <span class="fa fa-comments"></span> <span class="fa fa-play"></span></a>
+ 				</div>
 				<div class = "perfil_pequena">
 					<img src = "{% static '/static/img/perfil1.jpeg' %}">
 				</div>
@@ -48,9 +51,6 @@
 						<small class = "fecha_desde"> {{video.5}} </small>
 					</p>
 				</div>
-				<div class = "footer_respuestas pull-right">
- 					<a href = " {% url 'videos:video' video.0.id tema.0.slug 'recientes' %} "> {{video.3}} <span class="fa fa-comments"></span> <span class="fa fa-play"></span></a>
- 				</div>
 			</div>
 		</div>
 	</div> <!-- class md 10 -->

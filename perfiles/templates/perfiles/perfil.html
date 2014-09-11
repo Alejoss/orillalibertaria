@@ -39,11 +39,11 @@
 					<ul class="nav nav-pills">
 					<br>
 						<li>
-							Puntos <span class="badge"> {{puntos_recibidos}} </span> 
+							Puntos <span class="badge"> {{usuario_perfil.votos_recibidos}} </span> 
 						</li>
 					<br>
 						<li>
-							Posts <span class="badge">{{num_posts}}</span> 
+							Posts <span class="badge">{{usuario_perfil.numero_de_posts}}</span> 
 						</li>
 					<br>
 					{% if creo_temas %}
@@ -78,19 +78,19 @@
 						</a>
 					</div>
 					<div id="panel-element-400081" class="panel-collapse collapse in">
-						<a href = "{% url 'imagenes:favoritas' usuario_fav %}">
+						<a href = "{% url 'imagenes:favoritas' usuario_visitado.username %}">
 							<div class="panel-body">
 								<span class = "badge pull-right"> {{numero_imgfavoritas}} </span>
 								Imágenes
 							</div>
 						</a>
-						<a href = "{% url 'citas:favoritas' usuario_fav %}">
+						<a href = "{% url 'citas:favoritas' usuario_visitado.username %}">
 							<div class="panel-body">
 								<span class = "badge pull-right"> {{num_frases_favoritas}} </span>
 								Frases
 							</div>
 						</a>
-						<a href = "{% url 'videos:videos_perfil' usuario_fav %}">
+						<a href = "{% url 'videos:videos_perfil' usuario_visitado.username %}">
 							<div class="panel-body">
 								<span class = "badge pull-right"> {{num_videos_favoritos}} </span>
 								Videos
@@ -147,15 +147,15 @@
 			<div class = "col-md-6 col-md-offset-4">
 				<div class = "imagenes_frases_perfil">
 				<ul class = "list-group">
-					<a class = "list-group-item" href = "{% url 'imagenes:favoritas' usuario_fav %}">
+					<a class = "list-group-item" href = "{% url 'imagenes:favoritas' usuario_visitado.username %}">
 						<span class = "badge">{{numero_imgfavoritas}}</span>
 						Imágenes favoritas
 					</a>
-					<a class = "list-group-item" href = "{% url 'citas:favoritas' usuario_fav %}">
+					<a class = "list-group-item" href = "{% url 'citas:favoritas' usuario_visitado.username %}">
 						<span class = "badge">{{num_frases_favoritas}}</span>
 						Frases favoritas
 					</a>
-					<a class = "list-group-item" href = "{% url 'videos:videos_perfil' usuario_fav %}">
+					<a class = "list-group-item" href = "{% url 'videos:videos_perfil' usuario_visitado.username %}">
 						<span class = "badge"> {{num_videos_favoritos}} </span>
 						Videos favoritos
 					</a>
@@ -173,11 +173,11 @@
 		<h3 style = "display: inline-block"> Posts </h3>
 		<div class="btn-group btn-group-sm control ">
 			<button class="btn btn-default {{recientes}} "
-			type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'recientes' %}';">
+			type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_visitado.username 'recientes' %}';">
 			<span class="fa fa-signal"> </span> Recientes
 			</button> 
 			<button class="btn btn-default {{populares}} " 
-			type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_user.username 'populares' %}';">
+			type="button" onclick="location.href='{% url 'perfiles:perfil' usuario_visitado.username 'populares' %}';">
 			<span class="fa fa-star"> </span> Populares
 			</button>
 		</div>
@@ -208,7 +208,7 @@
 			</div>
 			<div class = "nombre_usuario">
 				<h3>
-					{{nickname_perfil}}
+					{{perfil_usuario.nickname}}
 				</h3>
 				<p class="text-muted">
 					{% if user.is_authenticated %}
@@ -224,11 +224,11 @@
 				<ul class="nav nav-pills">
 				<br>
 					<li>
-						Puntos <span class="badge"> {{puntos_recibidos}} </span> 
+						Puntos <span class="badge"> {{usuario_perfil.votos_recibidos}} </span> 
 					</li>
 				<br>
 					<li>
-						Posts <span class="badge">{{num_posts}}</span> 
+						Posts <span class="badge">{{usuario_perfil.numero_de_posts}}</span> 
 					</li>
 				<br>
 				{% if creo_temas %}

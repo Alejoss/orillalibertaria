@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import bleach
 
-from django.forms import ModelForm, Textarea, TextInput
+from django.forms import Textarea, TextInput
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -9,6 +9,7 @@ from django.utils import html
 
 
 class FormRegistroUsuario(UserCreationForm):
+    # Form fuera de uso, usuarios se registran con Facebook Twitter y Google
     # añade un email al default UserCreationForm
     email = forms.EmailField(required=True)
 
@@ -30,7 +31,8 @@ class FormRegistroUsuario(UserCreationForm):
 
 
 class PerfilesForm(forms.Form):
-
+    # class form-control es para Bootstrap.
+    # id nickname es para ajax y revisar si ya existe ese nickname
     descripcion = forms.CharField(
         label="Descripción", max_length=250, required=False,
         widget=forms.Textarea(attrs={'data-maxlength': 250,
@@ -45,7 +47,6 @@ class PerfilesForm(forms.Form):
 
     email = forms.EmailField(required=False, max_length=75,
                              widget=TextInput(attrs={'class': 'form-control'}))
-
     link1 = forms.CharField(max_length=250, required=False,
                             widget=TextInput(attrs={'class': 'form-control'}))
     link2 = forms.CharField(max_length=250, required=False,
@@ -57,6 +58,7 @@ class PerfilesForm(forms.Form):
     link5 = forms.CharField(max_length=250, required=False,
                             widget=TextInput(attrs={'class': 'form-control'}))
 
+    # remover todo tipo de html tags del texto por seguridad
     def clean_descripcion(self):
         texto = self.cleaned_data['descripcion']
         texto_limpio_parcial = html.strip_tags(texto)

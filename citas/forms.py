@@ -8,10 +8,12 @@ from django.utils import html
 
 
 class FormNuevaCita(forms.ModelForm):
+        # class form-control es para Bootstrap.
+        # id wchar es para jquery, contar los caracteres.
 
     def __init__(self, *args, **kwargs):
         super(FormNuevaCita, self).__init__(*args, **kwargs)
-        self.fields['fuente'].required = False
+        self.fields['fuente'].required = False  # La fuente no debe ser requerida
         self.fields['autor'].required = True
         self.fields['texto'].required = True
 
@@ -26,6 +28,7 @@ class FormNuevaCita(forms.ModelForm):
             'fuente': TextInput(attrs={'class': 'form-control'})
         }
 
+    # remover todo tipo de html tags del texto por seguridad
     def clean_texto(self):
         texto = self.cleaned_data['texto']
         texto_limpio_parcial = html.strip_tags(texto)
@@ -49,7 +52,7 @@ class FormEditarCita(forms.Form):
     texto = forms.CharField(max_length=1000, widget=Textarea(attrs={'class': 'form-control', 'id': 'wchar'}))
     autor = forms.CharField(max_length=150, required=False,
                             widget=TextInput(attrs={'class': 'form-control',
-                                                    'id': 'autor'}))
+                                                    'id': 'autor'}))  # id autor es para autocomplete
     fuente = forms.CharField(max_length=150, required=False, widget=TextInput(attrs={'class': 'form-control'}))
     razon = forms.CharField(
         widget=TextInput(attrs={'class': "form-control", 'placeholder': '¿Qué es lo que estaba mal?'}))

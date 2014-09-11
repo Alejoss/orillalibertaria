@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
 import re
 import pytz
 import random
 from datetime import datetime
-
-from django.core.exceptions import ImproperlyConfigured
 
 from perfiles.models import Perfiles
 from temas.models import Votos, Posts, Respuestas
@@ -15,7 +12,9 @@ from citas.models import Cita
 from imagenes.models import Imagen
 
 
+# Perfil y Editar Perfil
 def obtener_avatar_large(perfil):
+    # Obtiene un perfil y devuelve la imagen de perfil grande.
     avatar_large = None
     if perfil.imagen_perfil is not None:
         if "facebook" in perfil.imagen_perfil:
@@ -25,15 +24,17 @@ def obtener_avatar_large(perfil):
         elif "google" in perfil.imagen_perfil:
             avatar_large = (perfil.imagen_perfil).replace("sz=50", "sz=400")
     else:
-        avatar_large = "no tiene avatar larga, remplazar con default"
+        avatar_large = ""
 
     return avatar_large
 
 
+# Post, Perfil, Video, Post_video
 def obtener_respuestas_post(post):
-    #obtiene un post object y devuelve dos respuestas para la vista previa.
+    #obtiene un post object y devuelve dos respuestas objects para la vista previa.
+    num_posts = 2
     respuestas_obj = Respuestas.objects.filter(post_padre=post,
-                                               post_padre__eliminado=False).order_by('-id')[:2]
+                                               post_padre__eliminado=False).order_by('-id')[:num_posts]
     respuestas = []
     for r in respuestas_obj:
         if len(r.post_padre.texto) > 1:
@@ -42,18 +43,10 @@ def obtener_respuestas_post(post):
     return respuestas
 
 
-def obtener_env_secret_key():
-    try:
-        return os.environ["OL_SECRET_KEY"]
-    except KeyError:
-        error_msg = "Falta la OL_SECRET_KEY virtualenv"
-        raise ImproperlyConfigured(error_msg)
-
-
+# PIPELINE
 def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
     url = None
-    print strategy.backend.name
     if strategy.backend.name == 'facebook':
         url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
     elif strategy.backend.name == "twitter":
@@ -71,6 +64,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     return kwargs
 
 
+# PIPELINE
 def crear_perfil(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Crea la tabla de Perfil del usuario.
     if Perfiles.objects.filter(usuario=user).exists():
@@ -81,6 +75,7 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
     return kwargs
 
 
+# PIPELINE
 def crear_nickname(strategy, details, response, user, *args, **kwargs):
     #pipeline que crea un default nickname para cada usuario.
     perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
@@ -92,9 +87,11 @@ def crear_nickname(strategy, details, response, user, *args, **kwargs):
     return kwargs
 
 
+# Temas, Posts, Videos, citas_coorg
 def tiempo_desde(hora_object):
+    # Obtiene un datetime object y devuelve un string sobre cuánto tiempo ha pasado
     unaware = datetime.today()
-    ahora = unaware.replace(tzinfo=pytz.UTC)
+    ahora = unaware.replace(tzinfo=pytz.UTC)  # datetime object timezone UTC
     dif_segundos = (ahora-hora_object).total_seconds()
     dif_minutos = dif_segundos/60
     mensaje = ""
@@ -159,7 +156,9 @@ def tiempo_desde(hora_object):
     return mensaje
 
 
+# Honeypot para evitar span en los forms
 def bersuit_vergarabat():
+    # Devuelve los argumentos de una suma que cambia con el día
     dia = datetime.today().weekday()
     if dia > 5:
         numero1 = "cinco"
@@ -177,11 +176,15 @@ def bersuit_vergarabat():
     return [numero1, numero2, respuesta]
 
 
+# Posts, descripcion_tema, descripcion_videos, citas, descripcion_perfiles
 def procesar_espacios(texto):
+    # Procesa los enters que el usuario ha dado al texto.
+    # Devuelve un texto con html tags para los espacios
     texto_final = re.sub('(?:\r\n|\r|\n)', '<br />', texto)
     return texto_final
 
 
+# Sidebars, citas.
 def obtener_cita(cita):
     #Recibe una cita, devuelve una lista con:
     #[Cita, tiene_fuente(boolean), fuente]
@@ -193,12 +196,16 @@ def obtener_cita(cita):
     return [cita, tiene_fuente, cita.fuente, texto_procesado]
 
 
+#  NOTIFICACIONES
 def obtener_num_notificaciones(perfil):
+    # devuelve numero de Notificaciones para navbar
     num_notificaciones = Notificacion.objects.filter(target=perfil, leida=False).count()
     return num_notificaciones
 
 
+# NOTIFICACIONES
 def obtener_string_fav_voteup(numero):
+    # Para procesar las notificaciones de felicitaciones por num votos/favoritos
     # Recibe un numero, devuelve un string que se utilizara en la notificacion.
     string = "diez"
     if numero > 90:
@@ -208,7 +215,10 @@ def obtener_string_fav_voteup(numero):
     return string
 
 
+# NOTIFICACIONES
 def obtener_args_notificacion(notificacion):
+    # Recibe una notificacion object y devuelve una lista con:
+    # [notificacion object, objeto de la notificacion (post, video, etc), y el string_fav_voteup]
     tipo_objeto = notificacion.tipo_objeto
     tipo_notificacion = notificacion.tipo_notificacion
     string_votos = None
@@ -233,14 +243,15 @@ def obtener_args_notificacion(notificacion):
         if tipo_notificacion == "num":
             string_votos = obtener_string_fav_voteup(objeto.favoritos_recibidos)
 
-    notificacion_list = [notificacion, objeto]  # [notificacion, objeto, extras...]
+    notificacion_list = [notificacion, objeto]
     if string_votos is not None:
         notificacion_list.append(string_votos)
     return notificacion_list
 
 
+# NOTIFICACIONES
 def obtener_notificaciones(perfil):
-    # Recibe un Perfil object
+    # Recibe un Perfil object, devuelve una lista con las ultimas 5 notificaciones
     notificaciones = Notificacion.objects.filter(target=perfil).order_by('-id')[:5]
     lista_de_notificaciones = []
     for notificacion in notificaciones:
@@ -250,10 +261,10 @@ def obtener_notificaciones(perfil):
     return lista_de_notificaciones
 
 
+# Sidebar, login.
 def obtener_imagenes_display(numero):
-    # Recibe un numero.
-    # Devuelve una lista con el mismo numero de imagenes, si hay disponibles.
-    numero_de_imagenes = 1
+    # Recibe un numero. Devuelve una lista numero de imagenes, si hay disponibles.
+    numero_de_imagenes = 1  # minimo una imagen
     imagenes_disponibles = Imagen.objects.filter(eliminada=False).count()
     if imagenes_disponibles < numero:
         numero_de_imagenes = imagenes_disponibles
@@ -268,9 +279,10 @@ def obtener_imagenes_display(numero):
     return lista_urls
 
 
+# Posts, Perfil, Videos, Post Videos
 def obtener_voted_status(post, perfil):
     # Recibe un post object y un perfil object.
-    # Devuelve el voted_status (no-vote, voted-up etc.)
+    # Devuelve el voted_status (no-vote, voted-up/down, propio_post) para la clase de CSS.
     voted_status = "no-vote"
     if post.creador == perfil:
         voted_status = "propio_post"
@@ -287,6 +299,7 @@ def obtener_voted_status(post, perfil):
     return voted_status
 
 
+# Main, Tema, Posts, Notificaciones, Videos
 def obtener_imagen_tema(tema):
     # Devuelve la imagen correspondiente al tema, si no, devuelve un default.
     imagen = "http://csunlibertarian.files.wordpress.com/2012/02/porcupine.gif"

@@ -17,6 +17,12 @@ class Perfiles(models.Model):
     link4 = models.CharField(max_length=200, blank=True, null=True)
     link5 = models.CharField(max_length=200, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        # asegurarse que el usuario no tenga puntaje negativo
+        if self.votos_recibidos < 1:
+            self.votos_recibidos = 1
+        super(Perfiles, self).save(*args, **kwargs)
+
     def obtener_descripcion(self):
         if self.descripcion is None:
             return ""

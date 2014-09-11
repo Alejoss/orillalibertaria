@@ -8,6 +8,7 @@ urlpatterns = patterns('',
                        url(r'^imagen/(?P<imagen_id>\d+)/$',
                            views.imagen, name='imagen'),
 
+                       # Ajax
                        url(r'^marcar_favorito/$', views.marcar_favorito,
                            name='marcar_favorito'),
                        url(r'^denunciar/$', views.denunciar,
@@ -20,6 +21,7 @@ urlpatterns = patterns('',
 
                        url(r'^nueva/$', views.nueva, name='nueva'),
 
+                       # Colaborar organizar
                        url(r'colaborar_organizar/$', views.colaborar_organizar,
                            name='colaborar_organizar'),
                        url(r'marcar_visto/(?P<imagen_id>\d+)/$',

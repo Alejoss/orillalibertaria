@@ -15,7 +15,7 @@ urlpatterns = patterns('',
                            views.video, name='video'),
                        url(r'^post_video/(?P<video_id>\d+)/(?P<slug>[-\w]+)/(?P<post_id>\d+)/(?P<queryset>\w+)/$',
                            views.post_video, name='post_video'),
-
+                       # Ajax
                        url(r'^marcar_favorito/$', views.marcar_favorito,
                            name='marcar_favorito'),
                        url(r'^denunciar/$', views.denunciar_video, name='denunciar_video'),

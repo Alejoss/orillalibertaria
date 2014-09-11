@@ -1,14 +1,9 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
-from temas import views
 
 urlpatterns = patterns('',
-                       # Examples:
-                       # url(r'^$', 'olibertaria.views.home', name='home'),
-                       # url(r'^blog/', include('blog.urls')),
-                       url(r'^$', views.redirect_main, name='redirect_main'),
-                       url('', include('social.apps.django_app.urls', namespace='social')),
+                       url('', include('social.apps.django_app.urls', namespace='social')),  # Pytho social auth
                        url(r'^perfiles/',
                            include('perfiles.urls', namespace='perfiles')),
                        url(r'^temas/',

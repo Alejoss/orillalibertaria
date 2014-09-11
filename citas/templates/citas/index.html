@@ -1,8 +1,8 @@
 {% extends "base_index.html" %}
+{% load staticfiles %}
 <!--index CITAS -->
 
 {% block extra_css %}
-{% load staticfiles %}
 <link href="{% static 'css/citas.css' %}" rel="stylesheet">
 <link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
 
@@ -125,7 +125,6 @@
 {% endblock sidebar %}
 
 {% block javascript %}
-{% load staticfiles %}
 <script src="{% static 'js/cita_favorita.js' %} "></script>
 <script src="{% static 'js/owl.carousel.min.js' %} "></script>
 <script>
