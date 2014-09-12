@@ -7,7 +7,7 @@ urlpatterns = patterns('',
                        # Python social auth
                        url('', include('social.apps.django_app.urls', namespace='social')),
                        # Redirect a main si accede el usuario a orillalibertaria.com
-                       url('', views.inicio, name="inicio_redirect"),
+                       url(r'^$', views.inicio, name="inicio_redirect"),
                        url(r'^perfiles/',
                            include('perfiles.urls', namespace='perfiles')),
                        url(r'^temas/',
