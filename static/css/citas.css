@@ -24,3 +24,43 @@
 .div_cita{
 	padding-left: 0px;
 }
+
+/*citas coorg */
+.div_cita_denunciada{
+	margin: 5px;
+	padding: 5px;
+	overflow: auto;
+    border: 5px double;
+    border-radius: 4px;
+    -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
+
+}
+.cita_coorg{
+	font-size: 12px;
+}
+.cita_texto{
+	overflow: auto;
+	height: 100%;
+}
+.cita_acciones{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.cita_acciones .iconos_acciones{
+	display: inline-block;
+}
+.cita_acciones p{
+	display: inline-block;
+}
+.iconos_acciones a{
+	margin-left: 10px;
+}
+
+.cita_correcciones p{
+	text-decoration: underline;
+	font-weight: bold
+}
+.cita_estado{
+	margin: 10px;
+}

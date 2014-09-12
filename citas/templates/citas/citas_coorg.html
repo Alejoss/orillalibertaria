@@ -1,104 +1,87 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% static 'css/citas.css' %}" rel="stylesheet">
+{% endblock extra_css %}
 
 {% block content %}
+<div class="col-md-8">
+	<ul class="breadcrumb">
+		<li>
+			<h4><a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a></h4> 
+			<span class="divider"></span>
+		</li>
+		<li>
+			Frases denunciadas <span class="divider"></span>
+		</li>
+	</ul>
+	<div class="progress">
+	  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_bar}}%;">
+	    <span class="sr-only">{{progress_bar}}% Complete</span>
+	  </div>
+	</div>
 
-<div class="container">
-	<div class="row clearfix">
-		<div class="col-md-12 column">
-			<div class="row clearfix">
-				<div class="col-md-8 column">
-					<ul class="breadcrumb">
-						<li>
-							<h4><a href="{% url 'citas:index' 'recientes' %}">Banco de Frases</a></h4> 
-							<span class="divider"></span>
-						</li>
-						<li>
-							Frases denunciadas <span class="divider"></span>
-						</li>
-					</ul>
-					<div class="progress">
-					  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{progress_bar}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_bar}}%;">
-					    <span class="sr-only">{{progress_bar}}% Complete</span>
-					  </div>
-					</div>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>
-									Frase Actual
-								</th>
-								<th>
-									Correcciones
-								</th>
-								<th>
-									Estado
-								</th>
-								<th>
-									Acciones
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							
-							{% for x in tabla_citas %}
-							<tr style = "background-color: {{x.3}} ">
-								<td> <!--frase-->
-									<blockquote><p>"{{x.0.0}}"</p>
-										<small>{{x.0.1}}, {{x.0.2}}</small>
-									</blockquote>
-								</td>
-								<td> <!--correcciones-->
-									<ul>
-										{% for c in x.1 %}
-										<li> <a href=" {% url 'perfiles:perfil' c.2 'recientes' %} ">
-											{{c.2}}</a>: {{c.1}} <br> <small class = "fecha_desde"> {{c.0}}.</small> </li>
-										{% endfor %}
-									</ul>
-								</td>
-								<td> <!--estado-->
-									{% for e in x.2.0 %}
-									<span class="fa fa-{{e}}"></span>
-									{% endfor %}
-								</td>
-								<td>
-									<a href=" {% url 'citas:coorg_editar' x.0.3 %} "><span style = "color:black" class="fa fa-edit fa-lg" title = "Editar"></span></a> | 
-									<a href = "{% url 'citas:marcar_visto' x.0.3 %}">
-									<span style = "color:green" class="fa fa-check{{x.4.0}} fa-lg" title = "Votar a favor"></span></span></a>
-									<a href = "{% url 'citas:marcar_x' x.0.3 %}">
-									<span style="color:red" class="fa fa-times{{x.4.1}} fa-lg" title = "Votar en contra"></span></a>
-								</td>
-							</tr>
-							{% endfor %}
-							
-						</tbody>
-					</table>
-				</div>
-				<div class="col-md-4 column">
-
-				<div class="alert alert-dismissable alert-info">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-					<i class = "fa fa-check"></i> </button>
-					En la tabla de la izquierda puedes encontrar las frases que han sido "denunciadas" más de tres veces. <strong> Revísalas, si encuentras algún error, corrígelo <span style = "color:black" class="fa fa-edit"></span> </strong>.
-				</div>
-
-				<div class="alert alert-dismissable alert-warning">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-					<i class = "fa fa-check"></i> </button>
-					<strong> Si ves una frase que no tiene solución </strong>, una frase totalmente errónea ya sea porque el autor jamás dijo algo parecido o porque consideras que no debe estar en esta página, márcala con una X y será eliminada después de recibir tres <span style="color:red" class="fa fa-times"></span>.(por ejemplo: "El internet es intrínsicamente libre"-Carl Menger, o "Eso es todo amigos" -Bugs Bunny)
-				</div>
-
-				<div class="alert alert-dismissable alert-info">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-					<i class = "fa fa-check"></i> </button>
-					<strong>Cuando una frase ya esté correcta</strong>, márcala con un <span style = "color:green" class="fa fa-check"></span>. Las frases que reciban tres vistos serán enviadas nuevamente al Banco de Frases.<br/><br>
-				</div>
-
-
-					<dl>
-				</div>
-			</div>
+<!--frases -->
+{% for x in tabla_citas %}
+<div class = "row">
+<div class = "div_cita_denunciada" style = "border-color: {{x.3.0}}; border-style: {{x.3.1}}">
+	<div class = "col-md-6">
+		<div class = "cita_estado">
+			{% for e in x.2.0 %}
+				<span class="fa fa-{{e}}"></span>
+			{% endfor %}
+		</div>
+		<div class = "cita_texto">
+			<blockquote><p class = "cita_coorg">"{{x.0.0}}"
+				<small>{{x.0.1}}, {{x.0.2}}</small></p>
+			</blockquote>
+		</div>
+	</div>
+	<div class = "col-md-6 ">
+		<div class = "cita_acciones">
+		<p> Acciones: </p>
+		<div class = "iconos_acciones ">
+			<a href=" {% url 'citas:coorg_editar' x.0.3 %} "><span style = "color:black" class="icono_accion fa fa-edit fa-lg" title = "Editar"></span></a>
+			<a href = "{% url 'citas:marcar_visto' x.0.3 %}">
+			<span style = "color:green" class="icono_accion fa fa-check{{x.4.0}} fa-lg" title = "Votar a favor"></span></a>
+			<a href = "{% url 'citas:marcar_x' x.0.3 %}">
+			<span style="color:red" class="icono_accion fa fa-times{{x.4.1}} fa-lg" title = "Votar en contra"></span></a>
+		</div>
+		</div>
+		<div class = "cita_correcciones">
+		<p class = "titulo_correciones"> Correcciones </p>
+			<ul>
+				{% for c in x.1 %}
+				<li> <a href=" {% url 'perfiles:perfil' c.2 'recientes' %} ">
+					{{c.2}}</a>: {{c.1}} <br> <small class = "fecha_desde"> {{c.0}}.</small> </li>
+				{% endfor %}
+			</ul>
 		</div>
 	</div>
 </div>
+</div>
+{% endfor %}
+</div> <!--col-md-8-->
 
+<div class="col-md-4">
+	<br>
+	<div class="alert alert-dismissable alert-info">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+		<i class = "fa fa-check"></i> </button>
+		En esta página puedes encontrar las frases que han sido "denunciadas" más de tres veces. <strong> Revísalas, si encuentras algún error, corrígelo <span style = "color:black" class="fa fa-edit"></span> </strong>.
+	</div>
+
+	<div class="alert alert-dismissable alert-warning">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+		<i class = "fa fa-check"></i> </button>
+		<strong> Si ves una frase que no tiene solución</strong>, una frase totalmente errónea ya sea porque el autor jamás dijo algo parecido o porque consideras que no debe estar en esta página, márcala con una X y será eliminada después de recibir tres <span style="color:red" class="fa fa-times"></span>.(por ejemplo: "El internet es intrínsicamente libre"-Carl Menger, o "Eso es todo amigos" -Bugs Bunny)
+	</div>
+
+	<div class="alert alert-dismissable alert-info">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+		<i class = "fa fa-check"></i> </button>
+		<strong>Cuando una frase ya esté correcta</strong>, márcala con un <span style = "color:green" class="fa fa-check"></span>. Las frases que reciban tres vistos serán enviadas nuevamente al Banco de Frases.<br/><br>
+	</div>
+</div>
 {% endblock content %}

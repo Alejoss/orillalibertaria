@@ -244,15 +244,8 @@ def colaborar_organizar(request):
 
     template = 'citas/citas_coorg.html'
     citas_eliminadas = Cita.objects.filter(
-        eliminada=True, removidatotalmente=False)
+        eliminada=True, removidatotalmente=False).order_by('-id')
     perfil_usuario = Perfiles.objects.get(usuario=request.user)
-    
-    # diferentes niveles de calificacion de las citas.
-    success_uno = "#dff0d8"
-    success_dos = "#d0e9c6"
-    danger_uno = "#f2dede"
-    danger_dos = "#ebcccc"
-    default = "#ebebeb"
 
     # para llenar la tabla de citas eliminadas.
     tabla_citas = []
@@ -268,25 +261,25 @@ def colaborar_organizar(request):
                 perfil = c.perfil.nickname
                 correccion = [fecha, razon, perfil]
                 correcciones.append(correccion)
-        #color & iconos
-        color = ""
+        #borde_color & iconos
+        borde_color = []
         estado = []
         if cita.denunciada < 4:
-            color = success_uno
+            borde_color = ["green", "double"]
             if cita.denunciada == 3:
                 estado.append(["check-circle"])
             else:
-                color = success_dos
+                borde_color = ["green", "solid"]
                 estado.append(["check-circle", "check-circle"])
         elif cita.denunciada > 4:
-            color = danger_uno
+            borde_color = ["red", "double"]
             if cita.denunciada == 5:
                 estado.append(["times-circle"])
             else:
-                color = danger_dos
+                borde_color = ["red", "solid"]
                 estado.append(["times-circle", "times-circle"])
         else:
-            color = default
+            borde_color = ["#ebebeb", "double"]
             estado.append(["flag"])
 
         # accion del usuario.
@@ -298,7 +291,7 @@ def colaborar_organizar(request):
                 accion_usr = ["", "-circle"]
             else:
                 accion_usr = ["-circle", ""]
-        tabla_citas.append([frase, correcciones, estado, color, accion_usr])
+        tabla_citas.append([frase, correcciones, estado, borde_color, accion_usr])
 
     # variables y calculo del progress bar
     if citas_eliminadas.count() > 0:
