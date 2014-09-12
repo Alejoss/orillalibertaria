@@ -1,9 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.conf.urls.static import static
+from temas import views
 
 urlpatterns = patterns('',
-                       url('', include('social.apps.django_app.urls', namespace='social')),  # Pytho social auth
+                       # Python social auth
+                       url('', include('social.apps.django_app.urls', namespace='social')),
+                       # Redirect a main si accede el usuario a orillalibertaria.com
+                       url('', views.inicio, name="inicio_redirect"),
                        url(r'^perfiles/',
                            include('perfiles.urls', namespace='perfiles')),
                        url(r'^temas/',
