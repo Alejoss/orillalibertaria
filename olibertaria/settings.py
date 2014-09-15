@@ -35,7 +35,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -57,9 +57,7 @@ INSTALLED_APPS = (
     'notificaciones',
     'south',
     'social.apps.django_app.default',
-    #'django_extensions',
     'endless_pagination',
-    #'debug_toolbar',
     'gunicorn',
     'storages'
 )
@@ -77,13 +75,13 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
-#python social auth #estan guardadas en heroku no en local environments.
-#SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "434651369292-v1bc66pvulmdvof26h1r2opt509f6r8i.apps.googleusercontent.com"
-#SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "yfrIUQcQv3wGIpGjqztCaPzF"
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWSSecretKey = os.environ['AWSSecretKey']
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 STATIC_URL = S3_URL
+
 if not DEBUG:
     SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
     SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
