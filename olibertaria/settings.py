@@ -85,9 +85,7 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
-#python social auth #estan guardadas en heroku no en local environments.
-#SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "434651369292-v1bc66pvulmdvof26h1r2opt509f6r8i.apps.googleusercontent.com"
-#SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "yfrIUQcQv3wGIpGjqztCaPzF"
+
 if not DEBUG:
     SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
     SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
