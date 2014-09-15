@@ -75,7 +75,7 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWSAccessKeyId = os.environ['AWSAccessKeyId']
 AWSSecretKey = os.environ['AWSSecretKey']
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
