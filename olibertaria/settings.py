@@ -1,12 +1,3 @@
-"""
-Django settings for olibertaria project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -70,6 +61,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     #'debug_toolbar',
     'gunicorn',
+    'storages'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,6 +80,10 @@ WSGI_APPLICATION = 'olibertaria.wsgi.application'
 #python social auth #estan guardadas en heroku no en local environments.
 #SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "434651369292-v1bc66pvulmdvof26h1r2opt509f6r8i.apps.googleusercontent.com"
 #SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "yfrIUQcQv3wGIpGjqztCaPzF"
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+STATIC_URL = S3_URL
 if not DEBUG:
     SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
     SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
@@ -157,7 +153,8 @@ USE_TZ = True
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),)
 
-STATIC_URL = '/static/'
+if DEBUG:
+    STATIC_URL = '/static/'
 
 # --- HEROKU --- #
 # Parse database configuration from $DATABASE_URL
