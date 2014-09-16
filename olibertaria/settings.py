@@ -35,7 +35,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = False
+DEBUG = TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -75,10 +75,10 @@ ROOT_URLCONF = 'olibertaria.urls'
 
 WSGI_APPLICATION = 'olibertaria.wsgi.application'
 
-AWSAccessKeyId = os.environ['AWSAccessKeyId']
-AWSSecretKey = os.environ['AWSSecretKey']
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_ACCESS_KEY_ID = os.environ['AWSAccessKeyId']
+AWS_SECRET_ACCESS_KEY = os.environ['AWSSecretKey']
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 STATIC_URL = S3_URL
 
