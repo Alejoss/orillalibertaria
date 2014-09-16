@@ -28,6 +28,11 @@ from utils import obtener_posts_populares, obtener_videos_populares
 # print "variable %s" %(variable) <--- para debug
 
 
+def aviso_legal(request):
+    template = 'aviso_legal.html'
+    return render(request, template)
+
+
 def inicio(request):
     template = 'inicio.html'
     flecha_hidden = "hidden"  # navbar link a Inicio.

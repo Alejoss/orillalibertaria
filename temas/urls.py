@@ -6,6 +6,9 @@ urlpatterns = patterns('',
                        # inicio
                        url(r'^inicio/$', views.inicio, name='inicio'),
 
+                       # aviso legal
+                       url(r'^legal/$', views.aviso_legal, name='aviso_legal'),
+
                        # main page
                        url(r'^index/(?P<queryset>\w+)/$',
                            views.main, name='main'),

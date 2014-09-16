@@ -93,3 +93,6 @@ display: inline-block;
 	margin-top: 25px;
 	cursor: pointer;
 }
+.info_aviso_legal{
+	font-size: 12px;
+}

@@ -25,8 +25,10 @@ def obtener_avatar_large(perfil):
             avatar_large = (perfil.imagen_perfil).replace("sz=50", "sz=400")
         elif "puzzle" in perfil.imagen_perfil:
             avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/logo_ol_puzzle.png"
+        else:
+            avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
     else:
-        avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/logo_ol_puzzle.png"
+        avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
 
     return avatar_large
 
@@ -304,7 +306,7 @@ def obtener_voted_status(post, perfil):
 # Main, Tema, Posts, Notificaciones, Videos
 def obtener_imagen_tema(tema):
     # Devuelve la imagen correspondiente al tema, si no, devuelve un default.
-    imagen = "http://csunlibertarian.files.wordpress.com/2012/02/porcupine.gif"
+    imagen = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
     if len(tema.imagen) > 10:
         imagen = tema.imagen
     return imagen
