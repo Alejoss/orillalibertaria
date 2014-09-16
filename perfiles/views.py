@@ -85,7 +85,7 @@ def logout(request):
     auth.logout(request)  # Logout el user guardado en Request
     return redirect('temas:main', 'activos')
 
-
+"""
 def registrar(request):
     template = 'perfiles/registrar.html'
     # Registra nuevos usuarios especiales. !!! Esta view no esta en uso.
@@ -103,7 +103,7 @@ def registrar(request):
     user_creation_form = FormRegistroUsuario()
     context = {'user_creation_form': user_creation_form}
     return render(request, template, context)
-
+"""
 
 @login_required
 def editar_perfil_des(request):

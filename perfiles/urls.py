@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                        url(r'^authcheck/$', views.authcheck, name="authcheck"),
                        url(r'^logout/$', views.logout, name="logout"),
                        # urls de registro
-                       url(r'^registrar/$', views.registrar, name='registrar'),  # Sin uso por ahora
+                       # url(r'^registrar/$', views.registrar, name='registrar'),  # Sin uso por ahora
                        url(r'^(?P<username>\w+)/(?P<queryset>\w+)/$',
                            views.perfil, name='perfil'),
                        )
