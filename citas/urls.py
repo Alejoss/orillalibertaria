@@ -3,7 +3,6 @@ from django.conf.urls import patterns, url
 from citas import views
 
 urlpatterns = patterns('',
-
                        url(r'^index/(?P<queryset>\w+)/$',
                            views.index, name='index'),
 
