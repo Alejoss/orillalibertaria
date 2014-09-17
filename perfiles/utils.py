@@ -1,10 +1,10 @@
-# Perfiles, editar perfil descripcion
+    # Perfiles, editar perfil descripcion
 def obtener_links_perfil(perfil):
     # Recibe un Perfil object
     # Devuleve una lista con los links.
     def evaluar_link(link, lista):
         # Se asegura que los links sean mas largos que 4 caracteres
-        if len(link) > 4:
+        if link is not None:
             lista.append(link)
 
     link1 = perfil.link1
