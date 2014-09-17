@@ -24,7 +24,7 @@ def obtener_avatar_large(perfil):
         elif "google" in perfil.imagen_perfil:
             avatar_large = (perfil.imagen_perfil).replace("sz=50", "sz=400")
         elif "puzzle" in perfil.imagen_perfil:
-            avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/logo_ol_puzzle.png"
+            avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/logo_ol_puzzle_small.png"
         else:
             avatar_large = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
     else:
