@@ -51,10 +51,10 @@ def obtener_respuestas_post(post):
 def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
     url = None
-    print "details"
-    print details
-    print "response"
-    print response
+    print "kwargs"
+    for key, value in kwargs.iteritems():
+        print "%s = %s" % (key, value)
+    print kwargs
     print "strategy.request.path"
     print strategy.request.path
 
