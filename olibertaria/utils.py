@@ -54,6 +54,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     if kwargs['backend'] == "FacebookOAuth2":
         print "FUNCIONA LO PRIMERO"
     else:
+        print "BUSCAR EL TIPO EN LOS ATRIBUTOS"
         print (kwargs['backend']).__dict__
 
     if strategy.backend.name == 'facebook':
