@@ -51,6 +51,9 @@ def obtener_respuestas_post(post):
 def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
     url = None
+    print strategy
+    print strategy.__dict__
+
     if strategy.backend.name == 'facebook':
         url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
     elif strategy.backend.name == "twitter":
