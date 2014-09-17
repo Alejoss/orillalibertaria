@@ -56,7 +56,7 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     print args
 
     print "KWARGS"
-    for key, value in kwargs.iteritems:
+    for key, value in kwargs.iteritems():
         print "%s = %s" % (key, value)
 
     if "facebook" in kwargs['backend'].redirect_uri:
