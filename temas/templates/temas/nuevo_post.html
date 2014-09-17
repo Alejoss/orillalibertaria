@@ -5,7 +5,7 @@
 {% block arriba %}
 <div class = "row titulo_con_barco">
 	<h2> Nuevo post en <a href = "{% url 'temas:index_tema' tema.slug 'recientes' %}"> {{tema.nombre}}</a> </h2>
-	<img class = "barco_logo pull-right" src=" {% static '/static/img/barco_amagi.png' %} ">
+	<img class = "barco_logo pull-right" src="https://s3-us-west-1.amazonaws.com/orillalibertaria/img/barco_amagi.png">
 	<br/>
 </div>
 {% endblock arriba %}
