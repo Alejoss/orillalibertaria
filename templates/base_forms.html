@@ -32,7 +32,8 @@
 <!--aviso legal -->
 <div class = "footer">
 <hr>
-<a href="{% url 'temas:aviso_legal' %}"> <small> Aviso Legal </small> </a> <a href=""><small> Contáctanos</small></a>
+<a href="{% url 'temas:aviso_legal' %}"> <small> Aviso Legal </small> </a> 
+<a href="{% url 'temas:index_tema' 'orilla-libertaria-meta-foro' 'recientes' %}"><small> Contáctanos</small></a>
 </div>
 {% endblock %}
 
