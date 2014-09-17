@@ -52,19 +52,15 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
     url = None
 
-    print "ARGS"
-    print args
-
-    print "KWARGS"
-    for key, value in kwargs.iteritems():
-        print "%s = %s" % (key, value)
+    print "KWARGS REDIRECT URI"
+    print kwargs['backend'].redirect_uri
 
     if "facebook" in kwargs['backend'].redirect_uri:
         url = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
-    elif strategy.backend.name == "twitter":
+    elif "twitter" in kwargs['backend'].redirect_uri:
         if response['profile_image_url'] != '':
             url = response['profile_image_url']
-    elif strategy.backend.name == "google-oauth2":
+    elif "google" in kwargs['backend'].redirect_uri:
         if response['image'].get('url') is not None:
             url = response['image'].get('url')
 
