@@ -53,8 +53,8 @@ def obtener_avatar(strategy, details, response, user, *args, **kwargs):
     url = None
     print "strategy"
     print strategy
-    print "strategy.request"
-    print strategy.request
+    print "strategy.request.path"
+    print strategy.request.path
     print "strategy_dict_"
     print strategy.__dict__
 
