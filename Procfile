@@ -1,1 +1,1 @@
-web: gunicorn olibertaria.wsgi
+web: newrelic-admin run-program gunicorn olibertaria.wsgi
