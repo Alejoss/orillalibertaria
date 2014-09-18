@@ -27,3 +27,4 @@ sqlparse==0.1.11
 static==1.0.2
 static3==0.5.1
 wsgiref==0.1.2
+newrelic
