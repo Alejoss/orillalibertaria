@@ -44,7 +44,7 @@ def login_page(request):
     template = 'perfiles/login.html'
 
     #temas - posts populares
-    posts_populares = obtener_posts_populares(5)
+    posts_populares = obtener_posts_populares(3)
     imagenes_posts_populares = []
     for post in posts_populares:
         imagen = obtener_imagen_tema(post.tema)

@@ -52,7 +52,7 @@
 					</div>
 				</div>
 				<h5 class = "pull-left"><small> Actual: {{actuales.temas_actuales}} Temas, {{actuales.videos_actuales}} Videos, {{actuales.posts_actuales}} Posts, {{actuales.imagenes_actuales}} Imágenes, {{actuales.frases_actuales}} Frases.</small></h5>
-				<h5 class = "pull-right"><small> Meta: 100+ Temas, 500+ Videos, 500+ Posts </small></h5>
+				<h5 class = "pull-right"><small> Meta: {{objetivos.temas}}+ Temas, {{objetivos.videos}}+ Videos, {{objetivos.posts}}+ Posts, {{objetivos.imagenes}}+ Imágenes, {{objetivos.frases}}+ Frases  </small></h5>
 			</div>
 			</div> <!--row-->
 		</div> <!--col md 8 -->
@@ -143,6 +143,7 @@
 <!--aviso legal -->
 <div class = "footer">
 <hr>
-<a href="{% url 'temas:aviso_legal' %}"> <small> Aviso Legal </small> </a> <a href=""><small> Contáctanos</small></a>
+<a href="{% url 'temas:aviso_legal' %}"> <small> Aviso Legal </small> </a> 
+<a href="{% url 'temas:index_tema' 'orilla-libertaria-meta-foro' 'recientes' %}"><small> Contáctanos</small></a>
 </div>
 {% endblock content %}

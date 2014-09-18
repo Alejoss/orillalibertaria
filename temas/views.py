@@ -50,9 +50,9 @@ def inicio(request):
     imagenes_actuales = Imagen.objects.filter(eliminada=False).count()
     frases_actuales = Cita.objects.filter(eliminada=False).count()
 
-    objetivos = {'objetivo_temas': objetivo_temas, 'objetivo_posts': objetivo_posts,
-                 'objetivo_videos': objetivo_videos, 'objetivo_imagenes': objetivo_imagenes,
-                 'objetivo_frases': objetivo_frases}
+    objetivos = {'temas': objetivo_temas, 'posts': objetivo_posts,
+                 'videos': objetivo_videos, 'imagenes': objetivo_imagenes,
+                 'frases': objetivo_frases}
 
     actuales = {'temas_actuales': temas_actuales, 'posts_actuales': posts_actuales,
                 'videos_actuales': videos_actuales, 'imagenes_actuales': imagenes_actuales,

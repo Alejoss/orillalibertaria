@@ -85,7 +85,7 @@
 				<img id = "imagen_perfil_post" src = "{{posts_populares.0.creador.imagen_perfil}}">
 			</div>
 			<h4  class = "display_inline_block">
-				<small id = "perfil_tema_post" > {{posts_populares.0.creador.usuario.username}} en
+				<small id = "perfil_tema_post" > {{posts_populares.0.creador.nickname}} en
 				{{posts_populares.0.tema.nombre}}</small>
 			</h4>
 		</div>
@@ -192,7 +192,7 @@ function cambiar_post(){
 		nueva_img_src = "{{imagenes_posts_populares.1|safe}}";
 		nuevo_text_post = "{{posts_populares.1.texto|truncatewords:50|safe}}";
 		nueva_imagen_perfil_post = "{{posts_populares.1.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.1.creador.usuario.username|safe}}"+" en "+
+		nuevo_perfil_tema_post = "{{posts_populares.1.creador.nickname|safe}}"+" en "+
 		"{{posts_populares.1.tema.nombre|safe}}";
 		$("#posts_num").text("1");
 	}
@@ -200,7 +200,7 @@ function cambiar_post(){
 		nueva_img_src = "{{imagenes_posts_populares.2|safe}}";
 		nuevo_text_post = "{{posts_populares.2.texto|truncatewords:50|safe}}"
 		nueva_imagen_perfil_post = "{{posts_populares.2.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.2.creador.usuario.username|safe}}"+" en "+
+		nuevo_perfil_tema_post = "{{posts_populares.2.creador.nickname|safe}}"+" en "+
 		"{{posts_populares.2.tema.nombre|safe}}";
 		$("#posts_num").text("2");
 	}
@@ -208,7 +208,7 @@ function cambiar_post(){
 		nueva_img_src = "{{imagenes_posts_populares.0|safe}}";
 		nuevo_text_post = "{{posts_populares.0.texto|truncatewords:50|safe}}";
 		nueva_imagen_perfil_post = "{{posts_populares.0.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.0.creador.usuario.username|safe}}"+" en "+
+		nuevo_perfil_tema_post = "{{posts_populares.0.creador.nickname|safe}}"+" en "+
 				"{{posts_populares.0.tema.nombre|safe}}";
 		$("#posts_num").text("0");
 	}
