@@ -155,8 +155,8 @@ def buscar(request):
                 descripcion = ""
 
             imagen_tema = obtener_imagen_tema(tema)
-            num_posts = Posts.objects.filter(tema=tema).count()
-            num_videos = Videos.objects.filter(tema=tema).count()
+            num_posts = Posts.objects.filter(tema=tema, es_respuesta=False, eliminado=False).count()
+            num_videos = Videos.objects.filter(tema=tema, eliminado=False).count()
             temas_encontrados.append(
                 [tema, imagen_tema, descripcion, num_posts, num_videos])
 
@@ -222,8 +222,8 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
         else:
             descripcion = ""
         imagen = obtener_imagen_tema(tema)
-        num_posts = Posts.objects.filter(tema=tema).count()
-        num_videos = Videos.objects.filter(tema=tema).count()
+        num_posts = Posts.objects.filter(tema=tema, es_respuesta=False, eliminado=False).count()
+        num_videos = Videos.objects.filter(tema=tema, eliminado=False).count()
         temas.append([tema, descripcion, imagen, num_posts, num_videos])
 
     # Cita sidebar
@@ -354,7 +354,7 @@ def sumar_post(request, slug):
 
             # calcular nivel actividad del Tema
             cinco_posts = Posts.objects.filter(
-                tema=tema_contenedor).order_by('-fecha')[:5]
+                tema=tema_contenedor, eliminado=False).order_by('-fecha')[:5]
             n_actividad = 0
             hoy = datetime.today()
             for post in cinco_posts:
