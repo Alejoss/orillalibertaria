@@ -74,22 +74,75 @@
 	<h3 class = "display_inline_block"> Posts </h3>
 	</div>
 	<div id = "div_posts" class="thumbnail">
-		<div class = "thumbnail_main_div hidden-sm hidden-xs">
-			<img id = "imagen_post" alt="300x200" src="{{imagenes_posts_populares.0}}"/>
-		</div>
-		<div class="caption thumbnail_main_post">
-			<p id = "text_post" class = "text">
-			{{posts_populares.0.texto|truncatewords:50}}
-			</p>
-			<div class = "perfil_pequena">
-				<img id = "imagen_perfil_post" src = "{{posts_populares.0.creador.imagen_perfil}}">
+		<div>
+			<div class = "thumbnail_main_div hidden-sm hidden-xs">
+				<img alt="300x200" src="{{imagenes_posts_populares.0}}"/>
 			</div>
-			<h4  class = "display_inline_block">
-				<small id = "perfil_tema_post" > {{posts_populares.0.creador.nickname}} en
-				{{posts_populares.0.tema.nombre}}</small>
-			</h4>
+			<div class="caption thumbnail_main_post">
+				<p class = "text">
+				{{posts_populares.0.texto|truncatewords:50}}
+				</p>
+				<div class = "perfil_pequena">
+					<img src = "{{posts_populares.0.creador.imagen_perfil}}">
+				</div>
+				<h4  class = "display_inline_block">
+					<small> {{posts_populares.0.creador.nickname}} en
+					{{posts_populares.0.tema.nombre}}</small>
+				</h4>
+			</div>
+		</div> <!--post -->
+	</div> <!-- div posts -->
+		<div id = "post_0" class = "hidden">
+			<div class = "thumbnail_main_div hidden-sm hidden-xs">
+				<img alt="300x200" src="{{imagenes_posts_populares.0}}"/>
+			</div>
+			<div class="caption thumbnail_main_post">
+				<p class = "text">
+				{{posts_populares.0.texto|truncatewords:50}}
+				</p>
+				<div class = "perfil_pequena">
+					<img src = "{{posts_populares.0.creador.imagen_perfil}}">
+				</div>
+				<h4  class = "display_inline_block">
+					<small> {{posts_populares.0.creador.nickname}} en
+					{{posts_populares.0.tema.nombre}}</small>
+				</h4>
+			</div>
+		</div> <!--post -->
+		<div id = "post_1" class = "hidden">
+			<div class = "thumbnail_main_div hidden-sm hidden-xs">
+				<img alt="300x200" src="{{imagenes_posts_populares.1}}"/>
+			</div>
+			<div class="caption thumbnail_main_post">
+				<p class = "text">
+				{{posts_populares.1.texto|truncatewords:50}}
+				</p>
+				<div class = "perfil_pequena">
+					<img src = "{{posts_populares.1.creador.imagen_perfil}}">
+				</div>
+				<h4  class = "display_inline_block">
+					<small> {{posts_populares.1.creador.nickname}} en
+					{{posts_populares.1.tema.nombre}}</small>
+				</h4>
+			</div>
 		</div>
-	</div>
+		<div id = "post_2" class = "hidden">
+			<div class = "thumbnail_main_div hidden-sm hidden-xs">
+				<img alt="300x200" src="{{imagenes_posts_populares.2}}"/>
+			</div>
+			<div class="caption thumbnail_main_post">
+				<p class = "text">
+				{{posts_populares.2.texto|truncatewords:50}}
+				</p>
+				<div class = "perfil_pequena">
+					<img src = "{{posts_populares.2.creador.imagen_perfil}}">
+				</div>
+				<h4  class = "display_inline_block">
+					<small> {{posts_populares.2.creador.nickname}} en
+					{{posts_populares.2.tema.nombre}}</small>
+				</h4>
+			</div>
+		</div>
 </div>
 <div class = "col-md-4">
 	<div>
@@ -186,38 +239,33 @@ function cambiar_imagenes(){
 	girar_puzzlepiece($("#puzzle_imagenes"))
 }
 function cambiar_post(){
-	var posts_num = $("#posts_num").html();
+	var posts_num = $("#posts_num").text();
 
 	if (posts_num == 0){
-		nueva_img_src = "{{imagenes_posts_populares.1|safe}}";
-		nuevo_text_post = "{{posts_populares.1.texto|truncatewords:50|safe}}";
-		nueva_imagen_perfil_post = "{{posts_populares.1.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.1.creador.nickname|safe}}"+" en "+
-		"{{posts_populares.1.tema.nombre|safe}}";
+		console.log($("#post_1"));
+		nuevo_html = $("#post_1").html();
+		console.log(nuevo_html);
+		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("1");
+		console.log("cambiar a primero")
 	}
 	else if (posts_num == 1){
-		nueva_img_src = "{{imagenes_posts_populares.2|safe}}";
-		nuevo_text_post = "{{posts_populares.2.texto|truncatewords:50|safe}}"
-		nueva_imagen_perfil_post = "{{posts_populares.2.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.2.creador.nickname|safe}}"+" en "+
-		"{{posts_populares.2.tema.nombre|safe}}";
+		console.log($("#post_2"));
+		nuevo_html = $("#post_2").html();
+		console.log(nuevo_html);
+		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("2");
+		console.log("cambiar a segundo")
 	}
 	else if (posts_num == 2){
-		nueva_img_src = "{{imagenes_posts_populares.0|safe}}";
-		nuevo_text_post = "{{posts_populares.0.texto|truncatewords:50|safe}}";
-		nueva_imagen_perfil_post = "{{posts_populares.0.creador.imagen_perfil|safe}}";
-		nuevo_perfil_tema_post = "{{posts_populares.0.creador.nickname|safe}}"+" en "+
-				"{{posts_populares.0.tema.nombre|safe}}";
+		console.log($("#post_0"));
+		nuevo_html = $("#post_0").html();
+		console.log(nuevo_html);
+		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("0");
+		console.log("cambiar a tercero")
 	}
 
-	$("#imagen_post").attr("src", nueva_img_src);
-	$("#text_post").text(nuevo_text_post);
-	$("#imagen_perfil_post").attr("src", nueva_imagen_perfil_post);
-	$("#perfil_tema_post").text(nuevo_perfil_tema_post);
-	
 	girar_puzzlepiece($("#puzzle_posts"))
 }
 function cambiar_frases(){
