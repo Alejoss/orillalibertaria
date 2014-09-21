@@ -43,7 +43,7 @@
  					<a href = " {% url 'videos:video' video.0.id tema.0.slug 'recientes' %} "> {{video.3}} <span class="fa fa-comments"></span> <span class="fa fa-play"></span></a>
  				</div>
 				<div class = "perfil_pequena">
-					<img src = "{% static '/static/img/perfil1.jpeg' %}">
+					<img src = "{{video.0.perfil.imagen_perfil}}">
 				</div>
 				<div class = "nombre_fecha">
 					<p><a href ="{% url 'perfiles:perfil' video.0.perfil.usuario.username 'recientes' %}">
