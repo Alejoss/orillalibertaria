@@ -1,4 +1,3 @@
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url  # Heroku
@@ -32,7 +31,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = False
+DEBUG = TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -125,7 +124,7 @@ if len(DATABASES['default']) == 0:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'localherokudb',
             'USER': 'alejandro',
-            'PASSWORD': 'farseer99'
+            'PASSWORD': os.environ["POSTGRE_PSWD"]
         }
     }
 
