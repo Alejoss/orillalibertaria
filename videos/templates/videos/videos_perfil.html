@@ -22,6 +22,9 @@
 <div class="col-md-8 column">
 	<div class="page-header">
 		<h3>
+		<div class = "perfil_pequena titulo_top pull-right">
+			<img title="{{perfil_usuario.nickname}} " src = "{{perfil_usuario.imagen_perfil}}">
+		</div>
 		{% if propio_usuario %}
 			Tus videos favoritos
 		{% else %}
@@ -42,6 +45,9 @@
 
 {% block sidebar %}
 <div class="col-md-4 col-sm-3 column">
+
+{% include 'sidebar_favoritos.html' %}
+
 	<blockquote>
 		<p>
 			{{cita.texto}}

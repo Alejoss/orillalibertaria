@@ -3,7 +3,7 @@
 
 import random
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -12,21 +12,22 @@ from django.contrib.auth.decorators import login_required
 
 from endless_pagination.decorators import page_template
 
-from forms import FormRegistroUsuario, PerfilesForm
+from forms import PerfilesForm
 from models import Perfiles
-from olibertaria.utils import obtener_voted_status, obtener_cita, procesar_espacios, tiempo_desde, \
-    obtener_imagen_tema, obtener_respuestas_post, obtener_avatar_large
-from temas.utils import obtener_posts_populares
+from olibertaria.utils import obtener_cita, obtener_imagen_tema,\
+                            obtener_respuestas_post, obtener_avatar_large,\
+                            obtener_args_post
+from temas.utils import obtener_posts_recientes
 from temas.models import Temas
-from temas.models import Posts, Respuestas
+from temas.models import Posts, Respuestas, Votos
 from citas.models import Cfavoritas, Cita
-from videos.models import VFavoritos
 from imagenes.models import Ifavoritas, Imagen
-from utils import obtener_links_perfil
+from utils import obtener_links_perfil, obtener_num_favoritos
 
 # print "nombre variable: %s" %(nombre variable) -- print para debug una variable
 
 
+# Ajax
 def revisar_nickname(request):
     # Evita que un usuario elija un nickname que ya existe
     if request.is_ajax():
@@ -44,7 +45,7 @@ def login_page(request):
     template = 'perfiles/login.html'
 
     #temas - posts populares
-    posts_populares = obtener_posts_populares(3)
+    posts_populares = obtener_posts_recientes(3)
     imagenes_posts_populares = []
     for post in posts_populares:
         imagen = obtener_imagen_tema(post.tema)
@@ -85,25 +86,6 @@ def logout(request):
     auth.logout(request)  # Logout el user guardado en Request
     return redirect('temas:main', 'activos')
 
-"""
-def registrar(request):
-    template = 'perfiles/registrar.html'
-    # Registra nuevos usuarios especiales. !!! Esta view no esta en uso.
-    if request.method == 'POST':
-        form = FormRegistroUsuario(request.POST)
-        # valida el form conforme a las reglas preestablecidas en form.py
-        if form.is_valid():
-            form.save()  # Guarda los valores en la base de datos auth.User.
-            user = User.objects.get(username=form.cleaned_data['username'])
-            perfil_nuevo, created = Perfiles.objects.get_or_create(
-                usuario=user)
-            perfil_nuevo.save()
-            return redirect('temas:main', 'activos')
-
-    user_creation_form = FormRegistroUsuario()
-    context = {'user_creation_form': user_creation_form}
-    return render(request, template, context)
-"""
 
 @login_required
 def editar_perfil_des(request):
@@ -164,27 +146,31 @@ def editar_perfil_des(request):
 def perfil(request, username, queryset, template="perfiles/perfil.html",
            extra_context=None):
     # recibe un username y un queryset.
-    usuario_visitado = User.objects.get(username=username)  # usuario dueño del perfil
-    usuario_perfil = Perfiles.objects.get(usuario=usuario_visitado)
+    usuario_visitado = get_object_or_404(User, username=username)  # usuario dueño del perfil
+    perfil_usuario = get_object_or_404(Perfiles, usuario=usuario_visitado)
+    propio_usuario = False
+    perfil_usuario_visitante = None
     if request.user.is_authenticated():
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
+        if perfil_usuario == perfil_usuario_visitante:
+            propio_usuario = True
 
     # Datos del usuario
-    avatar_large = obtener_avatar_large(usuario_perfil)
+    avatar_large = obtener_avatar_large(perfil_usuario)
 
     nombre_completo = usuario_visitado.get_full_name()
-    num_temas = Temas.objects.filter(creador=usuario_perfil).count()
+    descripcion = perfil_usuario.obtener_descripcion()
+    num_favoritos = obtener_num_favoritos(perfil_usuario)
+    num_temas = Temas.objects.filter(creador=perfil_usuario).count()
     creo_temas = False
     temas_usuario = []
     if num_temas > 0:
-        temas_usuario = Temas.objects.filter(creador=usuario_perfil).order_by('nombre')
+        temas_usuario = Temas.objects.filter(creador=perfil_usuario).order_by('nombre')
         creo_temas = True
-    num_frases_favoritas = Cfavoritas.objects.filter(
-        perfil=usuario_perfil).count()
-    numero_imgfavoritas = 0
-    descripcion = usuario_perfil.obtener_descripcion()
 
     # Posts del usuario, utiliza el queryset: 'recientes' o 'populares'
+    # posts favoritos
+
     recientes = ""
     populares = ""
     q = ""
@@ -196,100 +182,116 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         recientes = "active"
 
     posts_obj = Posts.objects.filter(
-        creador=usuario_perfil, eliminado=False).order_by(q)
+        creador=perfil_usuario, eliminado=False).order_by(q)
     posts = []
     for p in posts_obj:
-        num_respuestas = Respuestas.objects.filter(post_padre=p).count()
-        if p.es_respuesta is True:
-            # informacion sobre el post padre
-            if Respuestas.objects.filter(post_respuesta=p).exists():
-                respuesta = Respuestas.objects.get(post_respuesta=p)
-                usuario_respuesta = respuesta.post_padre.creador.nickname
-                es_respuesta = True
-            else:
-                # Por si de dan respuestas descuadradas (respuestas sin post padre)
-                es_respuesta = False
-                usuario_respuesta = None
-        else:
-            es_respuesta = False
-            usuario_respuesta = None
-        if request.user.is_authenticated():
-            # revisa si el usuario visitante voto por cada post
-            voted_status = obtener_voted_status(p, perfil_usuario_visitante)
-        else:
-            voted_status = "no-vote"
 
+        # [post, voted_status, num_respuestas, texto_procesado, hora_procesada]
+        post = obtener_args_post(p, perfil_usuario_visitante)
+
+        # Sumar post_en_video, usuario_respuesta, respuestas_post
         post_en_video = False
         if p.video is not None:
             # si el post pertenece a un video
             post_en_video = True
 
-        texto_procesado = procesar_espacios(p.texto)
-        hora_procesada = tiempo_desde(p.fecha)
+        if p.es_respuesta is True:
+            # informacion sobre el post padre
+            if Respuestas.objects.filter(post_respuesta=p).exists():
+                respuesta = Respuestas.objects.get(post_respuesta=p)
+                usuario_respuesta = respuesta.post_padre.creador.nickname
+            else:
+                # Por si de dan respuestas descuadradas (respuestas sin post padre)
+                usuario_respuesta = None
+        else:
+            usuario_respuesta = None
+
         respuestas_post = obtener_respuestas_post(p)
 
-        post = [p, es_respuesta, usuario_respuesta, voted_status, num_respuestas, post_en_video,
-                texto_procesado, hora_procesada, respuestas_post]
+        post.extend([post_en_video, usuario_respuesta, respuestas_post])
 
         #suma el post a la lista de posts
         posts.append(post)
 
     # cita
-    if num_frases_favoritas == 0:
+    if num_favoritos[1] == 0:
         cita_favorita = ""
     else:
         citas_favoritas_obj = Cfavoritas.objects.filter(
-            perfil=usuario_perfil, eliminado=False)
+            perfil=perfil_usuario, eliminado=False)
         cita_favorita_obj = (random.choice(citas_favoritas_obj)).cita
         cita_favorita = obtener_cita(cita_favorita_obj)
-
-    # videos
-    num_videos_favoritos = VFavoritos.objects.filter(
-        perfil=usuario_perfil, eliminado=False).count()
 
     # imagenes
     portada = ""
     imagenes_favoritas = []
-    tiene_imagenesfav = Ifavoritas.objects.filter(
-        perfil=usuario_perfil, eliminado=False).exists()
 
-    if tiene_imagenesfav:
-        numero_imgfavoritas = Ifavoritas.objects.filter(
-            perfil=usuario_perfil, eliminado=False).count()
-        if numero_imgfavoritas > 3:
+    if num_favoritos[0] > 0:
+        if num_favoritos[0] > 3:
             # Limita a 3 las imagenes del display de portada
             imagenes_display = 3
         else:
-            imagenes_display = numero_imgfavoritas
+            imagenes_display = num_favoritos[0]
 
         ifavoritas_objects = Ifavoritas.objects.filter(
-            perfil=usuario_perfil, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
+            perfil=perfil_usuario, eliminado=False, portada=False).order_by('-fecha')[:imagenes_display]
         for i in ifavoritas_objects:
             imagenes_favoritas.append(i.imagen.url)
 
-        if Ifavoritas.objects.filter(perfil=usuario_perfil, eliminado=False, portada=True).exists():
+        if Ifavoritas.objects.filter(perfil=perfil_usuario, eliminado=False, portada=True).exists():
             portada_obj = Ifavoritas.objects.get(
-                perfil=usuario_perfil, eliminado=False, portada=True)
+                perfil=perfil_usuario, eliminado=False, portada=True)
         else:
             portada_obj = Ifavoritas.objects.filter(
-                perfil=usuario_perfil, eliminado=False).latest('id')
+                perfil=perfil_usuario, eliminado=False).latest('id')
         portada = portada_obj.imagen.url
 
     # links
-    links = obtener_links_perfil(usuario_perfil)
+    links = obtener_links_perfil(perfil_usuario)
 
     context = {
         'portada': portada, 'usuario_visitado': usuario_visitado, 'avatar_large': avatar_large,
         'nombre_completo': nombre_completo, 'links': links, 'descripcion': descripcion,
         'posts': posts, 'cita_favorita': cita_favorita, 'imagenes_favoritas': imagenes_favoritas,
-        'tiene_imagenesfav': tiene_imagenesfav, 'recientes': recientes,
+        'recientes': recientes, 'num_favoritos': num_favoritos,
         'populares': populares, 'num_temas': num_temas,
-        'numero_imgfavoritas': numero_imgfavoritas,
-        'num_frases_favoritas': num_frases_favoritas, 'temas_usuario': temas_usuario,
-        'creo_temas': creo_temas, 'num_videos_favoritos': num_videos_favoritos,
-        'usuario_perfil': usuario_perfil}
+        'temas_usuario': temas_usuario,
+        'creo_temas': creo_temas,
+        'perfil_usuario': perfil_usuario, 'propio_usuario': propio_usuario}
 
     if extra_context is not None:  # endless pagination
         context.update(extra_context)
+
+    return render(request, template, context)
+
+
+def postsfav(request, username):
+    template = "perfiles/postsfav.html"
+    usuario_fav = get_object_or_404(User, username=username)
+    perfil_usuario = get_object_or_404(Perfiles, usuario=usuario_fav)
+    num_favoritos = obtener_num_favoritos(perfil_usuario)
+    propio_usuario = False
+    if request.user.is_authenticated():
+        if request.user == usuario_fav:
+            propio_usuario = True
+
+    # Posts
+    posts = []
+    votos_posts = Votos.objects.filter(tipo=1, usuario_votante=perfil_usuario,
+                                       post_votado__es_respuesta=False,
+                                       post_votado__eliminado=False)
+
+    for p in votos_posts:
+        post_votado = p.post_votado
+        post_args = obtener_args_post(post_votado, perfil_usuario)
+        post_en_video = False
+        if post_votado.video is not None:
+            # si el post pertenece a un video
+            post_en_video = True
+        post_args.extend([post_en_video])
+        posts.append(post_args)
+
+    context = {'perfil_usuario': perfil_usuario, 'posts': posts,
+               'num_favoritos': num_favoritos, 'propio_usuario': propio_usuario}
 
     return render(request, template, context)

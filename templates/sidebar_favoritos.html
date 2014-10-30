@@ -1,0 +1,27 @@
+<!-- requiere lista num_favoritos y bool propio_usuario -->
+
+<ul class = "list-group">
+	<li class = "visible-md visible-lg list-group-item list-group-item-info">
+	{% if propio_usuario %}
+	Favoritos
+	{% else %}
+	Favoritos de {{perfil_usuario.nickname}}
+	{% endif %}
+	</li>
+	<a title = "Imágenes Favoritas" class = "list-group-item" href = "{% url 'imagenes:favoritas' perfil_usuario.usuario.username %}">
+		<span class = "badge">{{num_favoritos.0}}</span>
+		Imágenes
+	</a>
+	<a title = "Frases Favoritas" class = "list-group-item" href = "{% url 'citas:favoritas' perfil_usuario.usuario.username %}">
+		<span class = "badge">{{num_favoritos.1}}</span>
+		Frases
+	</a>
+	<a title = "Videos Favoritos" class = "list-group-item" href = "{% url 'videos:videos_perfil' perfil_usuario.usuario.username %}">
+		<span class = "badge"> {{num_favoritos.2}} </span>
+		Videos
+	</a>
+	<a title = "Posts Favoritos" class = "list-group-item" href = "{% url 'perfiles:postsfav' perfil_usuario.usuario.username %}">
+		<span class = "badge"> {{num_favoritos.3}} </span>
+		Posts
+	</a>
+</ul>

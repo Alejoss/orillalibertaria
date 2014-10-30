@@ -10,7 +10,7 @@
 
 <div class="row clearfix">
 <div class="col-md-8 column ">
-<!-- post_padre -si el post respuesta-->
+<!-- post_padre -si el post post-->
 <div class = "div_goback_tema visible-xs visible-sm">
 	<a class = "goback_tema" href="">
 	<img class = "" src="{{tema.1}}">
@@ -82,30 +82,7 @@
 
 			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
-					<div class = "btn-group-vertical">
-					{% if user.is_authenticated %}
-						<p class = "vote-id hidden">{{post_padre.0.id}}</p>
-						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-					{% else %}
-						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-					{% endif %}
-						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje {{post_padre.1}} "> {{post_padre.0.votos_total}} </h2>
-						</button>
-					{% if user.is_authenticated %}
-						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-					{% else %}
-						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-					{% endif %}
-					</div>
+				{% include 'control_votos_fav.html' with post=post_padre %}
 				</div>
 			</div>
 			<div class = "col-md-10 col-sm-10 col-xs-10">
@@ -213,30 +190,7 @@
 		<br>
 		<div class = "col-md-2 col-sm-2 col-xs-2">
 			<div class = "control_votos">
-				<div class = "btn-group-vertical">
-					{% if user.is_authenticated %}
-						<p class = "vote-id hidden">{{post.0.id}}</p>
-						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-					{% else %}
-						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-					{% endif %}
-						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje {{post.1}} "> {{post.0.votos_total}} </h2>
-						</button>
-					{% if user.is_authenticated %}
-						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-					{% else %}
-						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-					{% endif %}
-				</div>
+			{% include 'control_votos_fav.html' %}
 			</div>
 		</div>
 		<div class = "col-md-10 col-sm-10 col-xs-10">
@@ -312,33 +266,12 @@
 </div>
 
 <div class = "row">
-{% for respuesta in respuestas %}
+{% for post in respuestas %}
 <div class = "post">
 	<div class = "col-md-2 col-sm-2 col-xs-2">
 		<div class = "control_votos">
 			<div class = "btn-group-vertical">
-				{% if user.is_authenticated %}
-					<p class = "vote-id hidden">{{respuesta.0.id}}</p>
-					<button type="button" class = "btn btn-default vote-up"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-				{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-				{% endif %}
-					<button type="button" class = "btn btn-default puntaje"> 
-					<h2 class = "numero_puntaje {{respuesta.1}} "> {{respuesta.0.votos_total}} </h2>
-					</button>
-				{% if user.is_authenticated %}
-					<button type="button" class = "btn btn-default vote-down"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-				{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-				{% endif %}
+				{% include 'control_votos_fav.html' %}
 			</div>
 		</div>
 	</div>
@@ -346,12 +279,12 @@
 		<div class="panel panel-info post_resaltado_info">
 			<div class="panel-body">
 				<p class = "text truncate">
-				{{respuesta.3|safe}}
+				{{post.3|safe}}
 				</p>
 				<br/>
 			</div>
 			<div class="panel-footer">
-				{% if respuesta.0.creador.usuario == request.user %}
+				{% if post.0.creador.usuario == request.user %}
 				<div class = "eliminar_editar pull-left">
 					<div class = "btn-group dropup">
 					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
@@ -359,33 +292,33 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="{% url 'temas:eliminar_propio_post' respuesta.0.id %}">Eliminar Post</a>
+							<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Eliminar Post</a>
 						</li>
 						<li class = "divider"></li>
 						<li>
-							<a href="{% url 'temas:editar_post' respuesta.0.id %}">Editar</a> 
+							<a href="{% url 'temas:editar_post' post.0.id %}">Editar</a> 
 						</li>
 					</ul>
 					</div>
 				</div>
 				{% endif %}
 				<div class = "footer_respuestas pull-right">
-		 			<a href = "{% url 'temas:post' tema.0.slug respuesta.0.id 'recientes' %} ">
-		 				{{respuesta.1}}
+		 			<a href = "{% url 'temas:post' tema.0.slug post.0.id 'recientes' %} ">
+		 				{{post.2}}
 		 			<span class="fa fa-comments"></span>
 		 			<span class="fa fa-chevron-right"> </span>  </a>
 		 		</div>
 				<div class = "perfil_pequena"> <!-- perfil pequeña -->
-						<img src = "{{respuesta.0.creador.imagen_perfil}}">
+						<img src = "{{post.0.creador.imagen_perfil}}">
 					</div>
 				<div class = "nombre_fecha">
 				<p>
-				<a href ="{% url 'perfiles:perfil' respuesta.0.creador.usuario.username 'recientes' %}">
-					{{respuesta.0.creador.nickname}}</a> 
-					<small class = "fecha_desde">{{respuesta.4}} </small>
+				<a href ="{% url 'perfiles:perfil' post.0.creador.usuario.username 'recientes' %}">
+					{{post.0.creador.nickname}}</a> 
+					<small class = "fecha_desde">{{post.4}} </small>
 				</p>
 				</div>
-		 		{% for resp in respuesta.5 %}
+		 		{% for resp in post.5 %}
 		 			<div class = "row">
 		 				<div class ="col-md-offset-1 col-sm-offset-1 col-xs-offset-1
 		 					col-md-2 col-sm-2 col-xs-2">

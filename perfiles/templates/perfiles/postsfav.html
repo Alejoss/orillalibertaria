@@ -1,0 +1,96 @@
+{% extends "base_index.html" %}
+
+{% block arriba %}
+<div class="col-md-7 column">
+    <div class = "perfil_pequena titulo_top pull-right">
+		<img title="{{perfil_usuario.nickname}} " src = "{{perfil_usuario.imagen_perfil}}">
+	</div>
+	{% if propio_usuario %}
+	<h2 class = "titulo_top"> Posts <small> - tus favoritos </small></h2>
+    {% else%}
+	<h2 class = "titulo_top"> Posts <small> - favoritos de <a href=" {% url 'perfiles:perfil' perfil_usuario.usuario.username 'recientes' %} "> {{perfil_usuario.nickname}} </a> </small></h2>
+    {% endif %}
+    <hr class = "titulo_top">
+</div>
+{% endblock arriba %}
+
+{% block tab_content %}
+<div class = "col-md-8 col-sm-8 col-xs-12">
+{% for post in posts %}
+<div class = "row">
+	<div class = "col-md-2 col-sm-2 col-xs-2 col-lg-2">
+		<div class = "control_votos">
+			<div class="row">
+				<div class = "col-md-12">
+		{% include 'control_votos_fav.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class = "col-md-10 col-sm-10 col-xs-10 col-lg-10">
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<p class = "text truncate">
+				{% if post.5 %}
+				<small>
+				<span class = "fa fa-play-circle"></span>
+				<a href=" {{post.0.video.url}} "> {{post.0.video.titulo}}:</a> <br><br>
+				</small> 
+				{% endif %}
+				{{post.3|safe}}
+				</p>
+			</div>
+			<div class="panel-footer">
+				{% if post.1 == 'propio_post' %}
+				<div class = "eliminar_editar pull-left">
+					<div class = "btn-group dropup">
+					<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="{% url 'temas:eliminar_propio_post' post.0.id %}">Eliminar Post</a>
+						</li>
+						<li class = "divider"></li>
+						<li>
+							<a href="{% url 'temas:editar_post' post.0.id %}">Editar
+							</a>
+						</li>
+					</ul>
+					</div>
+				</div>
+				{% endif %}
+
+				<div class = "footer_respuestas pull-right">
+					{% if post.5 %} <!--si es en video cambia a link a video -->
+					<a href = "{% url 'videos:post_video' post.0.video.id post.0.tema.slug post.0.id 'recientes' %} "> {{post.2}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
+					{% else %}
+					<a href = "{% url 'temas:post' post.0.tema.slug post.0.id 'recientes' %} "> {{post.2}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
+	 				{% endif %}
+					</div>
+
+				<div class = "nombre_fecha">
+					<p>
+					{% if post.0.es_respuesta %}
+					<small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} ">{{post.6}}</a> 
+					sobre <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}} </a> </small>
+					
+					{% else %}
+					<small> En <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}}</a> </small>
+					{% endif %}
+					<small class = "fecha_desde"> - {{post.4}}</small>
+					</p>
+				</div>
+				</div> <!--panel footer -->
+			</div> <!-- panel -->
+	</div> <!-- class md 10 -->
+</div> <!--row-->
+{% endfor %}
+</div>
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class = "col-md-4 col-sm-4 hidden-xs">
+	{% include 'sidebar_favoritos.html' %}
+</div>
+{% endblock sidebar %}
+

@@ -54,27 +54,27 @@
 }
 
 /* overlay post */
-#post_popular .overlay_post{
+#post_front .overlay_post{
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
 }
 
-#post_popular:hover .overlay_post{
+#post_front:hover .overlay_post{
   opacity: 0.8;
 }
 
-#post_popular .ver_post_overlay{
+#post_front .ver_post_overlay{
   transition:opacity 1.5s;
   -webkit-transition:opacity 1.5s;
 }
-#post_popular:hover .ver_post_overlay{
+#post_front:hover .ver_post_overlay{
   opacity: 0.8;
 }
 
 .overlay_post{
   position:absolute;
   width: 350px;
-  height: 120px;
+  height: 60px;
   background: #fff;
   opacity: 0;
   margin-top: 5px;
@@ -83,14 +83,14 @@
 
 .overlay_post_perfil{
   width: 170px;
-  height: 120px;
+  height: 60px;
   display: inline-block;
   margin-left: 15px;
 }
 
 .overlay_post_tema{
   width: 170px;
-  height: 120px;
+  height: 60px;
   margin-right: 15px;
   display: inline-block;
 }
@@ -105,33 +105,6 @@
   margin-top: 12px;
   float:left;
   font-weight: bold;
-}
-.datos_perfil_overlay{
-  display: block;
-  margin-left: 50px;
-  font-weight: bold;
-}
-.datos_perfil_overlay p{
-  display: block;
-}
-.posts_perfil_overlay{
-  display: inline-block;
-}
-.puntos_perfil_overlay{
-  display: inline-block;
-}
-.datos_tema_overlay{
-  display: block;
-  margin-right: 50px;
-  text-align: right;
-  font-weight: bold;
-}
-.datos_tema_overlay p{
-  display: block;
-}
-.posts_tema_overlay{
-}
-.videos_tema_overlay{
 }
 .imagen_tema_overlay{
   margin-left: 0px;
@@ -148,16 +121,12 @@
   position: absolute;
   background: #fff;
   opacity: 0;
-  margin-top: 130px;
+  margin-top: 75px;
   margin-left: 5px;
   height: 49px;
   width: 350px;
 }
-.ver_post_link{
-  height: auto;
-  width: auto;
-  display: inline;
-}
+
 .ver_post_div{
   margin-left: 100px;
 }
@@ -178,23 +147,6 @@
   margin-left: 10px;
 }
 
-.ver_post_puntos::before, .ver_post_puntos::after{
-  position: absolute;
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-family:'FontAwesome';
-}
-.ver_post_puntos::before{
-  content: "\f077";
-  top: 0;
-  font-weight: lighter;
-}
-.ver_post_puntos::after{
-  content: "\f078";
-  bottom: 0;
-  font-weight: lighter;
-}
 .ver_post_comments{
   float:right;
   margin-top: 25px;

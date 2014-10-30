@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_index.html" %}
 {% load staticfiles %}
 
 {% block extra_css %}
@@ -19,11 +19,10 @@
 </li>
 {% endblock navbar_mobile_xs %}
 
-{% block content %}
-<div class="row clearfix">
+{% block arriba %}
 	<div class="col-md-7 column">
         <div class = "perfil_pequena titulo_top pull-right">
-			<img src = "{{perfil_usuario.imagen_perfil}}">
+			<img title="{{perfil_usuario.nickname}} " src = "{{perfil_usuario.imagen_perfil}}">
 		</div>
 		{% if propio_usuario %}
 		<h2 class = "titulo_top"> Banco de Frases <small> - favoritas </small></h2>
@@ -32,38 +31,41 @@
         {% endif %}
         <hr class = "titulo_top">
 	</div>
-	<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
-		<div class="row clearfix">
-			<div class = "col-md-12">
-			{% for c in citas_favoritas %}
-			<div class = "row div_cita">
-				<div class="panel panel-info">
-					<div class="panel-body">
-						<blockquote>
-							<p>
-								"{{c.0.texto}}"
-							</p> <small>{{c.0.autor}}, <cite>{{c.0.fuente}}</cite></small>
-						</blockquote>
+{% endblock arriba %}
+
+{% block tab_content %}
+<div class = "col-md-6 col-sm-7 col-md-offset-1 col-xs-offset-0 col-xs-12">
+	{% for c in citas_favoritas %}
+		<div class = "row div_cita">
+			<div class="panel panel-info">
+				<div class="panel-body">
+					<blockquote>
+						<p>
+							"{{c.0.texto}}"
+						</p> <small>{{c.0.autor}}, <cite>{{c.0.fuente}}</cite></small>
+					</blockquote>
+				</div>
+				<div class="panel-footer">
+					<div class = "pull-right">
+					{% if user.is_authenticated %}
+					<p class = "hidden"> {{c.0.id}} </p>
+					<i class="marcar_favorito fa fa-star-o fa-lg {{c.1}} "></i>
+					{% else %}
+					<i class="fa fa-star"></i>
+					{% endif %}
+					<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
 					</div>
-					<div class="panel-footer">
-						<div class = "pull-right">
-						{% if user.is_authenticated %}
-						<p class = "hidden"> {{c.0.id}} </p>
-						<i class="marcar_favorito fa fa-star-o fa-lg {{c.1}} "></i>
-						{% else %}
-						<i class="fa fa-star"></i>
-						{% endif %}
-						<p class = "cita_favoritos" > {{c.0.favoritos_recibidos}}</p>
-						</div>
-						<p><small class = "fecha_desde"> favorito desde {{c.2|date:"F/d"}} </small></p>
-					</div>
+					<p><small class = "fecha_desde"> favorito desde {{c.2|date:"F/d"}} </small></p>
 				</div>
 			</div>
-			{% endfor %}
-			</div>
 		</div>
-	</div>
-	<div class="hidden-xs col-md-4 col-sm-4 column">
+	{% endfor %}
+</div> <!-- col md -->
+{% endblock tab_content %}
+
+{% block sidebar %}
+<div class="hidden-xs col-md-4 col-sm-4 column">
+
 		<div>
 			<br>
 			<button type="button" class="btn btn-warning btn_sidebar" 
@@ -79,12 +81,11 @@
 			</button>
 			<hr>
 		</div>
-		
-			{% include "imagenes_sidebar.html" %}
-		
+		<div class = "btn_sidebar">
+			{% include 'sidebar_favoritos.html' %}
+		</div>
 	</div> <!--column 4-->
-</div>
-{% endblock %}
+{% endblock sidebar %}
 
 {% block javascript %}
 <script>

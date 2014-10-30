@@ -4,10 +4,9 @@
 <div class = "col-md-3 control_galeria">
     <ul class = "list-group">
         {% if propio_usuario %}
-        <a class = "list-group-item active" href="{% url 'imagenes:index' 'recientes' %}">
-        <i class="fa fa-star"></i> {{nickname}}, tus imágenes favoritas.</a>
+        <a class = "list-group-item active" href=""></i> {{nickname}}, tus imágenes favoritas.</a>
         {% else%}
-        <a class = "list-group-item active" href="{%url 'perfiles:perfil' username 'recientes' %}">Imágenes favoritas de {{perfil_usuario.nickname}} </a>
+        <a class = "list-group-item active" href="">Imágenes favoritas de {{perfil_usuario.nickname}} </a>
 
             {% if user.is_authenticated %}
             <a class = "list-group-item" href="{% url 'imagenes:favoritas' user.username %}">

@@ -21,6 +21,7 @@ from citas.models import Cita
 from notificaciones.models import Notificacion
 from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
     bersuit_vergarabat, tiempo_desde, obtener_respuestas_post
+from perfiles.utils import obtener_num_favoritos
 
 
 @login_required
@@ -183,6 +184,7 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
     user_object = get_object_or_404(User, username=username)
     perfil_usuario = get_object_or_404(Perfiles, usuario=user_object)
     propio_usuario = False
+    num_favoritos = obtener_num_favoritos(perfil_usuario)
     if request.user.is_authenticated():
         perfil_usuario_visitante = Perfiles.objects.get(usuario=request.user)
         if perfil_usuario == perfil_usuario_visitante:
@@ -234,7 +236,8 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
 
     context = {'videos': videos, 'perfil_usuario': perfil_usuario,
-               'propio_usuario': propio_usuario, 'cita': cita}
+               'propio_usuario': propio_usuario, 'cita': cita,
+               'num_favoritos': num_favoritos}
 
     if extra_context is not None:
         context.update(extra_context)

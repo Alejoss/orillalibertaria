@@ -29,16 +29,15 @@
 	<div class = "col-md-8">
 		<div class = "thumbnail">
 			<div class = "row">
-			<h4 class = "titulo_videos_populares"> Videos Populares </h4>
 			{% for video in videos_populares %}
 				<div class = "col-md-4">
 					<div class = "thumbnail">
-						<a class = "thumb_video" href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
+						<div class = "thumb_video">
 							<!--overlay videos -->
 							<div class = "overlay_videos visible-md visible-lg"> 
-								<p class = "overlay_p">
+								<a class = "overlay_p" href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
 									{{video.0.titulo}}
-								</p>
+								</a>
 								<div class = "overlay_favoritos pull-right">
 									<p>{{video.0.favoritos_recibidos}}</p>
 									<span class = "fa fa-star"></span>
@@ -47,7 +46,7 @@
 							<!--overlay videos -->
 							<img class = "visible-md visible-lg imagen_video" src = "{{video.1}}">
 							<img class = "visible-sm visible-xs imagen_video_small" src = "{{video.1}}">
-						</a>
+						</div>
 						<div class = "visible-md visible-lg">
 							<div class = "perfil_pequena">
 								<img src = "{{video.0.perfil.imagen_perfil}}">
@@ -96,41 +95,27 @@
 		</div>
 	</div>
 	<div class="col-md-4">
-		<div id ="post_popular" class="thumbnail">
-			<h4 class = "titulo_post_popular"> Post Popular </h4>
-			
+		<div id ="post_front" class="thumbnail">
 		<div class = "overlay_post visible-lg">
 			<div class="row">
 				<div class = "overlay_post_perfil pull-left">
-					<a href="{% url 'perfiles:perfil' post_popular.creador.usuario 'recientes' %}">
+					<a href="{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}">
 					<div class = "row">
 						<div class = "imagen_perfil_overlay perfil_pequena">
-							<img src = "{{post_popular.creador.imagen_perfil}}">
+							<img src = "{{post_front.creador.imagen_perfil}}">
 						</div>
-						<p class = "overlay_perfil_nombre">{{post_popular.creador.nickname}}</p>
-					</div>
-					<div class = "row datos_perfil_overlay">
-						<p class = "puntos_perfil_overlay">{{post_popular.creador.votos_recibidos}} Puntos
-						</p>
-						<p class = "posts_perfil_overlay">{{post_popular.creador.numero_de_posts}} Posts
-						</p>
+						<p class = "overlay_perfil_nombre">{{post_front.creador.nickname}}</p>
 					</div>
 					</a>
 				</div>
 				<div class = "overlay_post_tema pull-right">
-					<a href="{% url 'temas:index_tema' post_popular.tema.slug 'recientes' %}">
+					<a href="{% url 'temas:index_tema' post_front.tema.slug 'recientes' %}">
 					<div class = "row">
 						<div class = "perfil_pequena imagen_tema_overlay">
-							<img src = "{{post_popular.tema.imagen}}">
+							<img src = "{{post_front.tema.imagen}}">
 						</div>
 						<p class = "overlay_tema_nombre pull-right">
-						{{post_popular.tema.nombre}}</p>
-					</div>
-					<div class = "row datos_tema_overlay">
-						<p class = "posts_tema_overlay">{{tema_posts_count}} Posts
-						</p>
-						<p class = "videos_tema_overlay">
-						{{tema_videos_count}} Videos
+						{{post_front.tema.nombre}}
 						</p>
 					</div>
 					</a>
@@ -139,46 +124,47 @@
 		</div> <!--ovelay_post-->
 
 		<div class="row ver_post_overlay visible-lg">
-			<a class = "ver_post_link" href="{% url 'temas:post' post_popular.tema.slug post_popular.id 'recientes' %}">
+			
 			<div class = "ver_post_div">
 				<div class = "ver_post_comments">
-					<p>{{comments_post_popular}} 
-			 		<span class="fa fa-comments"></span> 
+					<p>{{comments_post_front}} 
+			 			<span class="fa fa-comments"></span> 
 			 		</p>
 		 		</div>
 				<div class = "ver_posts_p">
 					<span class = "ver_post_puntos">
-					{{post_popular.votos_positivos}}
+					{{post_front.votos_positivos}} <i class = "fa fa-star"></i>
 					</span> 
-					<p class = "ver_post_text"> 
-						<strong>- Leer Post</strong>
+					<p class = "ver_post_text">
+						<a href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}">
+							<strong> Ver Post</strong>
+						</a>
 					</p>
 				</div>
 			</div>
-			</a>
 		</div>
 			
 			<div class="caption thumbnail_main_post">
-				<div id = "post_popular_parcial">
+				<div id = "post_front_parcial">
 				<div class = "thumbnail_main_div hidden-sm hidden-xs">
-					<img alt="300x200" src="{{imagen_post_popular}}"/>
+					<img alt="300x200" src="{{imagen_post_front}}"/>
 				</div>
-					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagen_post_popular}}">
+					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagen_post_front}}">
 					<p class = "text">
-					{{post_popular.texto|truncatewords:30}}
+					{{post_front.texto|truncatewords:30}}
 					</p>
 				</div>	
-					<a style = "float:right" href="{% url 'temas:post' post_popular.tema.slug post_popular.id 'recientes' %}"> <h4><small>leer post</h4></small></a>
+					<a style = "float:right" href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 				<div class = "perfil_pequena">
-					<img src = "{{post_popular.creador.imagen_perfil}}">
+					<img src = "{{post_front.creador.imagen_perfil}}">
 				</div>
 				<h4 class = "display_inline_block">
-					<small> <a href = "{% url 'perfiles:perfil' post_popular.creador.usuario 'recientes' %}"> {{post_popular.creador.nickname}} </a> en
-					<a href = "{% url 'temas:index_tema' post_popular.tema.slug 'recientes' %} ">
-					{{post_popular.tema.nombre}}</a></small>
+					<small> <a href = "{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}"> {{post_front.creador.nickname}} </a> en
+					<a href = "{% url 'temas:index_tema' post_front.tema.slug 'recientes' %} ">
+					{{post_front.tema.nombre}}</a></small>
 				</h4>
 			</div> <!--thumbnail_main_post-->
-		</div> <!--post _popular -->
+		</div> <!--post_front -->
 	</div> <!-- div col 4 -->
 </div> <!-- row -->
 

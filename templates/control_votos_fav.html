@@ -1,0 +1,40 @@
+<div class = "btn-group-vertical">
+{% if post.0.es_respuesta %}
+	{% if user.is_authenticated %}
+		<p class = "vote-id hidden">{{post.0.id}}</p>
+		<button type="button" class = "btn btn-default vote-up"> 
+			<span class="fa fa-chevron-up"></span>
+		</button>
+		<button type="button" class = "btn btn-default puntaje"> 
+			<h2 class = "numero_puntaje {{post.1}} "> {{post.0.votos_total}} </h2>
+		</button>
+		<button type="button" class = "btn btn-default vote-down"> 
+			<span class="fa fa-chevron-down"></span>
+		</button>
+	{% else %}
+		<button type="button" class = "btn btn-default disabled"> 
+			<span class="fa fa-chevron-up"></span>
+		</button>
+		<button type="button" class = "btn btn-default puntaje"> 
+			<h2 class = "numero_puntaje {{post.1}} "> {{post.0.votos_total}} </h2>
+		</button>
+		<button type="button" class = "btn btn-default disabled"> 
+			<span class="fa fa-chevron-down"></span>
+		</button>
+	{% endif %}
+{% else %}
+	{% if user.is_authenticated %}
+	<p class = "vote-id hidden">{{post.0.id}}</p>
+	<button title = "Guardar en favoritos" type="button" class = "btn btn-default vote-up"> 
+		<span class="fa fa-star fa-lg"></span>
+	</button>
+	{% else %}
+	<button title = "Guardar en favoritos" type="button" class = "btn btn-default disabled"> 
+		<span class="fa fa-star fa-lg"></span>
+	</button>
+	{% endif %}
+	<button type="button" class = "btn btn-default puntaje"> 
+		<h2 class = "numero_puntaje {{post.1}} "> {{post.0.votos_total}} </h2>
+	</button>
+{% endif %}
+</div>

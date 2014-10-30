@@ -15,6 +15,7 @@ $('#modal_imagen').on('show.bs.modal', function(e){
 	var nuevo_id = $(e.relatedTarget).parent().find(".imagen_id").text();
 
 	$(this).find('.modal-body > .imagen_modal').attr('src', nueva_src);
+	$(this).find('.modal-header > #link_imagen').attr('href', "/imagenes/imagen/"+nuevo_id+"/");
 	$(this).find('.modal-header > .marcar_favorito').addClass(nueva_imagen_fav);
 	$(this).find('.modal-header > #modal_favoritos').text(nuevos_favoritos);
 	$(this).find('.modal-header > #modal_counter').data('counter', nuevo_counter);
@@ -68,8 +69,10 @@ $('#modal_right').on('click', function(){
 		var src_nueva = $(counter_p_nuevo).parent().prev('.imagen').attr('src');
 		var fav_nuevos = $(counter_p_nuevo).parent().find('.favoritos').text();
 		var estrella_img = $(counter_p_nuevo).parent().find('.marcar_favorito');
+		var nuevo_id = $(counter_p_nuevo).parent().find('.imagen_id').text();
 
 		$("#modal_imagen").find('.imagen_modal').attr('src', src_nueva);
+		$("#modal_imagen").find('#link_imagen').attr('href', "/imagenes/imagen/"+nuevo_id+"/");
 		$("#modal_imagen").find("#modal_favoritos").text(fav_nuevos);
 		$("#modal_imagen").find("#modal_counter").data('counter', counter_nuevo);
 
@@ -95,8 +98,10 @@ $('#modal_left').on('click', function(){
 		var src_nueva = $(counter_p_nuevo).parent().prev('.imagen').attr('src');
 		var fav_nuevos = $(counter_p_nuevo).parent().find('.favoritos').text();
 		var estrella_img = $(counter_p_nuevo).parent().find('.marcar_favorito');
+		var nuevo_id = $(counter_p_nuevo).parent().find('.imagen_id').text();
 
 		$("#modal_imagen").find('.imagen_modal').attr('src', src_nueva);
+		$("#modal_imagen").find('#link_imagen').attr('href', "/imagenes/imagen/"+nuevo_id+"/");
 		$("#modal_imagen").find("#modal_favoritos").text(fav_nuevos);
 		$("#modal_imagen").find("#modal_counter").data('counter', counter_nuevo);
 

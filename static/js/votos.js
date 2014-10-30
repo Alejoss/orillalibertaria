@@ -28,7 +28,6 @@ $('#mostrar_post_padre').on('click', mostrar_post_padre);
 
 function sumar_respuesta(){
 	num_respuestas = parseInt($('#num_respuestas').text());
-	console.log(num_respuestas)
 	$('#num_respuestas').parent().effect("shake", {distance:5});
 	$('#num_respuestas').text(num_respuestas+1);
 }
@@ -39,11 +38,11 @@ function mostrar_post_padre(){
 }
 function vote_up(){
 	var $control = $(this).parent();
-	var puntaje_obj = $control.find('.numero_puntaje');		
+	var puntaje_obj = $control.find('.numero_puntaje');
 
 	if ( puntaje_obj.not("propio_post")){
 
-		var puntaje = parseInt($control.find('.numero_puntaje').text(), 10);
+		var puntaje = parseInt($control.find('.numero_puntaje').text());
 		var nuevo_puntaje = puntaje;
 		var post_id = $control.find('.vote-id').text();
 		$(this).toggleClass("btn-warning");
@@ -64,7 +63,6 @@ function vote_up(){
 		
 		else if ( puntaje_obj.hasClass("no-vote") )
 		{
-			console.log("no-vote case");
 			var nuevo_puntaje = puntaje + 1;
 			puntaje_obj.removeClass("no-vote");
 			puntaje_obj.addClass("voted-up");
@@ -91,7 +89,7 @@ function vote_up(){
 
 	}
 
-	puntaje_obj.html(nuevo_puntaje);
+	puntaje_obj.text(nuevo_puntaje);
 
 }
 
@@ -110,7 +108,6 @@ function vote_down(){
 
 		if ( puntaje_obj.hasClass("voted-up"))
 		{
-			console.log('vote_down en post voted-up');
 			var nuevo_puntaje = puntaje - 2;
 			puntaje_obj.removeClass("voted-up");
 			puntaje_obj.addClass("voted-down");
@@ -123,7 +120,6 @@ function vote_down(){
 		}
 		else if (puntaje_obj.hasClass("no-vote")){
 
-			console.log('vote_down en post no-vote');
 			var nuevo_puntaje = puntaje -1;
 			puntaje_obj.removeClass("no-vote");
 			puntaje_obj.addClass("voted-down");
@@ -136,7 +132,6 @@ function vote_down(){
 		}
 		else if (puntaje_obj.hasClass("voted-down")){
 
-			console.log('vote_down en post voted-down');
 			var nuevo_puntaje = puntaje +1;
 			puntaje_obj.removeClass("voted-down");
 			puntaje_obj.addClass("no-vote");
@@ -149,7 +144,6 @@ function vote_down(){
 		}
 	}
 
-	console.log("nuevo_puntaje "+ nuevo_puntaje);
 	puntaje_obj.html(nuevo_puntaje);
 
 }

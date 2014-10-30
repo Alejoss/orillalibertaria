@@ -13,25 +13,16 @@
 						{% if user.is_authenticated %}
 						<p class = "vote-id hidden">{{post.0.id}}</p>
 						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="fa fa-chevron-up"></span>
+							<span class="fa fa-star fa-lg"></span>
 						</button>
 						{% else %}
 						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-up"></span>
+							<span class="fa fa-star fa-lg"></span>
 						</button>
 						{% endif %}
 						<button class = "btn puntaje"> 
 						<h2 class = "numero_puntaje {{post.2}}"> {{post.0.votos_total}} </h2>
 						</button>
-						{% if user.is_authenticated %}
-						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-						{% else %}
-						<button type="button" class = "btn btn-default disabled"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-						{% endif %}
 					</div>
 				</div>
 			</div>

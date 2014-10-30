@@ -6,19 +6,8 @@
 		{% for post in posts %}
 			<div>
 			<div class = "col-md-2 col-sm-2 col-xs-2 col-lg-2">
-				<div class = "control_votos">
-					<div class = "btn-group-vertical">
-						<p class = "vote-id hidden">{{post.0.id}}</p>
-						<button type="button" class = "btn btn-default vote-up"> 
-							<span class="fa fa-chevron-up"></span>
-						</button>
-						<button type="button" class = "btn btn-default puntaje"> 
-						<h2 class = "numero_puntaje {{post.3}} "> {{post.0.votos_total}} </h2>
-						</button>
-						<button type="button" class = "btn btn-default vote-down"> 
-							<span class="fa fa-chevron-down"></span>
-						</button>
-					</div>
+				<div class = "control_votos">			
+					{% include 'control_votos_fav.html' %}
 				</div>
 			</div>
 			<div class = "col-md-10 col-sm-10 col-xs-10 col-lg-10">
@@ -31,12 +20,12 @@
 						<a href=" {{post.0.video.url}} "> {{post.0.video.titulo}}:</a> <br><br>
 						</small> 
 						{% endif %}
-						{{post.6|safe}}
+						{{post.3|safe}}
 						</p>
 					</div>
 					<div class="panel-footer">
 					<div class = "row">
-						{% if post.0.creador.usuario == request.user %}
+						{% if post.1 == 'propio_post' %}
 						<div class = "eliminar_editar pull-left">
 							<div class = "btn-group dropup">
 							<button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="fa fa-cog"></span>
@@ -56,27 +45,27 @@
 						{% endif %}
 
 						<div class = "footer_respuestas pull-right">
-							{% if post.5 %}
-							<a href = "{% url 'videos:post_video' post.0.video.id post.0.tema.slug post.0.id 'recientes' %} "> {{post.4}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
+							{% if post.5 %} <!--si es en video cambia a link a video -->
+							<a href = "{% url 'videos:post_video' post.0.video.id post.0.tema.slug post.0.id 'recientes' %} "> {{post.2}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
 							{% else %}
-			 				<a href = "{% url 'temas:post' post.0.tema.slug post.0.id 'recientes' %} "> {{post.4}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
+							<a href = "{% url 'temas:post' post.0.tema.slug post.0.id 'recientes' %} "> {{post.2}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right "></span></a>
 			 				{% endif %}
 		 				</div>
 
 						<div class = "nombre_fecha">
 							<p>
-							{% if post.1 %}
-							<small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} ">{{post.2}}</a> 
+							{% if post.0.es_respuesta %}
+							<small> Respuesta a <a href=" {% url 'perfiles:perfil' post.2 'recientes' %} ">{{post.6}}</a> 
 							sobre <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}} </a> </small>
 							
 							{% else %}
 							<small> En <a href = "{% url 'temas:index_tema' post.0.tema.slug 'recientes' %} ">{{post.0.tema.nombre}}</a> </small>
 							{% endif %}
-							<small class = "fecha_desde"> - {{post.7}}</small>
+							<small class = "fecha_desde"> - {{post.4}}</small>
 							</p>
 						</div>
 						</div>
-		 				{% for respuesta in post.8 %}
+		 				{% for respuesta in post.7 %}
 		 				<div class = "row div_respuesta_post">
 		 					<div class ="col-xs-offset-1 col-sm-offset-1
 		 					col-md-offset-1

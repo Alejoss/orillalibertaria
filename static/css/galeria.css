@@ -1,3 +1,7 @@
+.borde {
+  border: 1px solid red;
+}
+
 body {
     padding-top: 5px;
 	background:#fafafa;
@@ -79,6 +83,23 @@ body {
 	max-width: 600px;
 	height: auto;
 }
+.link_imagen{
+	margin-left: 190px;
+	color: #000000;
+  	text-shadow: 0 1px 0 #ffffff;
+  	opacity: 0.2;
+  	filter: alpha(opacity=20);
+}
+
+.link_imagen:hover,
+.link_imagen:focus {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
 
 /* Colaborar organizar */
 

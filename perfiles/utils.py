@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+from imagenes.models import Ifavoritas
+from citas.models import Cfavoritas
+from videos.models import VFavoritos
+from temas.models import Votos
+
+
     # Perfiles, editar perfil descripcion
 def obtener_links_perfil(perfil):
     # Recibe un Perfil object
@@ -20,3 +28,19 @@ def obtener_links_perfil(perfil):
     evaluar_link(link4, links)
     evaluar_link(link5, links)
     return links
+
+
+def obtener_num_favoritos(perfil):
+    # Recibe un perfil devuelve una lista con el numero de favoritos en este orden:
+    # Imágenes, Frases, Videos, Posts
+    num_imagenes_fav = Ifavoritas.objects.filter(
+        perfil=perfil, eliminado=False).count()
+    num_frases_fav = Cfavoritas.objects.filter(
+        perfil=perfil).count()
+    num_videos_fav = VFavoritos.objects.filter(
+        perfil=perfil, eliminado=False).count()
+    num_posts_fav = Votos.objects.filter(tipo=1,
+        usuario_votante=perfil, post_votado__es_respuesta=False,
+        post_votado__eliminado=False).count()
+
+    return [num_imagenes_fav, num_frases_fav, num_videos_fav, num_posts_fav]

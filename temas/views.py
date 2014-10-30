@@ -22,8 +22,8 @@ from videos.models import Videos
 from imagenes.models import Imagen
 from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
     obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde,\
-    obtener_respuestas_post
-from utils import obtener_posts_populares, obtener_videos_populares
+    obtener_respuestas_post, obtener_args_post
+from utils import obtener_posts_recientes, obtener_videos_populares
 
 # print "variable %s" %(variable) <--- para debug
 
@@ -171,13 +171,9 @@ def buscar(request):
 def main(request, queryset, template='temas/main.html', extra_context=None):
     # muestra la pagina principal de todos los temas
     # Post Popular
-    post_popular = (obtener_posts_populares(1))[0]
-    imagen_post_popular = obtener_imagen_tema(post_popular.tema)
-    comments_post_popular = Respuestas.objects.filter(post_padre=post_popular).count()
-    tema_posts_count = Posts.objects.filter(
-        tema=post_popular.tema, eliminado=False, es_respuesta=False).count()
-    tema_videos_count = Videos.objects.filter(
-        tema=post_popular.tema, eliminado=False).count()
+    post_front = (obtener_posts_recientes(1))[0]
+    imagen_post_front = obtener_imagen_tema(post_front.tema)
+    comments_post_front = Respuestas.objects.filter(post_padre=post_front).count()
 
     # autocomplete search temas
     lista_temas_autocomplete = []
@@ -230,14 +226,12 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     cita_obj = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
     cita = obtener_cita(cita_obj)
 
-    context = {'temas': temas, 'post_popular': post_popular, 'videos_populares': videos_populares,
+    context = {'temas': temas, 'post_front': post_front, 'videos_populares': videos_populares,
                'cita': cita, 'recientes': recientes, 'activos': activos,
-               'populares': populares, 'imagen_post_popular': imagen_post_popular,
-               'tema_posts_count': tema_posts_count,
-               'tema_videos_count': tema_videos_count,
+               'populares': populares, 'imagen_post_front': imagen_post_front,
                'num_temas_ol': num_temas_ol, 'num_posts_ol': num_posts_ol,
                'num_videos_ol': num_videos_ol,
-               'comments_post_popular': comments_post_popular,
+               'comments_post_front': comments_post_front,
                'lista_temas_json': lista_temas_json}
 
     if extra_context is not None:
@@ -382,6 +376,7 @@ def sumar_post(request, slug):
 def post(request, slug, post_id, queryset):
     template = 'temas/post.html'
 
+    perfil_usuario = None
     if request.user.is_authenticated():
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
@@ -402,15 +397,7 @@ def post(request, slug, post_id, queryset):
 
     # post
     post_obj = get_object_or_404(Posts, id=post_id)
-    if request.user.is_authenticated():
-        post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
-    else:
-        post_voted_status = "no-vote"
-    post_numrespuestas = Respuestas.objects.filter(
-        post_padre=post_obj, post_respuesta__eliminado=False).count()
-    texto_procesado_post = procesar_espacios(post_obj.texto)
-    hora_procesada = tiempo_desde(post_obj.fecha)
-    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado_post, hora_procesada]
+    post = obtener_args_post(post_obj, perfil_usuario)
 
     # El post padre del post si el post es respuesta
     post_padre = []
@@ -418,18 +405,7 @@ def post(request, slug, post_id, queryset):
         # respuestas post_padre_object.
         respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
         post_padre_obj = respuesta_obj.post_padre
-
-        if request.user.is_authenticated():
-            post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
-        else:
-            post_padre_estado = "no-vote"
-
-        post_padre_numrespuestas = Respuestas.objects.filter(
-            post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
-        texto_procesado_postpadre = procesar_espacios(post_padre_obj.texto)
-        hora_procesada = tiempo_desde(post_padre_obj.fecha)
-        post_padre = [post_padre_obj, post_padre_estado, post_padre_numrespuestas,
-                      texto_procesado_postpadre, hora_procesada]
+        post_padre = obtener_args_post(post_padre_obj, perfil_usuario)
 
     # respuestas Post, ordenadas por el queryset. suma la clase al filtro activo
     recientes = ""
@@ -446,19 +422,8 @@ def post(request, slug, post_id, queryset):
     respuestas = []
     for r in respuestas_obj:
         post_respuesta = r.post_respuesta
-        if post_respuesta.eliminado is False:
-            respuesta_numrespuestas = Respuestas.objects.filter(
-                post_padre=post_respuesta, post_respuesta__eliminado=False).count()
-            if request.user.is_authenticated():
-                respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
-            else:
-                respuesta_estado = "no-vote"
-            texto_procesado_resp = procesar_espacios(post_respuesta.texto)
-            hora_procesada = tiempo_desde(post_respuesta.fecha)
-            respuestas_respuesta = obtener_respuestas_post(post_respuesta)
-            respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado,
-                 texto_procesado_resp, hora_procesada, respuestas_respuesta])
+        respuesta = obtener_args_post(post_respuesta, perfil_usuario)
+        respuestas.append(respuesta)
 
     # utiliza el mismo form que los posts normales
     form_respuesta = FormNuevoPost()
@@ -555,8 +520,7 @@ def remover_voto_ajax(request):
         autor_post = post_votado.creador
         usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
         usuario_votante = Perfiles.objects.get(usuario=request.user)
-        voto_actual = Votos.objects.get(post_votado=post_votado,
-                                        usuario_votante=usuario_votante)
+        voto_actual = get_object_or_404(Votos, post_votado=post_votado, usuario_votante=usuario_votante)
         if voto_actual.tipo == 1:
             # Si es voto positivo, resta un voto.
             post_votado.votos_positivos -= 1
@@ -587,11 +551,11 @@ def vote_up_ajax(request):
         usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
         usuario_votante = Perfiles.objects.get(usuario=request.user)
 
-        if usuario_votado == usuario_votante:
-            return HttpResponse('no se puede votar en propios posts')
+        if usuario_votado == usuario_votante and post_votado.es_respuesta is True:
+            return HttpResponse('no puedes votar tus propios post')
         else:
             ya_voto = Votos.objects.filter(post_votado=post_votado,
-                                           usuario_votante=usuario_votante).exists()
+                                          usuario_votante=usuario_votante).exists()
             if ya_voto:
                 # si ya voto, obtiene el objecto Voto.
                 voto_actual = Votos.objects.get(post_votado=post_votado,
@@ -615,10 +579,13 @@ def vote_up_ajax(request):
                 elif voto_actual.tipo == 0:
                     voto_actual.tipo = 1
                     post_votado.votos_positivos += 1
-                    usuario_votado.votos_recibidos += 1
+                    if usuario_votado == usuario_votante:
+                        pass
+                    else:
+                        usuario_votado.votos_recibidos += 1
+                        usuario_votado.save()
                     voto_actual.save()
                     post_votado.save()
-                    usuario_votado.save()
             else:
                 # Si no existe un voto del usuario en ese post
                 # crea un voto Positivo de ese usario en ese post.
@@ -633,8 +600,11 @@ def vote_up_ajax(request):
                 post_votado.save()
 
                 # suma 1 a los votos recibidos del usuario_votado.
-                usuario_votado.votos_recibidos += 1
-                usuario_votado.save()
+                if usuario_votado == usuario_votante:
+                    pass
+                else:
+                    usuario_votado.votos_recibidos += 1
+                    usuario_votado.save()
 
                 # Notificacion post numero de votos altos
                 if post_votado.votos_total == 100 or post_votado.votos_total == 1000:
@@ -663,7 +633,7 @@ def vote_down_ajax(request):
         usuario_votado = Perfiles.objects.get(usuario=autor_post.usuario)
         usuario_votante = Perfiles.objects.get(usuario=request.user)
 
-        if usuario_votado == usuario_votante:
+        if usuario_votado == usuario_votante and post_votado.es_respuesta is False:
             return HttpResponse('no puedes votar tus propios post')
         else:
             ya_voto = Votos.objects.filter(post_votado=post_votado,

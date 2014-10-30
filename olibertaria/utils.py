@@ -284,14 +284,26 @@ def obtener_imagenes_display(numero):
     return lista_urls
 
 
+# Main, Tema, Posts, Notificaciones, Videos
+def obtener_imagen_tema(tema):
+    # Devuelve la imagen correspondiente al tema, si no, devuelve un default.
+    imagen = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
+    if len(tema.imagen) > 10:
+        imagen = tema.imagen
+    return imagen
+
+
 # Posts, Perfil, Videos, Post Videos
 def obtener_voted_status(post, perfil):
     # Recibe un post object y un perfil object.
     # Devuelve el voted_status (no-vote, voted-up/down, propio_post) para la clase de CSS.
     voted_status = "no-vote"
+
     if post.creador == perfil:
-        voted_status = "propio_post"
-    else:
+        if post.es_respuesta:
+            voted_status = "propio_post"
+
+    if voted_status != "propio_post":
         if Votos.objects.filter(post_votado=post, usuario_votante=perfil).exists():
             voto = Votos.objects.get(post_votado=post, usuario_votante=perfil)
             if voto.tipo == 1:
@@ -304,10 +316,19 @@ def obtener_voted_status(post, perfil):
     return voted_status
 
 
-# Main, Tema, Posts, Notificaciones, Videos
-def obtener_imagen_tema(tema):
-    # Devuelve la imagen correspondiente al tema, si no, devuelve un default.
-    imagen = "https://s3-us-west-1.amazonaws.com/orillalibertaria/tema_default.jpg"
-    if len(tema.imagen) > 10:
-        imagen = tema.imagen
-    return imagen
+# Posts, Perfil, Videos, Post Videos
+def obtener_args_post(post, perfil):
+    # Devuelve una lista con el post, voted_status, num_respuestas,
+    # texto_procesado, hora_procesada
+    if perfil is not None:
+        voted_status = obtener_voted_status(post, perfil)
+    else:
+        voted_status = "no-vote"
+
+    num_respuestas = Respuestas.objects.filter(
+        post_padre=post, post_respuesta__eliminado=False).count()
+
+    texto_procesado = procesar_espacios(post.texto)
+    hora_procesada = tiempo_desde(post.fecha)
+
+    return [post, voted_status, num_respuestas, texto_procesado, hora_procesada]

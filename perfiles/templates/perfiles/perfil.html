@@ -40,11 +40,11 @@
 					<ul class="nav nav-pills">
 					<br>
 						<li>
-							Puntos <span class="badge"> {{usuario_perfil.votos_recibidos}} </span> 
+							Puntos <span class="badge"> {{perfil_usuario.votos_recibidos}} </span> 
 						</li>
 					<br>
 						<li>
-							Posts <span class="badge">{{usuario_perfil.numero_de_posts}}</span> 
+							Posts <span class="badge">{{perfil_usuario.numero_de_posts}}</span> 
 						</li>
 					<br>
 					{% if creo_temas %}
@@ -79,24 +79,7 @@
 						</a>
 					</div>
 					<div id="panel-element-400081" class="panel-collapse collapse in">
-						<a href = "{% url 'imagenes:favoritas' usuario_visitado.username %}">
-							<div class="panel-body">
-								<span class = "badge pull-right"> {{numero_imgfavoritas}} </span>
-								Imágenes
-							</div>
-						</a>
-						<a href = "{% url 'citas:favoritas' usuario_visitado.username %}">
-							<div class="panel-body">
-								<span class = "badge pull-right"> {{num_frases_favoritas}} </span>
-								Frases
-							</div>
-						</a>
-						<a href = "{% url 'videos:videos_perfil' usuario_visitado.username %}">
-							<div class="panel-body">
-								<span class = "badge pull-right"> {{num_videos_favoritos}} </span>
-								Videos
-							</div>
-						</a>
+						{% include 'sidebar_favoritos.html' %}
 					</div>
 				</div>
 				<div class="panel panel-default">
@@ -129,7 +112,7 @@
 	</div> <!--visible sm xs -->
 	<div class = "col-md-6 col-md-offset-1 hidden-sm hidden-xs">
 		<div class = "imagenes_portada">
-		{% if tiene_imagenesfav %}
+		{% if num_favoritos.0 %}
 			<ul class="pgwSlider">
 			    <li>
 			    	<img src="{{portada}}"> 
@@ -146,22 +129,7 @@
 	<div class = "col-md-5 hidden-xs hidden-sm">
 		<div class = "row">
 			<div class = "col-md-6 col-md-offset-4">
-				<div class = "imagenes_frases_perfil">
-				<ul class = "list-group">
-					<a class = "list-group-item" href = "{% url 'imagenes:favoritas' usuario_visitado.username %}">
-						<span class = "badge">{{numero_imgfavoritas}}</span>
-						Imágenes favoritas
-					</a>
-					<a class = "list-group-item" href = "{% url 'citas:favoritas' usuario_visitado.username %}">
-						<span class = "badge">{{num_frases_favoritas}}</span>
-						Frases favoritas
-					</a>
-					<a class = "list-group-item" href = "{% url 'videos:videos_perfil' usuario_visitado.username %}">
-						<span class = "badge"> {{num_videos_favoritos}} </span>
-						Videos favoritos
-					</a>
-				</div>
-				</ul>
+				{% include 'sidebar_favoritos.html' %}
 			</div>
 		</div>
 	</div> <!--col 5 -->
@@ -225,11 +193,11 @@
 				<ul class="nav nav-pills">
 				<br>
 					<li>
-						Puntos <span class="badge"> {{usuario_perfil.votos_recibidos}} </span> 
+						Puntos <span class="badge"> {{perfil_usuario.votos_recibidos}} </span> 
 					</li>
 				<br>
 					<li>
-						Posts <span class="badge">{{usuario_perfil.numero_de_posts}}</span> 
+						Posts <span class="badge">{{perfil_usuario.numero_de_posts}}</span> 
 					</li>
 				<br>
 				{% if creo_temas %}

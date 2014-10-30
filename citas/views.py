@@ -17,6 +17,7 @@ from models import Cita, Cfavoritas, Ceditadas, Cdenunciadas
 from perfiles.models import Perfiles
 from forms import FormNuevaCita, FormEditarCita
 from notificaciones.models import Notificacion
+from perfiles.utils import obtener_num_favoritos
 
 
 @page_template('index_page_citas.html')  # endless pagination
@@ -201,6 +202,7 @@ def favoritas(request, username):
     user_object = User.objects.get(username=username)
 
     perfil_usuario = Perfiles.objects.get(usuario=user_object)  # perfil usuario visitado
+    num_favoritos = obtener_num_favoritos(perfil_usuario)
     Cfavoritas_objects = Cfavoritas.objects.filter(perfil=perfil_usuario, eliminado=False).order_by('-fecha')
     propio_usuario = False
     citas_favoritas = []
@@ -228,12 +230,10 @@ def favoritas(request, username):
         for c in Cfavoritas_objects:
             citas_favoritas.append([c.cita, "", c.fecha])
 
-    # slider imagenes
-    imagenes_display = obtener_imagenes_display(7)
-
     context = {
-        'citas_favoritas': citas_favoritas, 'imagenes_display': imagenes_display,
-        'perfil_usuario': perfil_usuario, 'propio_usuario': propio_usuario}
+        'citas_favoritas': citas_favoritas,
+        'perfil_usuario': perfil_usuario, 'propio_usuario': propio_usuario,
+        'num_favoritos': num_favoritos}
 
     return render(request, template, context)
 
