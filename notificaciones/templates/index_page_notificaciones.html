@@ -10,13 +10,17 @@
 	{% if notificacion.0.tipo_objeto == "post" %}
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> voto a favor de tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
+		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">	<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> 
+			{% if notificacion.1.es_respuesta %}
+			voto a favor de tu 
+			{% else %}
+			marcó como favorito tu 
+			{% endif %}
+			<a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
-		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">		
+		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">	<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">		
 			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "num" %}

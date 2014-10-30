@@ -7,7 +7,12 @@
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
 
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> voto a favor de tu 
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> 
+			{% if notificacion.1.es_respuesta %}
+			voto a favor de tu 
+			{% else %}
+			marcó como favorito tu 
+			{% endif %}
 			<a class ="notificacion_obj" href="{% url 'notificaciones:marcar_leida_redirect' notificacion.1.tema.slug notificacion.0.id %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">		
