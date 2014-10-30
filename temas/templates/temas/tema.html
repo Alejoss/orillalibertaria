@@ -1,6 +1,14 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block titletag %}
+<title> {{tema.nombre}} en Orilla Libertaria </title>
+{% endblock titletag %}
+
+{% block meta_description %}
+<meta name="description" content = "Posts y videos del tema '{{tema.nombre}}' compartidos en Orilla Libertaria">
+{% endblock meta_description %}
+
 {% block extra_css %}
 <link href="{% static 'css/post.css' %}" rel="stylesheet">
 <link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">

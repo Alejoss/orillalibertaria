@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Orilla Libertaria</title>
+  
+  {% block titletag %}
+  {% endblock titletag %}
+
   {% load staticfiles %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Comunidad dedicada a compartir contenido libertario">
-  <meta name="author" content="Temas Libertarios">
+
+  {% block meta_description %}
+  {% endblock meta_description %}
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />

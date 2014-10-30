@@ -1,6 +1,14 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block titletag %}
+<title> Orilla Libertaria </title>
+{% endblock titletag %}
+
+{% block meta_description %}
+<meta name="description" content = "Biblioteca de contenido libertario">
+{% endblock meta_description %}
+
 {% block extra_css %}
 <link href="{% static 'css/main.css' %}" rel="stylesheet">
 <link href="{% static 'css/jquery-ui.min_ol_autocomplete.css' %}" rel="stylesheet">

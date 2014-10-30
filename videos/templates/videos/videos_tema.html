@@ -1,6 +1,14 @@
 {% extends "base_index.html" %}
 {% load staticfiles %}
 
+{% block titletag %}
+<title> Videos sobre '{{tema.0.nombre}}'</title>
+{% endblock titletag %}
+
+{% block meta_description %}
+<meta name="description" content = "Videos del tema '{{tema.0.nombre}}' compartidos en Orilla Libertaria">
+{% endblock meta_description %}
+
 {% block extra_css %}
 <link href="{% static 'css/post.css' %}" rel="stylesheet">
 <link href="{% static 'css/videos.css' %}" rel="stylesheet">

@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% block titletag %}
+<title> Imágenes Libertarias </title>
+{% endblock titletag %}
+
+
+{% block meta_description %}
+<meta name="description" content = "Colección de imágenes libertarias compartidas en Orilla Libertaria">
+{% endblock meta_description %}
+
+
 {% block extra_css %}
 <link href="{% static 'css/galeria.css' %}" rel="stylesheet">
 {% endblock extra_css %}

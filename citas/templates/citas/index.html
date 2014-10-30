@@ -2,6 +2,15 @@
 {% load staticfiles %}
 <!--index CITAS -->
 
+{% block titletag %}
+<title> Citas y Frases Libertarias </title>
+{% endblock titletag %}
+
+{% block meta_description %}
+<meta name="description" content = "Colección de citas y frases libertarias compartidas en Orilla Libertaria">
+{% endblock meta_description %}
+
+
 {% block extra_css %}
 <link href="{% static 'css/citas.css' %}" rel="stylesheet">
 <link href="{% static 'css/carrusel_sidebar.css' %}" rel="stylesheet">
