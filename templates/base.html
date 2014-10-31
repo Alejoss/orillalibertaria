@@ -102,7 +102,7 @@
 
 					{% else %}
 					<li id="beta_login" >
-						<a href="{% url 'perfiles:login' %} ">Login <i class = "beta_login fa fa-sun-o"></i> <small class = "beta_login" > Beta </small> </a>
+						<a href="{% url 'perfiles:login' %} ">Login <i class = "beta_login fa fa-circle-o-notch"></i> <small class = "beta_login" > Beta </small> </a>
 					</li>
 					{% endif %}
 				</ul>
@@ -150,10 +150,10 @@
 $("#beta_login").hover(
 	function(){
 		console.log("hover")
-		$(this).find(".fa-sun-o").addClass("fa-spin");
+		$(this).find(".fa-circle-o-notch").addClass("fa-spin");
 	}, 
 	function(){
-		$(this).find(".fa-sun-o").removeClass("fa-spin");
+		$(this).find(".fa-circle-o-notch").removeClass("fa-spin");
 });
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
