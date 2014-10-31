@@ -6,7 +6,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">
-				<a href = "{% url 'temas:index_tema' t.0.slug 'ultimos' %}">  {{t.0.nombre}} </a>
+				<a href = "{% url 'temas:index_tema' t.0.slug 'ultimos' %}">  {{t.0.nombre}} {{t.0.nivel_popularidad}} {{t.0.nivel_actividad}}  </a>
 			</h3>
 		</div>
 		<div class="panel-body">

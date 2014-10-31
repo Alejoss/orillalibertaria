@@ -2,7 +2,6 @@
 # VIEWS VIDEOS
 
 import urlparse
-from datetime import datetime
 
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -22,6 +21,7 @@ from notificaciones.models import Notificacion
 from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
     bersuit_vergarabat, tiempo_desde, obtener_respuestas_post
 from perfiles.utils import obtener_num_favoritos
+from temas.utils import popularidad_actividad_tema
 
 
 @login_required
@@ -51,6 +51,10 @@ def nuevo_video(request, slug):
                 tema=tema, perfil=perfil_usuario, titulo=titulo,
                 descripcion=descripcion, url=url, es_youtube=es_youtube, youtube_id=youtube_id)
             nuevo_video.save()
+
+            # calcular nivel actividad y de popularidad del Tema
+            popularidad_actividad_tema(tema, "positivo")
+
             return redirect('videos:videos_tema', slug=tema.slug, queryset='recientes')
         else:
             print "form invalid"
@@ -350,25 +354,8 @@ def sumar_post_video(request, slug, video_id):
                                                       tipo_notificacion="comment")
                 notificacion_respuesta.save()
 
-            # sumar a nivel de popularidad del Tema
-            tema.nivel_popularidad += 1
-            # calcular nivel actividad del Tema
-            cinco_posts = Posts.objects.filter(
-                tema=tema).order_by('-fecha')[:5]
-            n_actividad = 0
-            hoy = datetime.today()
-            for post in cinco_posts:
-                f = post.fecha
-                if hoy.month == f.month:
-                    if hoy.day - f.day < 7:
-                        n_actividad += 5
-                    elif hoy.day - f.day < 15:
-                        n_actividad += 3
-                    else:
-                        n_actividad += 1
-            tema.nivel_actividad = n_actividad
-
-            tema.save()
+            # calcular nivel actividad y de popularidad del Tema
+            popularidad_actividad_tema(tema, "positivo")
 
             return HttpResponseRedirect(reverse('videos:video',
                                                 kwargs={'video_id': video_padre.id, 'slug': tema.slug, 'queryset': u'recientes'}))
@@ -414,6 +401,9 @@ def marcar_favorito(request):
             registro_favorito = VFavoritos(video=video, perfil=perfil_usuario)
             video.save()
             registro_favorito.save()
+
+            # calcular nivel actividad y de popularidad del Tema
+            popularidad_actividad_tema(video.tema, "positivo")
 
             #Notificaciones video
             if perfil_usuario != video.perfil:

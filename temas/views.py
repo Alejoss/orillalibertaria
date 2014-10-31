@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # VIEWS TEMAS
 
-from datetime import datetime
 import re
 import json
 
@@ -23,7 +22,8 @@ from imagenes.models import Imagen
 from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
     obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde,\
     obtener_respuestas_post, obtener_args_post
-from utils import obtener_posts_recientes, obtener_videos_populares
+from utils import obtener_posts_recientes, obtener_videos_populares,\
+                popularidad_actividad_tema
 
 # print "variable %s" %(variable) <--- para debug
 
@@ -343,28 +343,11 @@ def sumar_post(request, slug):
                          tema=tema_contenedor)
             post.save()
 
-            # sumar a nivel de popularidad del Tema
-            tema_contenedor.nivel_popularidad += 1
-
-            # calcular nivel actividad del Tema
-            cinco_posts = Posts.objects.filter(
-                tema=tema_contenedor, eliminado=False).order_by('-fecha')[:5]
-            n_actividad = 0
-            hoy = datetime.today()
-            for post in cinco_posts:
-                f = post.fecha
-                if hoy.month == f.month:
-                    if hoy.day - f.day < 7:
-                        n_actividad += 5
-                    elif hoy.day - f.day < 15:
-                        n_actividad += 3
-                    else:
-                        n_actividad += 1
-            tema_contenedor.nivel_actividad = n_actividad
-            tema_contenedor.save()
+            # calcular nivel actividad y de popularidad del Tema
+            popularidad_actividad_tema(tema_contenedor, "positivo")
 
             return HttpResponseRedirect(reverse('temas:index_tema',
-                                                kwargs={'slug': tema_contenedor.slug, 'queryset': u'recientes'}))
+                                        kwargs={'slug': tema_contenedor.slug, 'queryset': u'recientes'}))
 
     form_nuevo_post = FormNuevoPost()
     tema_contenedor = get_object_or_404(Temas, slug=slug)
@@ -556,6 +539,11 @@ def vote_up_ajax(request):
         else:
             ya_voto = Votos.objects.filter(post_votado=post_votado,
                                           usuario_votante=usuario_votante).exists()
+
+            # calcular nivel actividad y de popularidad del Tema
+            tema = post_votado.tema
+            popularidad_actividad_tema(tema, "positivo")
+
             if ya_voto:
                 # si ya voto, obtiene el objecto Voto.
                 voto_actual = Votos.objects.get(post_votado=post_votado,
@@ -586,6 +574,7 @@ def vote_up_ajax(request):
                         usuario_votado.save()
                     voto_actual.save()
                     post_votado.save()
+
             else:
                 # Si no existe un voto del usuario en ese post
                 # crea un voto Positivo de ese usario en ese post.
@@ -638,6 +627,10 @@ def vote_down_ajax(request):
         else:
             ya_voto = Votos.objects.filter(post_votado=post_votado,
                                            usuario_votante=usuario_votante).exists()
+
+            tema = post_votado.tema
+            popularidad_actividad_tema(tema, "negativo")
+
             if ya_voto:
                 voto_actual = Votos.objects.get(post_votado=post_votado,
                                                 usuario_votante=usuario_votante)
@@ -660,6 +653,7 @@ def vote_down_ajax(request):
                     voto_actual.save()
                     post_votado.save()
                     usuario_votado.save()
+
             else:
                 voto = Votos(usuario_votado=usuario_votado,
                              usuario_votante=usuario_votante,
