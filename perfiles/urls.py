@@ -16,5 +16,6 @@ urlpatterns = patterns('',
                        # url(r'^registrar/$', views.registrar, name='registrar'),  # Sin uso por ahora
                        url(r'^(?P<username>\w+)/postsfav/$', views.postsfav, name='postsfav'),
                        url(r'^(?P<username>\w+)/(?P<queryset>\w+)/$',
-                           views.perfil, name='perfil')
+                           views.perfil, name='perfil'),
+                       url(r'^allyoutouch/$', views.allyoutouch, name="allyoutouch")
                        )

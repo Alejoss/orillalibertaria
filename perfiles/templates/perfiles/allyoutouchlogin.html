@@ -1,0 +1,36 @@
+{% load staticfiles %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="{% static 'css/allyoutouch.css' %}" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<div id="floyd" class = "col-md-6 col-md-offset-5 col-sm-offset-1 col-xs-offset-0">
+	<img class = "pinkfloyd" src= "http://media-cache-ec0.pinimg.com/236x/54/ab/00/54ab00e89e3ef110fc79fb392bbf24ac.jpg">
+	<span class="llave" id="llave"> O </span>
+</div>
+<div class = "col-md-6 col-md-offset-4 col-sm-offset-1 col-xs-offset-0">
+<div class = "formulario hidden">
+	<form action = "{% url 'perfiles:authcheck' %}" method = "post">
+		{% csrf_token %}
+		<label for = "username"> Usuario: </label>
+		<input type = "text" name = "username" value = "" id = "username">
+		<label for = "password"> Password: </label>
+		<input type = "password" name = "password" value ="" id = "password">
+		<input type = "submit" value = "login"/>
+	</form>
+</div>
+</div>
+<div class = "col-md-6 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
+	<img class = "thumbnail demonhunter hidden" src= "http://lafacultadgamer.com/wp-content/uploads/2014/08/Illidan.jpg">
+</div>
+
+<script>
+
+$("#llave").on("click", function(){
+	$(this).addClass("hidden");
+	$(".pinkfloyd").addClass("hidden");
+	$(".formulario").removeClass("hidden");
+	$(".demonhunter").removeClass("hidden");
+});
+
+</script>

@@ -295,3 +295,7 @@ def postsfav(request, username):
                'num_favoritos': num_favoritos, 'propio_usuario': propio_usuario}
 
     return render(request, template, context)
+
+
+def allyoutouch(request):
+    return render(request, 'perfiles/allyoutouchlogin.html')
