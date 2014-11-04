@@ -107,26 +107,23 @@
 		<div class = "overlay_post visible-lg">
 			<div class="row">
 				<div class = "overlay_post_perfil pull-left">
-					<a href="{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}">
 					<div class = "row">
 						<div class = "imagen_perfil_overlay perfil_pequena">
 							<img src = "{{post_front.creador.imagen_perfil}}">
 						</div>
-						<p class = "overlay_perfil_nombre">{{post_front.creador.nickname}}</p>
+						<a class = "overlay_perfil_nombre" href="{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}">{{post_front.creador.nickname}}</a>
 					</div>
 					</a>
 				</div>
 				<div class = "overlay_post_tema pull-right">
-					<a href="{% url 'temas:index_tema' post_front.tema.slug 'recientes' %}">
 					<div class = "row">
 						<div class = "perfil_pequena imagen_tema_overlay">
 							<img src = "{{post_front.tema.imagen}}">
 						</div>
-						<p class = "overlay_tema_nombre pull-right">
+						<a class = "overlay_tema_nombre pull-right" href="{% url 'temas:index_tema' post_front.tema.slug 'recientes' %}">
 						{{post_front.tema.nombre}}
-						</p>
+						</a>
 					</div>
-					</a>
 				</div>
 			</div>
 		</div> <!--ovelay_post-->
