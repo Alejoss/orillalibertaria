@@ -271,7 +271,9 @@ def postsfav(request, username):
     perfil_usuario = get_object_or_404(Perfiles, usuario=usuario_fav)
     num_favoritos = obtener_num_favoritos(perfil_usuario)
     propio_usuario = False
+    perfil_usuario_visitante = None
     if request.user.is_authenticated():
+        perfil_usuario_visitante = get_object_or_404(Perfiles, usuario=request.user)
         if request.user == usuario_fav:
             propio_usuario = True
 
@@ -279,11 +281,11 @@ def postsfav(request, username):
     posts = []
     votos_posts = Votos.objects.filter(tipo=1, usuario_votante=perfil_usuario,
                                        post_votado__es_respuesta=False,
-                                       post_votado__eliminado=False)
+                                       post_votado__eliminado=False).order_by('-id')
 
     for p in votos_posts:
         post_votado = p.post_votado
-        post_args = obtener_args_post(post_votado, perfil_usuario)
+        post_args = obtener_args_post(post_votado, perfil_usuario_visitante)
         post_en_video = False
         if post_votado.video is not None:
             # si el post pertenece a un video

@@ -1,5 +1,5 @@
 <div class = "btn-group-vertical">
-{% if post.0.es_respuesta %}
+{% if post.0.es_respuesta or post.0.video %}
 	{% if user.is_authenticated %}
 		<p class = "vote-id hidden">{{post.0.id}}</p>
 		<button type="button" class = "btn btn-default vote-up"> 
@@ -29,7 +29,7 @@
 		<span class="fa fa-star fa-lg"></span>
 	</button>
 	{% else %}
-	<button title = "Guardar en favoritos" type="button" class = "btn btn-default disabled"> 
+	<button title = "Guardar en favoritos" type="button" class = "btn btn-default disabled_estrella"> 
 		<span class="fa fa-star fa-lg"></span>
 	</button>
 	{% endif %}
@@ -38,3 +38,21 @@
 	</button>
 {% endif %}
 </div>
+
+<script>
+$(".disabled_estrella").hover(
+	function(){
+		console.log("hover");
+		var estrella = $(this).find(".fa-star");
+		console.log(estrella);
+		$(estrella).removeClass("fa-star");
+		$(estrella).addClass("fa-lock");
+	},
+	function(){
+		console.log("leave");
+		var estrella = $(this).find(".fa-lock");
+		console.log(estrella);
+		$(estrella).removeClass("fa-lock");
+		$(estrella).addClass("fa-star");
+});
+</script>

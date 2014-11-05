@@ -19,7 +19,7 @@ from temas.models import Temas, Tema_descripcion, Posts, Respuestas
 from citas.models import Cita
 from notificaciones.models import Notificacion
 from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
-    bersuit_vergarabat, tiempo_desde, obtener_respuestas_post
+    bersuit_vergarabat, tiempo_desde, obtener_respuestas_post, obtener_args_post
 from perfiles.utils import obtener_num_favoritos
 from temas.utils import popularidad_actividad_tema
 
@@ -162,7 +162,7 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
                 es_favorito = "es_favorito"
 
         num_respuestas_video = Posts.objects.filter(
-            video=video, eliminado=False).count()
+            video=video, eliminado=False, es_respuesta=False).count()
 
         descripcion_video = procesar_espacios(video.descripcion)
         hora_procesada = tiempo_desde(video.fecha)
@@ -233,7 +233,6 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
 
         num_respuestas_video = Posts.objects.filter(
             video=video, eliminado=False).count()
-        print es_favorito
         videos.append([video, imagen_video, es_favorito, num_respuestas_video])
 
     # cita
@@ -252,6 +251,7 @@ def videos_perfil(request, username, template="videos/videos_perfil.html", extra
 def video(request, video_id, slug, queryset):
     # Pagina del video.
     template = 'videos/video.html'
+    perfil_usuario = None
     if request.user.is_authenticated():
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
@@ -290,7 +290,7 @@ def video(request, video_id, slug, queryset):
 
     # Posts en el video
     num_respuestas_video = Posts.objects.filter(
-        video=video, eliminado=False).count()
+        video=video, eliminado=False, es_respuesta=False).count()
     populares = ""
     recientes = ""
     if queryset == "populares":
@@ -303,19 +303,11 @@ def video(request, video_id, slug, queryset):
     posts_obj = Posts.objects.filter(video=video, eliminado=False, es_respuesta=False).order_by(q)
     posts = []
     for post in posts_obj:
-        # Respuestas y voted status de cada post
-        num_respuestas = Respuestas.objects.filter(
-            post_padre=post, post_respuesta__eliminado=False).count()
-        if request.user.is_authenticated():
-            voted_status = obtener_voted_status(post, perfil_usuario)
-        else:
-            voted_status = "no-vote"
         # Post
-        texto_procesado = procesar_espacios(post.texto)
-        hora_procesada = tiempo_desde(post.fecha)
+        p = obtener_args_post(post, perfil_usuario)
         respuestas_post = obtener_respuestas_post(post)
-        posts.append([post, num_respuestas, voted_status,
-                      texto_procesado, hora_procesada, respuestas_post])
+        p.append(respuestas_post)
+        posts.append(p)
 
     # cita
     cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
@@ -452,6 +444,7 @@ def denunciar_video(request):
 def post_video(request, video_id, slug, post_id, queryset):
     # Pagina que muestra un post con el video donde fue posteado y sus respuestas.
     template = 'videos/post_video.html'
+    perfil_usuario = None
     if request.user.is_authenticated():
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
@@ -485,15 +478,7 @@ def post_video(request, video_id, slug, post_id, queryset):
 
     # Post
     post_obj = get_object_or_404(Posts, id=post_id)
-    if request.user.is_authenticated():
-        post_voted_status = obtener_voted_status(post_obj, perfil_usuario)
-    else:
-        post_voted_status = "no-vote"
-    post_numrespuestas = Respuestas.objects.filter(
-        post_padre=post_obj, post_respuesta__eliminado=False).count()
-    texto_procesado = procesar_espacios(post_obj.texto)
-    hora_procesada = tiempo_desde(post_obj.fecha)
-    post = [post_obj, post_voted_status, post_numrespuestas, texto_procesado, hora_procesada]
+    post = obtener_args_post(post_obj, perfil_usuario)
 
     # post_padre
     post_padre = []
@@ -501,17 +486,7 @@ def post_video(request, video_id, slug, post_id, queryset):
         # respuestas post_padre_object.
         respuesta_obj = Respuestas.objects.get(post_respuesta=post_obj)
         post_padre_obj = respuesta_obj.post_padre
-        if request.user.is_authenticated():
-            post_padre_estado = obtener_voted_status(post_padre_obj, perfil_usuario)
-        else:
-            post_padre_estado = "no-vote"
-        post_padre_numrespuestas = Respuestas.objects.filter(
-            post_padre=post_padre_obj, post_respuesta__eliminado=False).count()
-        texto_procesado_pp = procesar_espacios(post_padre_obj.texto)
-        hora_procesada = tiempo_desde(post_padre_obj.fecha)
-
-        post_padre = [post_padre_obj,
-                      post_padre_estado, post_padre_numrespuestas, texto_procesado_pp, hora_procesada]
+        post_padre = obtener_args_post(post_padre_obj, perfil_usuario)
 
     # respuestas al post con respecto al queryset
     recientes = ""
@@ -529,18 +504,10 @@ def post_video(request, video_id, slug, post_id, queryset):
     for r in respuestas_obj:
         post_respuesta = r.post_respuesta
         if post_respuesta.eliminado is False:
-            respuesta_numrespuestas = Respuestas.objects.filter(
-                post_padre=post_respuesta, post_respuesta__eliminado=False).count()
-            if request.user.is_authenticated():
-                respuesta_estado = obtener_voted_status(post_respuesta, perfil_usuario)
-            else:
-                respuesta_estado = "no-vote"
-            texto_procesado_resp = procesar_espacios(r.post_respuesta.texto)
-            hora_procesada = tiempo_desde(post_respuesta.fecha)
+            respuesta = obtener_args_post(post_respuesta, perfil_usuario)
             respuestas_respuesta = obtener_respuestas_post(post_respuesta)
-            respuestas.append(
-                [post_respuesta, respuesta_numrespuestas, respuesta_estado,
-                 texto_procesado_resp, hora_procesada, respuestas_respuesta])
+            respuesta.append(respuestas_respuesta)
+            respuestas.append(respuesta)
 
     # form_respuestas, mismo que para todos los posts
     form_respuesta = FormNuevoPost()

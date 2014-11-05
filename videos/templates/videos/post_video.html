@@ -86,30 +86,7 @@
 
 			<div class = "col-md-2 col-sm-2 col-xs-2">
 				<div class = "control_votos">
-					<div class = "btn-group-vertical">
-					{% if user.is_authenticated %}
-					<p class = "vote-id hidden">{{post_padre.0.id}}</p>
-					<button type="button" class = "btn btn-default vote-up"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-					{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-					{% endif %}
-					<button class = "btn puntaje"> 
-					<h2 class = "numero_puntaje {{post_padre.1}}"> {{post_padre.0.votos_total}} </h2>
-					</button>
-					{% if user.is_authenticated %}
-					<button type="button" class = "btn btn-default vote-down"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-					{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-					{% endif %}
-					</div>
+				{% include 'control_votos_fav.html' with post=post_padre %}
 				</div>
 			</div>
 			<div class = "col-md-10 col-sm-10 col-xs-10">
@@ -117,6 +94,7 @@
 					<div class="panel-body">
 						<p class = "text truncate">
 						{{post_padre.3|safe}}
+						Es Respuesta: {{post_padre.0.es_respuesta}}
 						</p>
 						<br/>
 					</div>
@@ -217,30 +195,7 @@
 		<br>
 		<div class = "col-md-2 col-sm-2 col-xs-2">
 			<div class = "control_votos">
-				<div class = "btn-group-vertical">
-					{% if user.is_authenticated %}
-					<p class = "vote-id hidden">{{post.0.id}}</p>
-					<button type="button" class = "btn btn-default vote-up"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-					{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-up"></span>
-					</button>
-					{% endif %}
-					<button class = "btn puntaje"> 
-					<h2 class = "numero_puntaje {{post.1}}"> {{post.0.votos_total}} </h2>
-					</button>
-					{% if user.is_authenticated %}
-					<button type="button" class = "btn btn-default vote-down"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-					{% else %}
-					<button type="button" class = "btn btn-default disabled"> 
-						<span class="fa fa-chevron-down"></span>
-					</button>
-					{% endif %}
-				</div>
+				{% include 'control_votos_fav.html' %}
 			</div>
 		</div>
 		<div class = "col-md-10 col-sm-10 col-xs-10">
@@ -319,37 +274,14 @@
 <div>
 <div class = "col-md-2 col-sm-2 col-xs-2">
 	<div class = "control_votos">
-		<div class = "btn-group-vertical">
-			{% if user.is_authenticated %}
-			<p class = "vote-id hidden">{{respuesta.0.id}}</p>
-			<button type="button" class = "btn btn-default vote-up"> 
-				<span class="fa fa-chevron-up"></span>
-			</button>
-			{% else %}
-			<button type="button" class = "btn btn-default disabled"> 
-				<span class="fa fa-chevron-up"></span>
-			</button>
-			{% endif %}
-			<button class = "btn puntaje"> 
-			<h2 class = "numero_puntaje {{respuesta.2}}"> {{respuesta.0.votos_total}} </h2>
-			</button>
-			{% if user.is_authenticated %}
-			<button type="button" class = "btn btn-default vote-down"> 
-				<span class="fa fa-chevron-down"></span>
-			</button>
-			{% else %}
-			<button type="button" class = "btn btn-default disabled"> 
-				<span class="fa fa-chevron-down"></span>
-			</button>
-			{% endif %}
-		</div>
+	{% include 'control_votos_fav.html' with post=respuesta %}		
 	</div>
 </div>
 <div class = "col-md-10 col-sm-10 col-xs-10">
 	<div class="panel panel-info post_resaltado_info">
 		<div class="panel-body">
 			<p class = "text truncate">
-			{{respuesta.3|safe}}
+			{{respuesta.3|safe}} {{respuesta.0.video}}
 			</p>
 			<br/>
 		</div>
@@ -372,7 +304,7 @@
 			</div>
 			{% endif %}
 			<div class = "footer_respuestas pull-right">
-				<a href = "{% url 'videos:post_video' video.id tema.0.slug respuesta.0.id 'recientes' %} ">{{respuesta.1}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right"></span></a>
+				<a href = "{% url 'videos:post_video' video.id tema.0.slug respuesta.0.id 'recientes' %} ">{{respuesta.2}} <span class="fa fa-comments"></span> <span class="fa fa-chevron-right"></span></a>
 			</div>
 			<div class = "perfil_pequena">
 				<img src = "{{respuesta.0.creador.imagen_perfil}}">

@@ -19,9 +19,9 @@ from perfiles.models import Perfiles
 from citas.models import Cita
 from videos.models import Videos
 from imagenes.models import Imagen
-from olibertaria.utils import obtener_imagenes_display, obtener_voted_status,\
-    obtener_imagen_tema, obtener_cita, procesar_espacios, bersuit_vergarabat, tiempo_desde,\
-    obtener_respuestas_post, obtener_args_post
+from olibertaria.utils import obtener_imagenes_display, obtener_imagen_tema,\
+                            obtener_cita, procesar_espacios, bersuit_vergarabat,\
+                            obtener_respuestas_post, obtener_args_post
 from utils import obtener_posts_recientes, obtener_videos_populares,\
                 popularidad_actividad_tema
 
@@ -279,6 +279,10 @@ def nuevo_tema(request):
 def index_tema(request, slug, queryset, template='temas/tema.html', extra_context=None):
     # muestra la pagina principal del tema
 
+    perfil_usuario = None
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
+
     # Tema object.
     tema = get_object_or_404(Temas, slug=slug)
     descripcion = ""
@@ -301,20 +305,10 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
         tema=tema, eliminado=False, es_respuesta=False, video=None).order_by(q)
     posts = []
     for post in posts_obj:
-        # lista de posts con respuestas y con voted status incluido
-        num_respuestas = Respuestas.objects.filter(
-            post_padre=post, post_respuesta__eliminado=False).count()
-        if request.user.is_authenticated():
-            perfil = Perfiles.objects.get(usuario=request.user)
-            voted_status = obtener_voted_status(post, perfil)
-        else:
-            voted_status = "no-vote"
-
-        texto_procesado = procesar_espacios(post.texto)
+        p = obtener_args_post(post, perfil_usuario)
         respuestas = obtener_respuestas_post(post)  # respuestas vista previa
-        hora_procesada = tiempo_desde(post.fecha)
-        posts.append([post, num_respuestas, voted_status, texto_procesado,
-                      hora_procesada, respuestas])
+        p.append(respuestas)
+        posts.append(p)
 
     # thumbnail de imágenes.
     imagenes_display = obtener_imagenes_display(7)
