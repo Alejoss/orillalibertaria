@@ -3,11 +3,11 @@
 	margin-left: auto;
 }
 .pinkfloyd{
-	border: 1px solid red;
 	max-height: 300px;
 	display: inline;
 	position: absolute;
 	width: auto;
+	cursor: pointer;
 }
 
 .demonhunter{
