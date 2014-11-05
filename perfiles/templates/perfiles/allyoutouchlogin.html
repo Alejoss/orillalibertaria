@@ -12,9 +12,9 @@
 <div class = "formulario hidden">
 	<form action = "{% url 'perfiles:authcheck' %}" method = "post">
 		{% csrf_token %}
-		<label for = "username"> Usuario: </label>
+		<label for = "username"> USUARIO: </label>
 		<input type = "text" name = "username" value = "" id = "username">
-		<label for = "password"> Password: </label>
+		<label for = "password"> PASSWORD: </label>
 		<input type = "password" name = "password" value ="" id = "password">
 		<input type = "submit" value = "login"/>
 	</form>
