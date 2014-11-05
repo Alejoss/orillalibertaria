@@ -206,7 +206,10 @@
 
 .datos_olibertaria{
   color: gray;
-  margin-right: 10px;
+}
+
+.datos_olibertaria > small{
+  color: #c09853;
 }
 
 

@@ -1,4 +1,8 @@
 /* css para el navbar */
+.borde{
+	border: 1px solid red;
+}
+
 .beta_login{
 	color: #c09853;
 }
