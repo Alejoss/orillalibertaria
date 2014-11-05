@@ -31,7 +31,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -147,8 +147,8 @@ USE_TZ = True
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),)
 
-if DEBUG:
-    STATIC_URL = '/static/'
+#if DEBUG:
+#   STATIC_URL = '/static/'
 
 # --- HEROKU --- #
 # Parse database configuration from $DATABASE_URL
@@ -160,4 +160,4 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
-STATIC_ROOT = 'static'
+STATIC_ROOT = '/'
