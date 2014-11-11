@@ -58,9 +58,7 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
         perfil_usuario = Perfiles.objects.get(usuario=user)
     else:
         perfil_usuario = Perfiles(usuario=user)
-    perfil_usuario.save()
 
-    """
     imagen_url_backend = None
     if "facebook" in kwargs['backend'].redirect_uri:
         imagen_url_backend = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
@@ -72,7 +70,9 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
             imagen_url_backend = response['image'].get('url')
 
     perfil_usuario.imagen_perfil = imagen_url_backend
+    perfil_usuario.save()
 
+    """
     if perfil_usuario.nickname is None:
         rand_num = random.randint(99)
         nickname = "%s_nick_%s" % (user.username, rand_num)
