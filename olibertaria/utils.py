@@ -70,12 +70,13 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
             imagen_url_backend = response['image'].get('url')
 
     perfil_usuario.imagen_perfil = imagen_url_backend
-    perfil_usuario.save()
 
     if perfil_usuario.nickname is None:
-        rand_num = random.randint(99)
-        nickname = "%s_nick_%s" % (user.username, rand_num)
+        rand_num = random.randint(0, 999)
+        nickname = "%s_%s" % (rand_num, user.username)
         perfil_usuario.nickname = nickname
+
+    perfil_usuario.save()
 
     return None
 
