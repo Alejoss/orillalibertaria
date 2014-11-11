@@ -76,7 +76,7 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
 
     perfil_usuario.save()
 
-    return kwargs
+    return None
 
 
 # Temas, Posts, Videos, citas_coorg
