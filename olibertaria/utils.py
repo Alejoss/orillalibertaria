@@ -72,13 +72,10 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
     perfil_usuario.imagen_perfil = imagen_url_backend
     perfil_usuario.save()
 
-    """
     if perfil_usuario.nickname is None:
         rand_num = random.randint(99)
         nickname = "%s_nick_%s" % (user.username, rand_num)
         perfil_usuario.nickname = nickname
-
-    """
 
     return None
 
