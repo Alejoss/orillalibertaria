@@ -8,7 +8,6 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 # login required redirect
 LOGIN_URL = 'perfiles:login'
-# LOGIN_REDIRECT_URL = 'temas/main/recientes' no sirve porque no se usa el login default de django.
 
 #notificaciones
 TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',
@@ -85,8 +84,7 @@ SOCIAL_AUTH_TWITTER_SECRET = os.environ["SOCIAL_AUTH_TWITTER_SECRET"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_SECRET"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_KEY"]
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/temas/inicio/'
-# SOCIAL_AUTH_LOGIN_ERROR_URL = '/perfiles/allyoutouch/'
-# SOCIAL_AUTH_LOGIN_URL = '/perfiles/login/'
+SOCIAL_AUTH_LOGIN_URL = '/perfiles/login/'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
