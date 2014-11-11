@@ -76,6 +76,8 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
 
     perfil_usuario.save()
 
+    return kwargs
+
 
 # Temas, Posts, Videos, citas_coorg
 def tiempo_desde(hora_object):
