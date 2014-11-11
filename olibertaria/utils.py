@@ -48,50 +48,33 @@ def obtener_respuestas_post(post):
 
 
 # PIPELINE
-def obtener_avatar(strategy, details, response, user, *args, **kwargs):
-    #pipeline para python social auth. Obtiene la URL del avatar y la guarda.
-    url_backend = None
+def crear_perfil(strategy, details, response, user, *args, **kwargs):
+    # pipeline para python social auth. Crea la tabla de Perfil del usuario.
+    # actualiza la imagen de perfil y si no tiene nickname le da uno
 
+    if Perfiles.objects.filter(usuario=user).exists():
+        perfil_usuario = Perfiles.objects.get(usuario=user)
+    else:
+        perfil_usuario = Perfiles(usuario=user)
+
+    imagen_url_backend = None
     if "facebook" in kwargs['backend'].redirect_uri:
-        url_backend = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
+        imagen_url_backend = 'http://graph.facebook.com/{0}/picture'.format(response['id'])
     elif "twitter" in kwargs['backend'].redirect_uri:
         if response['profile_image_url'] != '':
-            url_backend = response['profile_image_url']
+            imagen_url_backend = response['profile_image_url']
     elif "google" in kwargs['backend'].redirect_uri:
         if response['image'].get('url') is not None:
-            url_backend = response['image'].get('url')
+            imagen_url_backend = response['image'].get('url')
 
-    perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
+    perfil_usuario.imagen_perfil = imagen_url_backend
 
-    perfil_usuario.imagen_perfil = url_backend
-    perfil_usuario.save()
-
-    return kwargs
-
-
-# PIPELINE
-def crear_perfil(strategy, details, response, user, *args, **kwargs):
-    #pipeline para python social auth. Crea la tabla de Perfil del usuario.
-    if Perfiles.objects.filter(usuario=user).exists():
-        pass
-    else:
-        nuevo_perfil = Perfiles(usuario=user)
-        nuevo_perfil.save()
-
-    return kwargs
-
-
-# PIPELINE
-def crear_nickname(strategy, details, response, user, *args, **kwargs):
-    #pipeline que crea un default nickname para cada usuario.
-    perfil_usuario, creado = Perfiles.objects.get_or_create(usuario=user)
     if perfil_usuario.nickname is None:
         rand_num = random.randint(99)
         nickname = "%s_nick_%s" % (user.username, rand_num)
         perfil_usuario.nickname = nickname
-        perfil_usuario.save()
 
-    return kwargs
+    perfil_usuario.save()
 
 
 # Temas, Posts, Videos, citas_coorg
