@@ -30,7 +30,10 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
+
+# Utilizar local staticfiles
+LOCAL_STATICFILES = False
 
 ALLOWED_HOSTS = []
 
@@ -76,6 +79,7 @@ AWS_SECRET_ACCESS_KEY = os.environ['AWSSecretKey']
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 S3_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 STATIC_URL = S3_URL
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ["SOCIAL_AUTH_FACEBOOK_KEY"]
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["SOCIAL_AUTH_FACEBOOK_SECRET"]
@@ -145,8 +149,9 @@ USE_TZ = True
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),)
 
-#if DEBUG:
-#   STATIC_URL = '/static/'
+# STATIC URL en debug False cambia. Nunca hacer Push.
+if LOCAL_STATICFILES:
+    STATIC_URL = '/static/'
 
 # --- HEROKU --- #
 # Parse database configuration from $DATABASE_URL
