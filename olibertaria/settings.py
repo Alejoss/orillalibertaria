@@ -164,5 +164,4 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
-if not LOCAL_STATICFILES:
-    STATIC_ROOT = '/'
+STATIC_ROOT = '/'
