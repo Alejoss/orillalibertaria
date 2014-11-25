@@ -1,4 +1,8 @@
 /* css para los thumbnails de temas/main */
+.post_front_parcial{
+  overflow: scroll;
+}
+
 .thumb_hover .overlay{
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
@@ -208,11 +212,9 @@
   color: gray;
 }
 
-/*
 .datos_olibertaria > small{
   color: #c09853;
 }
-*/
 
 
 /* css para temas/main general */

@@ -27,11 +27,6 @@
 					<h3>
 						{{nickname_perfil}}
 					</h3>
-					<p class="text-muted">
-						{% if user.is_authenticated %}
-							 {{nombre_completo}}
-						{% endif %}
-					</p>
 				</div>
 			<div class = "div_perfil_datos">
 			<div class = "div_imagen_perfil">
@@ -165,13 +160,14 @@
 	<div class="col-md-4 col-sm-3 column">
 		<div class = "col-md-offset-1">
 			<div class = "frase_perfil">
-			{% if num_frases_favoritas > 0 %}
+			{% if cita_favorita > 0 %}
 				<blockquote>
 					<p class = "cita_small">
 						"{{cita_favorita.3|safe}}"
 					</p> 
 					<small>{{cita_favorita.0.autor}} {% if cita_favorita.1 %}, {{cita_favorita.0.fuente}} 
-					{% endif %}</small>
+					{% endif %}
+					</small>
 				</blockquote> 
 			{% endif %}
 			</div>
@@ -179,13 +175,7 @@
 				<h3>
 					{{perfil_usuario.nickname}}
 				</h3>
-				<p class="text-muted">
-					{% if user.is_authenticated %}
-						 {{nombre_completo}}
-					{% endif %}
-				</p>
 			</div>
-			
 			<div class = "div_perfil_datos">
 			<div class = "div_imagen_perfil">
 			<img alt = "imagen_perfil" class="imagen_perfil" src="{{avatar_large}}"/>

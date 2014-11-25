@@ -131,7 +131,6 @@
 		</div> <!--ovelay_post-->
 
 		<div class="row ver_post_overlay visible-lg">
-			
 			<div class = "ver_post_div">
 				<div class = "ver_post_comments">
 					<p>{{comments_post_front}} 
@@ -150,18 +149,17 @@
 				</div>
 			</div>
 		</div>
-			
 			<div class="caption thumbnail_main_post">
-				<div id = "post_front_parcial">
-				<div class = "thumbnail_main_div hidden-sm hidden-xs">
-					<img alt="300x200" src="{{imagen_post_front}}"/>
-				</div>
+				<div classs = "post_front_parcial" id = "post_front_parcial">
+					<div class = "thumbnail_main_div hidden-sm hidden-xs">
+						<img alt="300x200" src="{{imagen_post_front}}"/>
+					</div>
 					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagen_post_front}}">
 					<p class = "text">
 					{{post_front.texto|truncatewords:30}}
 					</p>
 				</div>	
-					<a style = "float:right" href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
+				<a style = "float:right" href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
 				<div class = "perfil_pequena">
 					<img src = "{{post_front.creador.imagen_perfil}}">
 				</div>

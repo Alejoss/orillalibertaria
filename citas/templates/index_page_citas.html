@@ -15,8 +15,9 @@
 						</blockquote>
 					</div>
 					<div class="panel-footer">
+						<a href="{% url 'citas:cita' c.0.0.id  %}"><small><span class = "fa fa-external-link"></span></small></a>
 						{% if user.is_authenticated %}
-						<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="reportar_cita fa fa-flag"></i></a>
+						<a href = "#" data-toggle="modal" data-target = "#modal_reportar"><i rel="tooltip" title = "Reportar" class="action_footer fa fa-flag"></i></a>
 						<p class = "hidden"> {{c.0.0.id}} </p>
 						<i class="estrella marcar_favorito fa fa-star-o fa-lg {{c.1}}"></i>
 						{% else %}

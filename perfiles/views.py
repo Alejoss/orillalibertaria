@@ -215,7 +215,7 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
 
     # cita
     if num_favoritos[1] == 0:
-        cita_favorita = ""
+        cita_favorita = None
     else:
         citas_favoritas_obj = Cfavoritas.objects.filter(
             perfil=perfil_usuario, eliminado=False)

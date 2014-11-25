@@ -10,7 +10,7 @@
 	display: inline-block;
 	cursor: pointer;
 }
-.reportar_cita{
+.action_footer{
 	float: right;
 	margin-top: 10px;
 	cursor:pointer;

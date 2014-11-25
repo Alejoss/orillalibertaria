@@ -11,7 +11,7 @@
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">	<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> 
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> 
 			{% if notificacion.1.es_respuesta %}
 			voto a favor de tu 
 			{% else %}
@@ -21,7 +21,7 @@
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">	<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">		
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> comentó tu <a href="{% url 'temas:post' notificacion.1.tema.slug notificacion.1.id 'recientes' %}">post</a> en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
@@ -37,12 +37,12 @@
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">				
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorito el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> marcó como favorito el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "comment" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.tema.imagen}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> comentó el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> comentó el <a href="{% url 'videos:video' notificacion.1.id notificacion.1.tema.slug 'recientes' %}">video</a> que compartiste en <a href="{% url 'temas:index_tema' notificacion.1.tema.slug 'recientes' %}"> {{notificacion.1.tema.nombre}}</a>
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "num" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
@@ -58,7 +58,7 @@
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
 			<img class = "pull-right imagen_notificacion" src="{{notificacion.1.url}}">
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a href="{% url 'imagenes:imagen' notificacion.1.id %}">imagen</a> que compartiste.
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> marcó como favorita la <a href="{% url 'imagenes:imagen' notificacion.1.id %}">imagen</a> que compartiste.
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "denuncia" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
@@ -78,7 +78,7 @@
 
 		{% if notificacion.0.tipo_notificacion == "fav_voteup" %}
 		<li class = "list-group-item {% if not notificacion.0.leida %} no_leida {% endif %}">		
-			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.usuario.username}} </a> marcó como favorita la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> de {{notificacion.1.autor}} que compartiste:</br>
+			<a href = "{% url 'perfiles:perfil' notificacion.0.actor.usuario.username 'recientes' %}">{{notificacion.0.actor.nickname}} </a> marcó como favorita la <a href="{% url 'citas:cita' notificacion.1.id %}">frase</a> de {{notificacion.1.autor}} que compartiste:</br>
 			<span class = "fa fa-quote-left fa-lg"></span> {{notificacion.1.texto|truncatewords:10}} <span class = "fa fa-quote-right fa-lg"></span> 
 		</li>
 		{% elif notificacion.0.tipo_notificacion == "denuncia" %}
