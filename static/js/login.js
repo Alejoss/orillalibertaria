@@ -35,7 +35,6 @@ function cambiar_post(){
 		console.log(nuevo_html);
 		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("1");
-		console.log("cambiar a primero")
 	}
 	else if (posts_num == 1){
 		console.log($("#post_2"));
@@ -43,7 +42,6 @@ function cambiar_post(){
 		console.log(nuevo_html);
 		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("2");
-		console.log("cambiar a segundo")
 	}
 	else if (posts_num == 2){
 		console.log($("#post_0"));
@@ -51,7 +49,6 @@ function cambiar_post(){
 		console.log(nuevo_html);
 		$("#div_posts").html(nuevo_html);
 		$("#posts_num").text("0");
-		console.log("cambiar a tercero")
 	}
 
 	girar_puzzlepiece($("#puzzle_posts"))
@@ -59,24 +56,25 @@ function cambiar_post(){
 function cambiar_frases(){
 	var frases_num = $("#frases_num").text();
 	if (frases_num == 0){
-		nueva_frase_1 = $("#cita_2").text()
-		nueva_descripcion_1 = "{{citas.2.0.autor}}"
-		nueva_frase_2 = $("#cita_3").text()
-		nueva_descripcion_2 = "{{citas.3.0.autor}}"
+		nueva_frase_1 = $("#cita_2").text();
+		nueva_descripcion_1 = $("#cita_2_autor").text()
+		nueva_frase_2 = $("#cita_3").text();
+		nueva_descripcion_2 = $("#cita_3_autor").text()
+		$("#cita_3_autor").text();
 		$("#frases_num").text("1");
 	}
 	else if (frases_num == 1){
 		nueva_frase_1 = $("#cita_4").text()
-		nueva_descripcion_1 = "{{citas.4.0.autor}}"
+		nueva_descripcion_1 = $("#cita_4_autor").text()
 		nueva_frase_2 = $("#cita_5").text()
-		nueva_descripcion_2 = "{{citas.5.0.autor}}"
+		nueva_descripcion_2 = $("#cita_5_autor").text()
 		$("#frases_num").text("2");
 	}
 	else if (frases_num == 2){
 		nueva_frase_1 = $("#cita_0").text()
-		nueva_descripcion_1 = "{{citas.0.0.autor}}"
+		nueva_descripcion_1 = $("#cita_0_autor").text()
 		nueva_frase_2 = $("#cita_1").text()
-		nueva_descripcion_2 = "{{citas.1.0.autor}}"
+		nueva_descripcion_2 = $("#cita_1_autor").text()
 		$("#frases_num").text("0");
 	}
 	$("#text_frase_1").text(nueva_frase_1);

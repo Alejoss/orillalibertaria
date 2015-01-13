@@ -145,7 +145,14 @@
 	<p id = "cita_3" class = "hidden">{{citas.3.3|safe}}</p>
 	<p id = "cita_4" class = "hidden">{{citas.4.3|safe}}</p>
 	<p id = "cita_5" class = "hidden">{{citas.5.3|safe}}</p>
-
+	
+	<p id = "cita_0_autor" class = "hidden">{{citas.0.0.autor}}</p>
+	<p id = "cita_1_autor" class = "hidden">{{citas.1.0.autor}}</p>
+	<p id = "cita_2_autor" class = "hidden">{{citas.2.0.autor}}</p>
+	<p id = "cita_3_autor" class = "hidden">{{citas.3.0.autor}}</p>
+	<p id = "cita_4_autor" class = "hidden">{{citas.4.0.autor}}</p>
+	<p id = "cita_5_autor" class = "hidden">{{citas.5.0.autor}}</p>
+	
 	<blockquote>
 		<p id = "text_frase_1" class = "cita_small">
 			"{{citas.0.3|safe}}"
@@ -180,7 +187,6 @@
 <script src="{% static 'js/login.js' %} "></script>
 <script>
 $(document).ready(function() {
-  
   $("#owl-demo").owlCarousel({
       navigation : false, // Show next and prev buttons
       slideSpeed : 600,
