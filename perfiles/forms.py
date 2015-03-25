@@ -47,6 +47,7 @@ class PerfilesForm(forms.Form):
 
     email = forms.EmailField(required=False, max_length=75,
                              widget=TextInput(attrs={'class': 'form-control'}))
+
     link1 = forms.CharField(max_length=250, required=False,
                             widget=TextInput(attrs={'class': 'form-control'}))
     link2 = forms.CharField(max_length=250, required=False,

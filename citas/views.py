@@ -98,7 +98,7 @@ def cita(request, cita_id):
 
     cita = obtener_cita(cita)
 
-    #imagenes slider
+    # imagenes slider
     imagenes_display = obtener_imagenes_display(7)
 
     context = {'cita': cita, 'es_favorita': es_favorita, 'imagenes_display': imagenes_display}
@@ -107,10 +107,10 @@ def cita(request, cita_id):
 
 @login_required
 def nueva(request):
-    #suma una frase
+    # suma una frase
     template = 'citas/nueva.html'
     if request.method == "POST":
-        #obtener perfil y crear nueva cita
+        # obtener perfil y crear nueva cita
         form = FormNuevaCita(request.POST)
         if form.is_valid():
             nueva_cita = form.save(commit=False)
@@ -121,6 +121,9 @@ def nueva(request):
         else:
             pass
 
+    else:
+        form = FormNuevaCita()
+
     # obtener lista de autores para ayudar al usuario. (sidebar+autocomplete)
     lista_de_autores = []
     lista_de_autores_obj = Cita.objects.filter(
@@ -130,9 +133,7 @@ def nueva(request):
             lista_de_autores.append(x['autor'])
     lista_de_autores_json = json.dumps(lista_de_autores)
 
-    form = FormNuevaCita()
-
-    #honeypot antispan
+    # honeypot antispan
     lista_bersuit = bersuit_vergarabat()
 
     context = {'FormNuevaCita': FormNuevaCita, 'lista_bersuit': lista_bersuit,
@@ -261,7 +262,7 @@ def colaborar_organizar(request):
                 perfil = c.perfil.nickname
                 correccion = [fecha, razon, perfil]
                 correcciones.append(correccion)
-        #borde_color & iconos
+        # borde_color & iconos
         borde_color = []
         estado = []
         if cita.denunciada < 4:
