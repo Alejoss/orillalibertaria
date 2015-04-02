@@ -12,11 +12,15 @@
 <div class = "row">
 <div class = "col-md-4">
 	<p> 
-	<small> 
+	<small class = "hidden"> 
 	Recuerda que estamos en versión Beta, tus comentarios y feedback será bienvenido. 
 	</small> 
 	</p>
-	<div id = "facebook_twitter">
+	<div>
+		<p> Estamos solucionando un problema con el login social, por favor, vuelve a intentarlo en unas horas. Disculpa las molestias </p>
+		<img class = "thumbnail" width="400" height="300" src="https://s3-us-west-1.amazonaws.com/orillalibertaria/500.jpg">
+	</div>
+	<div class = "hidden" id = "facebook_twitter">
 	  <a href="{% url 'social:begin' 'facebook' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-facebook">
 	    <i class="fa fa-facebook"></i> Inicia sesión con Facebook
 	  </a>

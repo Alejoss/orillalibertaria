@@ -18,6 +18,19 @@
 		<input type = "password" name = "password" value ="" id = "password">
 		<input type = "submit" value = "login"/>
 	</form>
+	<div id = "facebook_twitter">
+	  <a href="{% url 'social:begin' 'facebook' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-facebook">
+	    <i class="fa fa-facebook"></i> Inicia sesión con Facebook
+	  </a>
+	  <a href="{% url 'social:begin' 'google-oauth2' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-google-plus">
+	    <i class="fa fa-google"></i> Inicia sesión con Google
+	  </a>
+	  <a href="{% url 'social:begin' 'twitter' %}?next=/temas/inicio/" class="btn btn-block btn-social btn-twitter">
+	    <i class="fa fa-twitter"></i> Inicia sesión con Twitter
+	  </a>
+	  <br>
+	  <p class = "info_aviso_legal"> <small> <i class = "fa fa-info-circle"></i> Al unirte a Orilla Libertaria entendemos que aceptas nuestros <a href="{% url 'temas:aviso_legal' %}">Términos y Condiciones</a> </small></p>
+	</div> 
 </div>
 </div>
 <div class = "col-md-6 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
