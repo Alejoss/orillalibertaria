@@ -14,7 +14,7 @@ urlpatterns = patterns('',
                        url(r'^denunciar/$', views.denunciar,
                            name='denunciar'),
 
-                       url(r'^(?P<username>\w+)/favoritas/$',
+                       url(r'^(?P<username>[-\w.]+)/favoritas/$',
                            views.favoritas, name='favoritas'),
                        url(r'^marcar_portada_ajax/$', views.marcar_portada_ajax,
                            name='marcar_portada_ajax'),

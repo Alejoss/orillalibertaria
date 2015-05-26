@@ -14,8 +14,8 @@ urlpatterns = patterns('',
                        url(r'^logout/$', views.logout, name="logout"),
                        # urls de registro
                        # url(r'^registrar/$', views.registrar, name='registrar'),  # Sin uso por ahora
-                       url(r'^(?P<username>\w+)/postsfav/$', views.postsfav, name='postsfav'),
-                       url(r'^(?P<username>\w+)/(?P<queryset>\w+)/$',
+                       url(r'^(?P<username>[-\w.]+)/postsfav/$', views.postsfav, name='postsfav'),
+                       url(r'^(?P<username>[-\w.]+)/(?P<queryset>\w+)/$',
                            views.perfil, name='perfil'),
                        url(r'^allyoutouch/$', views.allyoutouch, name="allyoutouch")
                        )

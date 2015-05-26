@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 
                        url(r'nueva/$', views.nueva, name='nueva'),
 
-                       url(r'^(?P<username>\w+)/favoritas/$',
+                       url(r'^(?P<username>[-\w.]+)/favoritas/$',
                            views.favoritas, name='favoritas'),
 
                        # Ajax

@@ -52,8 +52,6 @@ def crear_perfil(strategy, details, response, user, *args, **kwargs):
     # pipeline para python social auth. Crea la tabla de Perfil del usuario.
     # actualiza la imagen de perfil y si no tiene nickname le da uno
 
-    print user.username
-
     if Perfiles.objects.filter(usuario=user).exists():
         perfil_usuario = Perfiles.objects.get(usuario=user)
     else:
