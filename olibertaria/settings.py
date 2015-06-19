@@ -9,11 +9,11 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 # login required redirect
 LOGIN_URL = 'perfiles:login'
 
-#notificaciones
+# notificaciones
 TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.procesar_notificaciones',
                                 'olibertaria.context_processor_nickname.procesar_nickname')
 
-#endless pagination
+# endless pagination
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
 ENDLESS_PAGINATION_PER_PAGE = 10
 ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
@@ -30,7 +30,7 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
 
 # Utilizar local staticfiles
 LOCAL_STATICFILES = False
@@ -145,8 +145,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # STATIC URL en debug False cambia. Nunca hacer Push.
 if LOCAL_STATICFILES:
