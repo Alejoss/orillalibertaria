@@ -92,7 +92,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
     'social.backends.google.GoogleOAuth2',
     'social.backends.twitter.TwitterOAuth',
-    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -110,8 +110,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details',
-    'olibertaria.utils.crear_perfil',
-    ''
+    'olibertaria.utils.crear_perfil'
 )
 
 # Database
