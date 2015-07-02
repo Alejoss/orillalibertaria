@@ -106,14 +106,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 							<li class="divider">
 							</li>
 							<li>
-								<a href=" {% url 'perfiles:logout' %} ">Logout</a>
+								<a href=" {% url 'perfiles:logout' %} ">logout</a>
 							</li>
 						</ul>
 					</li>
 
 					{% else %}
 					<li id="beta_login" >
-						<a href="{% url 'perfiles:login' %} ">Login <i class = "beta_login fa fa-circle-o-notch"></i> <small class = "beta_login" > Beta </small> </a>
+						<a href="{% url 'perfiles:login' %} ">login</a>
 					</li>
 					{% endif %}
 				</ul>

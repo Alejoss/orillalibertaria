@@ -170,10 +170,11 @@ def buscar(request):
 @page_template('index_page_temas.html')
 def main(request, queryset, template='temas/main.html', extra_context=None):
     # muestra la pagina principal de todos los temas
-    # Post Popular
-    post_front = (obtener_posts_recientes(1))[0]
-    imagen_post_front = obtener_imagen_tema(post_front.tema)
-    comments_post_front = Respuestas.objects.filter(post_padre=post_front).count()
+
+    # Perfil usuario autenticado
+    perfil_usuario = False
+    if request.user.is_authenticated():
+        perfil_usuario = Perfiles.objects.get(usuario=request.user)
 
     # autocomplete search temas
     lista_temas_autocomplete = []
@@ -187,11 +188,11 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
     num_videos_ol = Videos.objects.filter(eliminado=False).count()
 
     # Videos populares
-    videos_populares_obj = obtener_videos_populares(3)
-    videos_populares = []
-    for video in videos_populares_obj:
-        imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
-        videos_populares.append([video, imagen_video])
+    # videos_populares_obj = obtener_videos_populares(1)
+    # videos_populares = []
+    # for video in videos_populares_obj:
+    #    imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
+    #    videos_populares.append([video, imagen_video])
 
     # temas. ordenados por el queryset.
     recientes = ""
@@ -222,17 +223,15 @@ def main(request, queryset, template='temas/main.html', extra_context=None):
         num_videos = Videos.objects.filter(tema=tema, eliminado=False).count()
         temas.append([tema, descripcion, imagen, num_posts, num_videos])
 
-    # Cita sidebar
-    cita_obj = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
-    cita = obtener_cita(cita_obj)
+    posts_actividad = Posts.objects.filter(eliminado=False, es_respuesta=False).order_by("-fecha")[:8]
+    videos_actividad = Videos.objects.filter(eliminado=False, es_youtube=True).order_by("-fecha")[:8]
 
-    context = {'temas': temas, 'post_front': post_front, 'videos_populares': videos_populares,
-               'cita': cita, 'recientes': recientes, 'activos': activos,
-               'populares': populares, 'imagen_post_front': imagen_post_front,
-               'num_temas_ol': num_temas_ol, 'num_posts_ol': num_posts_ol,
-               'num_videos_ol': num_videos_ol,
-               'comments_post_front': comments_post_front,
-               'lista_temas_json': lista_temas_json}
+    context = {'temas': temas, 'recientes': recientes, 'activos': activos,
+               'populares': populares, 'num_temas_ol': num_temas_ol, 'num_posts_ol': num_posts_ol,
+               'num_videos_ol': num_videos_ol, 'perfil_usuario': perfil_usuario,
+               'lista_temas_json': lista_temas_json, 'posts_actividad': posts_actividad,
+               'videos_actividad': videos_actividad
+               }
 
     if extra_context is not None:
         context.update(extra_context)
@@ -310,12 +309,14 @@ def index_tema(request, slug, queryset, template='temas/tema.html', extra_contex
         p.append(respuestas)
         posts.append(p)
 
-    # thumbnail de imágenes.
-    imagenes_display = obtener_imagenes_display(7)
-
+    # num posts y videos en el tema.
+    num_posts = posts_obj.count()
+    num_videos = Videos.objects.filter(tema=tema, eliminado=False).count()
+    
     context = {
         'tema': tema, 'imagen': imagen, 'posts': posts, 'descripcion': descripcion,
-        'imagenes_display': imagenes_display, 'recientes': recientes, 'populares': populares,
+        'recientes': recientes, 'populares': populares, 'num_posts': num_posts, 
+        'num_videos': num_videos
     }
 
     if extra_context is not None:
@@ -424,7 +425,10 @@ def editar_post(request, post_id):
             texto = form.cleaned_data['texto']
             post.texto = texto
             post.save()
-            return redirect('temas:post', slug=post.tema.slug, post_id=post.id, queryset=u'recientes')
+            if post.video:
+                return redirect('videos:video', video_id=post.video.id, slug=post.tema.slug, queryset=u'recientes')
+            else:
+                return redirect('temas:post', slug=post.tema.slug, post_id=post.id, queryset=u'recientes')
         else:
             return redirect('temas:editar_post', post_id=post.id)
     else:

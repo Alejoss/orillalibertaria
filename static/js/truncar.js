@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('.truncate').trunk8({
-	  	lines: 4,
+	  	lines: 6,
 	  	fill: '<a class="leer_mas" href="#">...leer más</a>',
 	  	tooltip: false
 	  });

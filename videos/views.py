@@ -125,6 +125,7 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
 
     posts_count = Posts.objects.filter(
         tema=tema_obj, eliminado=False, es_respuesta=False).count()
+
     tema = [tema_obj, imagen_tema, descripcion_tema, posts_count]
 
     # Videos, ordenados por el queryset
@@ -153,7 +154,7 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
         if video.es_youtube is True:
             imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
         else:
-            imagen_video = "http://www.flaticon.es/png/256/24933.png"
+            imagen_video = False
 
         es_favorito = "no_es_favorito"
         # Marca los videos favoritos con la clase "es_favorito"
@@ -170,11 +171,11 @@ def videos_tema(request, slug, queryset, template='videos/videos_tema.html', ext
         videos.append([video, imagen_video, es_favorito, num_respuestas_video,
                        descripcion_video, hora_procesada])
 
-    # cita sidebar
-    cita = Cita.objects.filter(favoritos_recibidos__gt=1).latest('fecha')
+    # num posts y videos en el tema.
+    num_videos = videos_obj.count()
 
     context = {'tema': tema, 'populares': populares, 'recientes': recientes,
-               'videos': videos, 'cita': cita}
+               'videos': videos, 'num_videos': num_videos}
 
     if extra_context is not None:
         context.update(extra_context)

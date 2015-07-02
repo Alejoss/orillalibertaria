@@ -220,7 +220,11 @@
 /* css para temas/main general */
 
 .main_sidebar_btns{
-	margin-left: 30px
+	margin-left: 30px;
+}
+
+.icono_actividad{
+  text-align: center;
 }
 
 /* css para el panel con el tema y el link */
@@ -232,4 +236,9 @@
 
 .col_flecha{
   height: 110px;
+}
+
+.post_actividad{
+  margin-left: 20px;
+  border: 1px solid red;
 }

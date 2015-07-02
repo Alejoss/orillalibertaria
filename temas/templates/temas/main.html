@@ -32,61 +32,53 @@
 
 <!--arriba-->
 {% block arriba %}
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v2.3&appId=496030367220511";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <meta property="og:image" content="https://s3-us-west-1.amazonaws.com/orillalibertaria/logo.png"/>
+
 <div class="row">
 	<div class = "col-md-8">
-		<div class = "thumbnail">
-			<div class = "row">
-			{% for video in videos_populares %}
-				<div class = "col-md-4">
-					<div class = "thumbnail">
-						<div class = "thumb_video">
-							<!--overlay videos -->
-							<div class = "overlay_videos visible-md visible-lg"> 
-								<a class = "overlay_p" href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
-									{{video.0.titulo}}
-								</a>
-								<div class = "overlay_favoritos pull-right">
-									<p>{{video.0.favoritos_recibidos}}</p>
-									<span class = "fa fa-star"></span>
-								</div>
-							</div>
-							<!--overlay videos -->
-							<img class = "visible-md visible-lg imagen_video" src = "{{video.1}}">
-							<img class = "visible-sm visible-xs imagen_video_small" src = "{{video.1}}">
-						</div>
-						<div class = "visible-md visible-lg">
-							<div class = "perfil_pequena">
-								<img src = "{{video.0.perfil.imagen_perfil}}">
-							</div>
-							<h4 class = "display_inline_block">
-								<small>en
-								<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
-								{{video.0.tema.nombre|truncatechars:30}}</a></small>
-							</h4>
-						</div>
-						<div class = "video_des_small visible-sm visible-xs">
-						<p>
-							{{video.0.titulo}}
-						</p>
-						<div class = "autor_titulo_video_thumb">
-							<div class = "perfil_pequena">
-								<img src = "{{video.0.perfil.imagen_perfil}}">
-							</div>
-							<h4 class = "display_inline_block">
-								<small>en
-								<a href = "{% url 'temas:index_tema' video.0.tema.slug 'recientes' %} ">
-								{{video.0.tema.nombre|truncatechars:30}}</a></small>
-							</h4>
-						</div>
-						</div>
-					</div>
-				</div>
-			{% endfor %}
+		<div>
+		<!--
+			<div class = "btn">
+				<a href="{% url 'imagenes:index' 'recientes' %}">
+				<button type="button" class="btn btn-default" >Galería de Imágenes
+				</button>
+				</a>
 			</div>
+		-->
+			<div class="jumbotron well">
+				{% if user.is_authenticated %}
+					<h2>
+						{{user.username}}, bienvenido
+					</h2>
+					<p>
+						Esta biblioteca funciona en base a links compartidos, gracias por ser parte de nuestra comunidad!
+					</p>
+				{% else %}
+					<h2>
+						Libertario, bienvenido
+					</h2>
+					<p>
+						Esta biblioteca funciona en base a links compartidos, sé parte de nuestra comunidad!
+					</p>
+					<p>
+						<a class="btn btn-warning btn-large" href="#">Únete. Es fácil empezar</a>
+					</p>
+				{% endif %}
+			</div>
+		</div>
+		<div class ="thumbnail">
 			<div class = "row">
+				<br><br>
 				<div class = "col-md-10 col-md-offset-1">
-					<hr>
 					<div class = "col-md-12">
 						<form class="form" method = "get" role="search"
 							action = "{% url 'temas:buscar' %}" >
@@ -95,84 +87,19 @@
 							</div> 
 							<button type="submit" class="btn btn-warning pull-right boton_buscar_main">Buscar Tema en Orilla Libertaria</button>
 						</form>
-					<p class = "datos_olibertaria">
-					Biblioteca libertaria compartida <br>
-					<small> {{num_temas_ol}} Temas - {{num_videos_ol}} Videos - {{num_posts_ol}} Posts  </small>
-					</p>
+						<p class = "datos_olibertaria">
+						Biblioteca Libertaria Compartida <br>
+						<small> {{num_temas_ol}} Temas - {{num_videos_ol}} Videos - {{num_posts_ol}} Posts </small>
+						</p>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>	
 	</div>
 	<div class="col-md-4">
-		<div id ="post_front" class="thumbnail">
-		<div class = "overlay_post visible-lg">
-			<div class="row">
-				<div class = "overlay_post_perfil pull-left">
-					<div class = "row">
-						<div class = "imagen_perfil_overlay perfil_pequena">
-							<img src = "{{post_front.creador.imagen_perfil}}">
-						</div>
-						<a class = "overlay_perfil_nombre" href="{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}">{{post_front.creador.nickname}}</a>
-					</div>
-					</a>
-				</div>
-				<div class = "overlay_post_tema pull-right">
-					<div class = "row">
-						<div class = "perfil_pequena imagen_tema_overlay">
-							<img src = "{{post_front.tema.imagen}}">
-						</div>
-						<a class = "overlay_tema_nombre pull-right" href="{% url 'temas:index_tema' post_front.tema.slug 'recientes' %}">
-						{{post_front.tema.nombre}}
-						</a>
-					</div>
-				</div>
-			</div>
-		</div> <!--ovelay_post-->
-
-		<div class="row ver_post_overlay visible-lg">
-			<div class = "ver_post_div">
-				<div class = "ver_post_comments">
-					<p>{{comments_post_front}} 
-			 			<span class="fa fa-comments"></span> 
-			 		</p>
-		 		</div>
-				<div class = "ver_posts_p">
-					<span class = "ver_post_puntos">
-					{{post_front.votos_positivos}} <i class = "fa fa-star"></i>
-					</span> 
-					<p class = "ver_post_text">
-						<a href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}">
-							<strong> Ver Post</strong>
-						</a>
-					</p>
-				</div>
-			</div>
-		</div>
-			<div class="caption thumbnail_main_post">
-				<div classs = "post_front_parcial" id = "post_front_parcial">
-					<div class = "thumbnail_main_div hidden-sm hidden-xs">
-						<img alt="300x200" src="{{imagen_post_front}}"/>
-					</div>
-					<img class = "thumbnail pull-left visible-sm visible-xs" alt="300x200" src="{{imagen_post_front}}">
-					<p class = "text">
-					{{post_front.texto|truncatewords:30}}
-					</p>
-				</div>	
-				<a style = "float:right" href="{% url 'temas:post' post_front.tema.slug post_front.id 'recientes' %}"> <h4><small>ver post</h4></small></a>
-				<div class = "perfil_pequena">
-					<img src = "{{post_front.creador.imagen_perfil}}">
-				</div>
-				<h4 class = "display_inline_block">
-					<small> <a href = "{% url 'perfiles:perfil' post_front.creador.usuario 'recientes' %}"> {{post_front.creador.nickname}} </a> en
-					<a href = "{% url 'temas:index_tema' post_front.tema.slug 'recientes' %} ">
-					{{post_front.tema.nombre}}</a></small>
-				</h4>
-			</div> <!--thumbnail_main_post-->
-		</div> <!--post_front -->
+		<div class="fb-page" data-href="https://www.facebook.com/orillalibertaria" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/orillalibertaria"><a href="https://www.facebook.com/orillalibertaria">Orilla Libertaria</a></blockquote></div></div>
 	</div> <!-- div col 4 -->
 </div> <!-- row -->
-
 {% endblock arriba %}
 	
 {% block botones_control %}
@@ -215,35 +142,36 @@
 
 {% block tab_content %}
 <div class="col-md-8 col-sm-7">
-		{% include page_template %}
+	{% include page_template %}
 </div>
 {% endblock tab_content %}
 
 {% block sidebar %}
 <div class="col-md-4 col-sm-3">
-	<div class = "sidebar_cita">
-		<blockquote>
-			<p>
-				"{{cita.3|safe}}"
-			</p> <small> {{cita.0.autor}} {% if cita.1 %}, {{cita.2}} {% endif %} </small>
-		</blockquote> 
-		<div>
-		<a href="{% url 'citas:index' 'recientes' %}">
-			<button type="button" class="btn btn-xs btn-info btn_galeria">
-			Ver banco de frases</button>
-		</a>
-		</div>
-	<hr/>
-	</div>
 	<div class = "main_sidebar_btns">
-		<div class="row clearfix">
-			<div class="col-md-12 column">
-			<div class = "btn">
-				<a href="{% url 'imagenes:index' 'recientes' %}">
-				<button type="button" class="btn btn-default" >Galería de Imágenes
-				</button>
-				</a>
-			</div>
+
+		<div class = "btn">
+			<a href="{% url 'imagenes:index' 'recientes' %}">
+			<button type="button" class="btn btn-default" >Galería de Imágenes
+			</button>
+			</a>
+		</div>
+
+		<div class = "btn">
+			<a href="{% url 'citas:index' 'recientes' %}">
+			<button type="button" class="btn btn-default" >Banco de Frases
+			</button>
+			</a>
+		</div>
+
+	</div>
+
+	<div>
+		<br>
+		<div clsas ="row">
+	        <a class="twitter-timeline"  href="https://twitter.com/OrillaLibertar" data-widget-id="616330387434926081">Tweets por el @OrillaLibertar.</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			<!--
 			<div class = "btn">
 				{% if user.is_authenticated %}
 				<a href="{% url 'temas:nuevo_tema'%}">
@@ -253,12 +181,76 @@
 				 {% else %}
 				<a href="{% url 'perfiles:login'%}">
 				 <button type="button" class="btn btn-default"> 
-				 <span class = "fa fa-lock"> </span> Login - Crear un tema nuevo
+				 <span class = "fa fa-lock"> </span> Crear un tema nuevo
 				 </button>
 				</a>
 				 {% endif %}
 			</div>
-			</div>
+			-->
+		</div>
+		<div>
+		<hr>
+		<h3> Actividad: </h3>
+			<p>
+				<p class="icono_actividad">
+					<i class ="fa fa-edit fa-4x"></i>
+				</p>
+			</p>
+			{% for post in posts_actividad %}
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class ="col-md-3">
+							<a class ="pull-left" href = "{% url 'perfiles:perfil' post.creador.usuario.username 'recientes' %}" title="{{post.creador.nickname}}">
+								<img class = "imagen_tema" src = "{{post.creador.imagen_perfil}}" height="50">
+							</a>
+						</div>
+						<div class ="col-md-6">
+							<p>
+							<small>
+							<strong>{{post.creador.nickname}}</strong> sumó un <a href="{% url 'temas:post' post.tema.slug post.id 'recientes' %}">post</a> a
+							<strong>{{post.tema.nombre}}</strong>
+							</small>
+							</p>
+						</div>
+						<div class ="col-md-3">
+							<a class ="pull-right" href = "{% url 'temas:index_tema' post.tema.slug 'ultimos' %}" title="{{post.tema.nombre}}">
+								<img class = "imagen_tema" src = "{{post.tema.imagen}}" height="50">
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<div>
+			<p>
+				<p class ="icono_actividad">
+					<i class ="fa fa-youtube fa-4x icono_actividad"></i>
+				</p>
+			</p>
+			{% for video in videos_actividad %}
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class ="col-md-3">
+							<a class ="pull-left" href = "{% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %}" title="{{video.perfil.nickname}}">
+								<img class = "imagen_tema" src = "{{video.perfil.imagen_perfil}}" height="50">
+							</a>
+						</div>
+						<div class ="col-md-6">
+							<p>
+							<small>
+							<strong>{{video.perfil.nickname}}</strong> sumó un <a href="{% url 'videos:video' video.id video.tema.slug 'recientes' %}">video</a> a
+							<strong>{{video.tema.nombre}}</strong>
+							</small>
+							</p>
+						</div>
+						<div class ="col-md-3">
+							<a class ="pull-right" href = "{% url 'videos:videos_tema' video.tema.slug 'ultimos' %}" title="{{video.tema.nombre}}">
+								<img class = "imagen_tema" src = "{{video.tema.imagen}}" height="50">
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
 		</div>
 	</div>
 </div>

@@ -20,8 +20,7 @@ display: inline-block;
 }
 .div_descripcion_video{
 	margin-top: 20px;
-	max-height: 315px;
-	overflow: auto;
+	max-height: 415px;	
 }
 .favoritos_video{
 	margin-right: 15px;

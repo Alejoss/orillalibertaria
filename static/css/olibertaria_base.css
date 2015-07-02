@@ -101,9 +101,8 @@
 /* thumbnail imagen tema */
 .imagen_tema{
 display: block;
-max-height: 250px;
-width:auto;
-max-width: 250px;
+max-height: 200px;
+max-width: 200px;
 border-top-left-radius: 10px 5px;
 border-bottom-right-radius: 10% 5%;
 border-top-right-radius: 10px;

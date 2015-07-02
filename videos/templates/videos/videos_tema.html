@@ -32,48 +32,36 @@
 		<h1>
 			{{ tema.0.nombre }}
 		</h1>
+		<h3 class="pull-right">
+			<small>
+				{{ num_videos }} posts, {{ tema.3 }} videos.
+			</small>
+		</h3>
 	</div>
 </div>
 {% endblock arriba %}
 
 {% block botones_control %}
 <div class = "col-md-8 div_control">
-	<div style = "margin-bottom:5px" class = "hidden-xs">
-		<h3 style = "display: inline-block"> Videos </h3>
-		<div class="btn-group btn-group-sm control">
-			<button class="btn btn-default {{recientes}} "
-			type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'recientes' %}';">
-			<span class="fa fa-signal"> </span> Recientes
-			</button> 
-			<button class="btn btn-default {{populares}} " 
-			type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'populares' %}';">
-			<span class="fa fa-star"> </span> Populares
-			</button>
-		</div>
+	<div class= "btn-group control">
+		<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Videos <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li>
+				<a href = "{% url 'temas:index_tema' tema.0.slug 'recientes' %}">Posts</a>
+			</li>
+		</ul>
 	</div>
-
-	<div class = "row visible-xs">
-		<div class= "btn-group control">
-			 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"> Videos <span class="caret"></span></button>
-			<ul class="dropdown-menu">
-				<li class = " {{recientes}} ">
-					<a href="{% url 'videos:videos_tema' tema.0.slug 'recientes' %}">Recientes</a>
-				</li>
-				<li class = " {{populares}}">
-					<a href="{% url 'videos:videos_tema' tema.0.slug 'populares' %}">Populares</a>
-				</li>
-				<li class = "divider">
-				</li>
-				<li>
-					<a href = "{% url 'temas:index_tema' tema.0.slug 'recientes' %}">Posts</a>
-				</li>
-			</ul>
-		</div>
-		<div class = "pull-right visible-xs">
-		<button type="button" class="btn btn-warning" 
-		onclick = "location.href='{% url 'videos:nuevo_video' tema.0.slug %}';">
-		Nuevo Video en {{tema.0.nombre}}</button>
-		</div>
+	
+	<div class="btn-group btn-group-sm control">
+		<button class="btn btn-default {{recientes}} "
+		type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'recientes' %}';">
+		<span class="fa fa-signal"> </span> Recientes
+		</button> 
+		<button class="btn btn-default {{populares}} " 
+		type="button" onclick="location.href='{% url 'videos:videos_tema' tema.0.slug 'populares' %}';">
+		<span class="fa fa-star"> </span> Populares
+		</button>
 	</div>
 
 </div>
@@ -89,7 +77,6 @@
 
 {% block sidebar %}
 <div class="col-md-4 col-sm-3 column">
-	<br>
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 		{% if user.is_authenticated %}
@@ -103,33 +90,22 @@
 		<span class = "fa fa-lock"></span> Nuevo Video en {{tema.0.nombre}}</button>
 		</a>
 		{% endif %}
-		<a class = "btn_sidebar" href="{% url 'temas:index_tema' tema.0.slug 'recientes' %}">
-		<button type="button" class="btn btn-default">
-		<i class= "fa fa-pencil-square-o fa-lg"></i>
-		Posts en {{tema.0.nombre}}</button>
-		</a>
-		<a class = "btn_sidebar" href="{% url 'imagenes:index' 'recientes' %}">
-		<button type="button" class="btn btn-default">Galería de Imágenes
-		</button>
-		</a>
-		<a class = "btn_sidebar" href="{% url 'citas:index' 'recientes' %}">
-		<button type="button" class="btn btn-default">Banco de Frases</button>
-		</a>
 		</div>
 	</div>
-	<hr>
+	<br><br>
 	<div>
+		<div class = "margin_sidebar">
+			<img class = "thumbnail imagen_tema" src = "{{tema.1}}">
+		</div>
+		<br/>
 		<h2>
-			<div style = "margin-left: 30px">
-				<img class = "thumbnail imagen_tema" src = "{{tema.1}}">
-			</div>
-			<br/>
-			{{ tema.0.nombre }} 
-			<br/>
-			<small><h5> {{tema.2|safe}} </h5>
-			<h6><a href="{% url 'temas:editar_tema' tema.0.slug %}"><i>editar tema</i></a></h6></small>
+			<p class = "margin_sidebar">
+				{{ tema.0.nombre }}
+			</p>
+			<small class="margin_sidebar"><h5 class="text"> {{tema.2|safe}} </h5>
+				<h6><a href="{% url 'temas:editar_tema' tema.0.slug %}"><i>editar tema</i></a></h6>
+			</small>
 		</h2>
-	<hr>
 	</div>
 	
 </div>

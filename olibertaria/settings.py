@@ -15,7 +15,7 @@ TEMPLATE_CONTEXT_PROCESSORS += ('olibertaria.context_processor_notificaciones.pr
 
 # endless pagination
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
-ENDLESS_PAGINATION_PER_PAGE = 10
+ENDLESS_PAGINATION_PER_PAGE = 20
 ENDLESS_PAGINATION_PREVIOUS_LABEL = "Anterior"
 ENDLESS_PAGINATION_NEXT_LABEL = "Siguiente"
 
@@ -30,10 +30,10 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = False
+DEBUG = TEMPLATE_DEBUG = True
 
 # Utilizar local staticfiles
-LOCAL_STATICFILES = False
+LOCAL_STATICFILES = True
 
 # Application definition
 

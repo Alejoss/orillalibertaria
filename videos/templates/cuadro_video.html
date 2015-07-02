@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <div class = "row clearfix">
 {% if video.es_youtube %}
 <div class = "col-md-offset-1 col-md-6 
@@ -43,27 +45,26 @@
 <div class = "col-sm-offset-1 col-xs-offset-1 col-md-offset-0 col-lg-offset-0
               col-md-4 col-sm-10 col-xs-10">
 	<div> <!-- foto perfil fecha -->
-	<div class = "perfil_pequena">
-		<img src = "{{video.perfil.imagen_perfil}}">
-	</div>
-	<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
-	<small class = "fecha_desde">
-	{{hora_procesada_video}}</small>
-	</p>
-	<hr>
+		<div class = "perfil_pequena">
+			<img src = "{{video.perfil.imagen_perfil}}">
+		</div>
+		<p class = "fecha_video"><a href=" {% url 'perfiles:perfil' video.perfil.usuario.username 'recientes' %} ">{{video.perfil.nickname}}</a>
+		<small class = "fecha_desde">
+		{{hora_procesada_video}}</small>
+		</p>
+		<hr>
 	</div> <!-- foto perfil fecha -->
 	<div class = "div_descripcion_video">
-		<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
-			<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
+		<p class="text"> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
 		</p>
+		<a href="{{video.url}}"> <i class = "fa fa-youtube fa-lg"></i><small> {{video.url}} </small></a>
 	</div>
 </div>
 {% else %}
 <div class = "col-md-7 col-sm-7">
 	<div class = "div_video thumbnail">
 	<div class = "video_no_youtube">
-	<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Photo-Video-Start-icon.png">
-
+		<img src="{% static 'img/logo.png' %}">
 	{% if origen_no_youtube == "vimeo" %}
 		<p> Video disponible en Vimeo: </p>
 		<a href="{{video.url}}"> <i class = "fa fa-vimeo-square"></i><small> {{video.url}} </small></a>
@@ -124,12 +125,14 @@
 </div> <!-- foto perfil fecha -->
 
 	<div class = "div_descripcion_video">
-		<p> <strong> {{video.titulo}}. </strong> <br> {{descripcion_video|safe}} <br> 
+		<p class="text"> <strong> {{video.titulo}}. </strong> <br> 
+		{{descripcion_video|safe}} <br> 
 		</p>
 	</div>
 </div>
 {% endif %}
 </div>
+
 <div class = "row">
 	<hr/>
 </div>
