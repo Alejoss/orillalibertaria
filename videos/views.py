@@ -6,6 +6,7 @@ import urlparse
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, HttpResponse
 from endless_pagination.decorators import page_template
 from django.contrib.auth.models import User
@@ -18,7 +19,7 @@ from models import Videos, VFavoritos, VDenunciados
 from temas.models import Temas, Tema_descripcion, Posts, Respuestas
 from citas.models import Cita
 from notificaciones.models import Notificacion
-from olibertaria.utils import obtener_imagen_tema, obtener_voted_status, procesar_espacios,\
+from olibertaria.utils import obtener_imagen_tema, procesar_espacios,\
     bersuit_vergarabat, tiempo_desde, obtener_respuestas_post, obtener_args_post
 from perfiles.utils import obtener_num_favoritos
 from temas.utils import popularidad_actividad_tema
@@ -105,7 +106,26 @@ def editar_video(request, video_id):
             context = {'video': video, 'form_editar_video': form_editar_video, 'lista_bersuit': lista_bersuit}
             return render(request, template, context)
     else:
-        raise Http404
+        raise PermissionDenied
+
+
+@login_required
+def eliminar_video(request, video_id):
+    print "llego a eliminar video"
+
+    video = get_object_or_404(Videos, id=video_id)
+    perfil_usuario = Perfiles.objects.get(usuario=request.user)
+    if video.perfil == perfil_usuario:
+        video.eliminado = True
+        video.save()
+        print "video eliminado"
+
+        perfil_usuario.numero_de_posts = perfil_usuario.numero_de_posts - 1 
+        perfil_usuario.save()
+
+        return redirect('perfiles:perfil', username=video.perfil.usuario.username, queryset=u'videos')
+    else:
+        raise PermissionDenied
 
 
 @page_template('index_page_videos.html')
@@ -340,6 +360,9 @@ def sumar_post_video(request, slug, video_id):
                                tema=tema, video=video_padre)
             post_video.save()
 
+            perfil_usuario.numero_de_posts = perfil_usuario.numero_de_posts + 1
+            perfil_usuario.save()
+
             # Notificacion respuesta
             if perfil_usuario != video_padre.perfil:
                 notificacion_respuesta = Notificacion(actor=perfil_usuario, target=video_padre.perfil,
@@ -363,6 +386,7 @@ def sumar_post_video(request, slug, video_id):
 def marcar_favorito(request):
     # Marca un video como favorito del usuario
     if request.is_ajax():
+        print "llego ajax marcar favorito"
         video_id = request.GET.get('video_id', '')
         video = get_object_or_404(Videos, id=video_id)
         perfil_usuario = Perfiles.objects.get(usuario=request.user)
@@ -371,10 +395,12 @@ def marcar_favorito(request):
         registro_existe = VFavoritos.objects.filter(
             video=video, perfil=perfil_usuario).exists()
         if registro_existe:
+            print "registro_existe"
             registro_favorito = VFavoritos.objects.get(
                 video=video, perfil=perfil_usuario)
             fue_eliminado = registro_favorito.eliminado
             if fue_eliminado:
+                print "fue_eliminado"
                 video.favoritos_recibidos += 1
                 registro_favorito.eliminado = False
                 video.save()
@@ -382,6 +408,7 @@ def marcar_favorito(request):
                 return HttpResponse("favorito marcado")
 
             else:
+                print "no fue eliminado"
                 # le esta eliminando de sus favoritos
                 video.favoritos_recibidos -= 1
                 registro_favorito.eliminado = True
@@ -389,6 +416,7 @@ def marcar_favorito(request):
                 registro_favorito.save()
                 return HttpResponse("favorito eliminado")
         else:
+            print "registro no existe"
             # Crea un nuevo registro de video favorito
             video.favoritos_recibidos += 1
             registro_favorito = VFavoritos(video=video, perfil=perfil_usuario)

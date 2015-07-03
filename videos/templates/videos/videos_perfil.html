@@ -48,16 +48,6 @@
 
 {% include 'sidebar_favoritos.html' %}
 
-	<blockquote>
-		<p>
-			{{cita.texto}}
-		</p> <small>{{cita.autor}}, <cite>{{cita.fuente}}</cite></small>
-	</blockquote>
-	<div>
-		<button type="button" class="btn btn-xs btn-info btn_galeria"
-		onclick="location.href='{% url 'citas:index' 'recientes' %}';">
-		Ver galería de frases</button>
-	</div>
 </div>
 {% endblock sidebar %}
 

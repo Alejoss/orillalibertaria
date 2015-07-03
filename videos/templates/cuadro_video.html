@@ -11,7 +11,7 @@
 		</div>
 		<div class = "favoritos_video ">
 			{% if user.is_authenticated %}
-			<p class = "hidden">{{video.id}}</p>
+			<p id="video_id" class = "hidden">{{video.id}}</p>
 			<span class = "fa fa-star fa-lg pull-left estrella {{es_favorito}}"> </span>
 			{% else %}
 			<span class = "fa fa-star pull-left"> </span>
@@ -30,6 +30,9 @@
 					<li class = "divider"></li>
 					<li>
 						<a href="{% url 'videos:editar_video' video.id %}">Editar video</a> 
+					</li>
+					<li>
+						<a href="#" data-toggle="modal" data-target="#modal_eliminar">Eliminar video</a> 
 					</li>
 				</ul>
 				</div>
@@ -99,6 +102,9 @@
 					<li>
 						<a href="{% url 'videos:editar_video' video.id %}">Editar video</a> 
 					</li>
+					<li>
+						<a href="#" data-toggle="modal" data-target="#modal_eliminar">Eliminar video</a> 
+					</li>
 				</ul>
 				</div>
 			</div>
@@ -135,4 +141,26 @@
 
 <div class = "row">
 	<hr/>
+</div>
+
+<!-- Modal -->
+<div id="modal_eliminar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Eliminar Video</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Estas seguro que quieres eliminar el video <strong>{{video.titulo}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button id="eliminar_video" type="button" class="btn btn-warning">Eliminar Video</button>
+      </div>
+    </div>
+
+  </div>
 </div>

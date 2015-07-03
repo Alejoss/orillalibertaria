@@ -20,6 +20,7 @@ from olibertaria.utils import obtener_cita, obtener_imagen_tema,\
 from temas.utils import obtener_posts_recientes
 from temas.models import Temas
 from temas.models import Posts, Respuestas, Votos
+from videos.models import Videos, VFavoritos
 from citas.models import Cfavoritas, Cita
 from imagenes.models import Ifavoritas, Imagen
 from utils import obtener_links_perfil, obtener_num_favoritos
@@ -168,50 +169,66 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         temas_usuario = Temas.objects.filter(creador=perfil_usuario).order_by('nombre')
         creo_temas = True
 
-    # Posts del usuario, utiliza el queryset: 'recientes' o 'populares'
-    # posts favoritos
+    # Si el queryset es "videos" entonces toma los videos del usuario, si no, toma los posts. 
+    posts = []            
+    videos = []
+    if queryset == "videos":
+        videos_obj = Videos.objects.filter(perfil=perfil_usuario, eliminado=False).order_by("-fecha")
 
-    recientes = ""
-    populares = ""
-    q = ""
-    if queryset == "populares":
-        q = "-votos_total"
-        populares = "active"
-    else:
-        q = "-fecha"
-        recientes = "active"
+        if perfil_usuario_visitante:
+            videos_favoritos_visitante_obj = VFavoritos.objects.filter(perfil=perfil_usuario_visitante, eliminado=False)
+            videos_favoritos_visitante = []
+            for vfav in videos_favoritos_visitante_obj:
+                videos_favoritos_visitante.append(vfav.video)
 
-    posts_obj = Posts.objects.filter(
-        creador=perfil_usuario, eliminado=False).order_by(q)
-    posts = []
-    for p in posts_obj:
-
-        # [post, voted_status, num_respuestas, texto_procesado, hora_procesada]
-        post = obtener_args_post(p, perfil_usuario_visitante)
-
-        # Sumar post_en_video, usuario_respuesta, respuestas_post
-        post_en_video = False
-        if p.video is not None:
-            # si el post pertenece a un video
-            post_en_video = True
-
-        if p.es_respuesta is True:
-            # informacion sobre el post padre
-            if Respuestas.objects.filter(post_respuesta=p).exists():
-                respuesta = Respuestas.objects.get(post_respuesta=p)
-                usuario_respuesta = respuesta.post_padre.creador.nickname
+        for video in videos_obj:
+            # Suma la clase a los videos favoritos        
+            if request.user.is_authenticated():
+                if video in videos_favoritos_visitante:
+                    es_favorito = "es_favorito"
+                else:
+                    es_favorito = "no_es_favorito"
             else:
-                # Por si de dan respuestas descuadradas (respuestas sin post padre)
+                es_favorito = "no_es_favorito"
+
+            if video.es_youtube is True:
+                imagen_video = "http://img.youtube.com/vi/%s/0.jpg" % (video.youtube_id)
+            else:
+                imagen_video = "http://www.flaticon.es/png/256/24933.png"
+
+            num_respuestas_video = Posts.objects.filter(video=video, eliminado=False).count()
+            videos.append([video, imagen_video, es_favorito, num_respuestas_video])
+
+    else:    
+        posts_obj = Posts.objects.filter(creador=perfil_usuario, eliminado=False).order_by("-fecha")
+        for p in posts_obj:
+
+            # [post, voted_status, num_respuestas, texto_procesado, hora_procesada]
+            post = obtener_args_post(p, perfil_usuario_visitante)
+
+            # Sumar post_en_video, usuario_respuesta, respuestas_post
+            post_en_video = False
+            if p.video is not None:
+                # si el post pertenece a un video
+                post_en_video = True
+
+            if p.es_respuesta is True:
+                # informacion sobre el post padre
+                if Respuestas.objects.filter(post_respuesta=p).exists():
+                    respuesta = Respuestas.objects.get(post_respuesta=p)
+                    usuario_respuesta = respuesta.post_padre.creador.nickname
+                else:
+                    # Por si de dan respuestas descuadradas (respuestas sin post padre)
+                    usuario_respuesta = None
+            else:
                 usuario_respuesta = None
-        else:
-            usuario_respuesta = None
 
-        respuestas_post = obtener_respuestas_post(p)
+            respuestas_post = obtener_respuestas_post(p)
 
-        post.extend([post_en_video, usuario_respuesta, respuestas_post])
+            post.extend([post_en_video, usuario_respuesta, respuestas_post])
 
-        #suma el post a la lista de posts
-        posts.append(post)
+            #suma el post a la lista de posts
+            posts.append(post)
 
     # cita
     if num_favoritos[1] == 0:
@@ -253,10 +270,9 @@ def perfil(request, username, queryset, template="perfiles/perfil.html",
         'portada': portada, 'usuario_visitado': usuario_visitado, 'avatar_large': avatar_large,
         'nombre_completo': nombre_completo, 'links': links, 'descripcion': descripcion,
         'posts': posts, 'cita_favorita': cita_favorita, 'imagenes_favoritas': imagenes_favoritas,
-        'recientes': recientes, 'num_favoritos': num_favoritos,
-        'populares': populares, 'num_temas': num_temas,
-        'temas_usuario': temas_usuario,
-        'creo_temas': creo_temas,
+        'num_favoritos': num_favoritos, 'num_temas': num_temas,
+        'temas_usuario': temas_usuario, 'queryset': queryset,
+        'creo_temas': creo_temas, 'videos': videos,
         'perfil_usuario': perfil_usuario, 'propio_usuario': propio_usuario}
 
     if extra_context is not None:  # endless pagination

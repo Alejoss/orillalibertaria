@@ -65,26 +65,22 @@
 
 {% block sidebar %}
 <div class="hidden-xs col-md-4 col-sm-4 column">
-
-		<div>
-			<br>
-			<button type="button" class="btn btn-warning btn_sidebar" 
-			onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
-			</button> 
-			<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
-			<button type="button" class="btn btn-default btn_sidebar visible-sm" 
-			onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
-			</button>
-			<br/>
-			<button type="button" class="btn btn-link btn_sidebar" 
-			onclick="location.href='{% url 'citas:colaborar_organizar' %}';"><i class="fa fa-wrench"></i> <small> Ayúdanos a organizar este Banco de Frases </small>
-			</button>
-			<hr>
-		</div>
-		<div class = "btn_sidebar">
-			{% include 'sidebar_favoritos.html' %}
-		</div>
-	</div> <!--column 4-->
+	<div>
+		<br>
+		<button type="button" class="btn btn-warning btn_sidebar" 
+		onclick="location.href='{% url 'citas:nueva' %}';"> Añade una frase
+		</button> 
+		<button type="button" class="btn btn-default btn_sidebar" onclick = "location.href='{% url 'citas:index' 'recientes' %}';">Banco de Frases</button>
+		<button type="button" class="btn btn-default btn_sidebar visible-sm" 
+		onclick="location.href='{% url 'imagenes:index' 'recientes' %}';">Galería de Imágenes
+		</button>
+		<br/>
+		<hr>
+	</div>
+	<div class = "btn_sidebar">
+		{% include 'sidebar_favoritos.html' %}
+	</div>
+</div> <!--column 4-->
 {% endblock sidebar %}
 
 {% block javascript %}

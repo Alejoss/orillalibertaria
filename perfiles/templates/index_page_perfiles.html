@@ -1,4 +1,101 @@
 {% load endless %}
+{% load staticfiles %}
+
+{% if queryset == "videos" %}
+{% paginate videos %}
+<div class = "row">
+	<div class = "endless_page_template">
+	{% for video in videos %}
+	<div class = "col-md-2 col-sm-2 col-xs-2">
+		<div class = "control_votos">
+			<div class = "btn-group-vertical">
+				<p class = "vote-id hidden">{{video.0.id}}</p>
+				{% if user.is_authenticated %}
+				<button type="button" title = "Guardar en favoritos" class = "btn btn-default estrella {{video.2}}"> 
+					<span class = "fa fa-star fa-lg"></span>
+				</button>
+				{% else %}
+				<button title = "Guardar en favoritos" type="button" class = "btn btn-default disabled_estrella"> 
+					<span class = "fa fa-star fa-lg"></span>
+				</button>
+				{% endif %}
+				<button class = "btn puntaje"> 
+					<h2 class = "numero_puntaje"> {{video.0.favoritos_recibidos}} </h2>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class = "col-md-10 col-sm-10 col-xs-10">
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<div class = "div_imagen_tema">
+					<a href="{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}">
+					{% if video.1 %}
+						<img class = "imagen_tema" src = "{{video.1}}">
+					{% else %}
+						<img class = "imagen_tema" src = "{% static 'img/logo.png' %}">
+					{% endif %}
+					</a>
+				</div>
+				<p class = "text truncate">
+					<strong>{{video.0.titulo}}:</strong> {{video.4|safe}}
+				</p>
+					<small><a href="{{video.0.url}}">{{video.0.url}}</a></small>
+				<br/>
+			</div>
+			<div class="panel-footer">
+				<div class = "footer_respuestas pull-right">
+ 					<a href = "{% url 'videos:video' video.0.id video.0.tema.slug 'recientes' %}"> 
+ 					{% if video.3 %}
+ 						{{video.3}} 
+ 					{% endif %}
+ 					<span class="fa fa-comments"></span> <span class="fa fa-play"></span></a>
+ 				</div>
+				<div class = "perfil_pequena">
+					<img src = "{{video.0.perfil.imagen_perfil}}">
+				</div>
+				<div class = "nombre_fecha">
+					<p><a href ="{% url 'perfiles:perfil' video.0.perfil.usuario.username 'recientes' %}">
+						{{video.0.perfil.nickname}}</a> 
+						<small class = "fecha_desde"> {{video.5}} </small>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div> <!-- class md 10 -->
+	{% endfor %}
+	</div>
+</div>
+<div class = "row">
+	<div class = "col-md-12">
+	<hr>
+	<div class = "paginacion">
+	{% show_pages %}
+	</div>
+	<br>
+	<br>
+</div>
+</div>
+<script src="{% static 'js/videos_favorito.js' %}"></script>
+<script>
+$(".disabled_estrella").hover(
+	function(){
+		console.log("hover");
+		var estrella = $(this).find(".fa-star");
+		console.log(estrella);
+		$(estrella).removeClass("fa-star");
+		$(estrella).addClass("fa-lock");
+	},
+	function(){
+		console.log("leave");
+		var estrella = $(this).find(".fa-lock");
+		console.log(estrella);
+		$(estrella).removeClass("fa-lock");
+		$(estrella).addClass("fa-star");
+});
+</script>
+
+{% else %}
 
 {% paginate posts %}
 <div class = "row">
@@ -101,3 +198,5 @@
 	</br>
 </div>
 </div>
+
+{% endif %}

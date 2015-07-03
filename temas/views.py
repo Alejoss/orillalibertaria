@@ -338,6 +338,9 @@ def sumar_post(request, slug):
                          tema=tema_contenedor)
             post.save()
 
+            perfil_usuario.numero_de_posts = perfil_usuario.numero_de_posts + 1
+            perfil_usuario.save()
+
             # calcular nivel actividad y de popularidad del Tema
             popularidad_actividad_tema(tema_contenedor, "positivo")
 
@@ -750,5 +753,8 @@ def eliminar_propio_post(request, post_id):
         elif post.eliminado is True:
             post.eliminado = False
         post.save()
+
+        post.creador.numero_de_posts = post.creador.numero_de_posts - 1
+        post.creador.save()
 
     return redirect('temas:post', slug=post.tema.slug, post_id=post.id, queryset=u'recientes')

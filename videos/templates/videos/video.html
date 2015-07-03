@@ -7,6 +7,7 @@
 {% endblock extra_css %}
 
 {% block content %}
+
 <div class="row clearfix">
 
 <div class = "col-md-12">
@@ -175,7 +176,6 @@
 	</div>
 </div> <!--col md 4 -->
 </div><!-- row clearfix -->
-
 {% endblock content %}
 
 {% block javascript %}
@@ -206,6 +206,16 @@ $(document).ready(function(){
 			texto: "*Escribe una post de mínimo 5 y máximo 10.000 caracteres.",
 		}
 	});
+
+	function eliminar_video(){	    
+	    var video_id = $("#video_id").text();	    
+	    var url_base = "{% url 'videos:eliminar_video' '11111' %}";
+	    var url = url_base.replace("11111", video_id);
+
+	    window.location = url;
+	}
+
+	$("#eliminar_video").on("click", eliminar_video);
 });
 </script>
 {% endblock javascript %}
