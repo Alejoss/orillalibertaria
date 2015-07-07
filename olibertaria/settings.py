@@ -30,10 +30,10 @@ TEMPLATE_DIRS = (
 SECRET_KEY = os.environ["OL_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
 
 # Utilizar local staticfiles
-LOCAL_STATICFILES = True
+LOCAL_STATICFILES = False
 
 # Application definition
 
